@@ -16,8 +16,9 @@
 /build_app_dev_k1pay
 
 /.env.development
-/.env.production.neosprint
-/.env.production.tramo
+/.env.production.kone
+/.env.production.nrupee
+/.env.production.payjust
 
 # misc
 .DS_Store
