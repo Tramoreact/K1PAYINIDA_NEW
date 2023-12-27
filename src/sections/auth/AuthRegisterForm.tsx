@@ -153,7 +153,12 @@ export default function AuthRegisterForm(props: any) {
     email: Yup.string()
       .email("Invalid email address")
       .required("email is required"),
-    refCode: Yup.string().required("Please Check Your Refral Code"),
+    refCode:
+      radioVal === "directagent" ||
+      radioVal === "directdistributor" ||
+      value2 === "m_distributor"
+        ? Yup.string()
+        : Yup.string().required("Referral code is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .max(15, "Password must be less than 15 characters")
@@ -262,33 +267,29 @@ export default function AuthRegisterForm(props: any) {
   };
 
   const onSubmit = (data: FormValuesProps) => {
-    if (refName !== "") {
-      setFormValues({
-        ...formValues,
-        refCode: data.refCode,
-        mobileNumber: data.mobile,
-        email: data.email.toLowerCase(),
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      });
-      let body = {
-        email: data.email.toLowerCase(),
-        mobileNumber: data.mobile,
-      };
-      Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
-        console.log("=============>" + JSON.stringify(Response));
-        if (Response.status == 200) {
-          if (Response.data.code == 200) {
-            enqueueSnackbar(Response.data.message);
-            setgOTP(true);
-          } else {
-            enqueueSnackbar(Response.data.message);
-          }
+    setFormValues({
+      ...formValues,
+      refCode: data.refCode,
+      mobileNumber: data.mobile,
+      email: data.email.toLowerCase(),
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    });
+    let body = {
+      email: data.email.toLowerCase(),
+      mobileNumber: data.mobile,
+    };
+    Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
+      console.log("=============>" + JSON.stringify(Response));
+      if (Response.status == 200) {
+        if (Response.data.code == 200) {
+          enqueueSnackbar(Response.data.message);
+          setgOTP(true);
+        } else {
+          enqueueSnackbar(Response.data.message);
         }
-      });
-    } else {
-      enqueueSnackbar("Check Your Refral Code");
-    }
+      }
+    });
   };
 
   const openEditModal = (val: any) => {
@@ -318,13 +319,8 @@ export default function AuthRegisterForm(props: any) {
 
   const verifyRef = (e: string) => {
     setLoading(true);
-    let rfcode;
-    if (value2 == "distributor") {
-      rfcode = "MD_" + e;
-    } else if (value2 == "agent") {
-      rfcode = "D_" + e;
-    }
-    Api(`auth/referralCode/` + rfcode, "GET", "", "").then((Response: any) => {
+
+    Api(`auth/referralCode/` + e, "GET", "", "").then((Response: any) => {
       console.log("=============>" + JSON.stringify(Response));
       if (Response.status == 200) {
         if (Response.data.code == 200) {
@@ -379,20 +375,13 @@ export default function AuthRegisterForm(props: any) {
   };
 
   const createUser = () => {
-    let rfcode;
-    if (value2 == "distributor") {
-      rfcode = "MD_" + formValues.refCode;
-    } else if (value2 == "agent") {
-      rfcode = "D_" + formValues.refCode;
-    }
-
     const body = {
       contactNo: formValues.mobileNumber,
       email: formValues.email?.toLowerCase(),
       password: formValues.password,
       role: value2 == "m_distributor" ? value2 : radioVal,
       application_no: Math.floor(Math.random() * 10000000),
-      referralCode: rfcode,
+      referralCode: formValues.refCode,
     };
     Api(`auth/create_account`, "POST", body, "").then((Response: any) => {
       console.log("=============> Create" + JSON.stringify(Response));
@@ -555,13 +544,6 @@ export default function AuthRegisterForm(props: any) {
                     error={!!errors.refCode}
                     label="Referral Code"
                     size="small"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {value2 == "agent" ? "D_" : "MD_"}
-                        </InputAdornment>
-                      ),
-                    }}
                     {...register("refCode", {
                       onChange: (e) =>
                         setFormValues({
