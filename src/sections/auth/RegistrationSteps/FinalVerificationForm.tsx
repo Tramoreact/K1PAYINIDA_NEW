@@ -1685,7 +1685,8 @@ function ConstitutionIdentification() {
     user?.Partnership_deed_File || ""
   );
 
-  //board Resolution BrdRes  Incor
+  //board Resolution
+  const [imageboardResolution, setimageboardResolution] = useState("");
   const [AadharFlieBrdRes, setAadharFlieBrdRes] = useState(false);
   const [AadharFileBrdResBtnDis, setAadharFileBrdResBtnDis] = useState(false);
   const [boardResolutionPath, setBoardResolutionpath] = useState<any>(
@@ -1693,6 +1694,7 @@ function ConstitutionIdentification() {
   );
 
   //Certificate Of Incorporation
+  const [imageCOI, setimageCOI] = useState("");
   const [AadharFlieCOI, setAadharFlieCOI] = useState(false);
   const [AadharFileCOIBtnDis, setAadharFileCOIBtnDis] = useState(false);
   const [COIPath, setCOIpath] = useState<any>(user?.COI_File || "");
@@ -1967,6 +1969,16 @@ function ConstitutionIdentification() {
     );
   };
 
+  const boardResolutionImage = {
+    Bucket: process.env.REACT_APP_AWS_BUCKET_NAME,
+    Key: boardResolutionPath?.split("/").splice(4, 4).join("/"),
+    Expires: 600, // Expiration time in seconds
+  };
+
+  s3.getSignedUrl("getObject", boardResolutionImage, (err: any, url: any) => {
+    setimageboardResolution(url);
+  });
+
   const COIUpload = (e: any) => {
     setAadharFlieCOI(false);
     console.log("coi");
@@ -1992,6 +2004,16 @@ function ConstitutionIdentification() {
       }
     );
   };
+
+  const COIImage = {
+    Bucket: process.env.REACT_APP_AWS_BUCKET_NAME,
+    Key: COIPath?.split("/").splice(4, 4).join("/"),
+    Expires: 600, // Expiration time in seconds
+  };
+
+  s3.getSignedUrl("getObject", COIImage, (err: any, url: any) => {
+    setimageCOI(url);
+  });
 
   const MOAUpload = (e: any) => {
     console.log("moa");
@@ -3102,22 +3124,42 @@ function ConstitutionIdentification() {
                                     </Button>
                                   ) : (
                                     <>
-                                      <Button
-                                        component="label"
-                                        size="small"
-                                        sx={{
-                                          border: "1px solid",
-                                          color: "black",
-                                          fontFamily: "Public Sans",
-                                          fontSize: "14px",
-                                          textTransform: "none",
-                                        }}
-                                        onClick={() =>
-                                          handlePIDDocuments("Boardresolution")
-                                        }
+                                      <Stack
+                                        display={"flex"}
+                                        direction={"row"}
+                                        spacing={1}
                                       >
-                                        Reset
-                                      </Button>
+                                        <Button
+                                          component="label"
+                                          size="small"
+                                          sx={{
+                                            border: "1px solid",
+                                            color: "black",
+                                            fontFamily: "Public Sans",
+                                            fontSize: "14px",
+                                            textTransform: "none",
+                                          }}
+                                          onClick={() =>
+                                            handlePIDDocuments(
+                                              "Boardresolution"
+                                            )
+                                          }
+                                        >
+                                          Reset
+                                        </Button>
+                                        <Image
+                                          src={
+                                            imageboardResolution &&
+                                            imageboardResolution
+                                          }
+                                          style={{
+                                            borderRadius: "3px",
+                                            border: "1px solid black",
+                                            width: 50,
+                                            height: 50,
+                                          }}
+                                        />
+                                      </Stack>
                                     </>
                                   )}
                                 </>
@@ -3249,22 +3291,37 @@ function ConstitutionIdentification() {
                                     </Button>
                                   ) : (
                                     <>
-                                      <Button
-                                        component="label"
-                                        size="small"
-                                        sx={{
-                                          border: "1px solid",
-                                          color: "black",
-                                          fontFamily: "Public Sans",
-                                          fontSize: "14px",
-                                          textTransform: "none",
-                                        }}
-                                        onClick={() =>
-                                          handlePIDDocuments("Incorporation")
-                                        }
+                                      <Stack
+                                        display={"flex"}
+                                        direction={"row"}
+                                        spacing={1}
                                       >
-                                        Reset
-                                      </Button>
+                                        <Button
+                                          component="label"
+                                          size="small"
+                                          sx={{
+                                            border: "1px solid",
+                                            color: "black",
+                                            fontFamily: "Public Sans",
+                                            fontSize: "14px",
+                                            textTransform: "none",
+                                          }}
+                                          onClick={() =>
+                                            handlePIDDocuments("Incorporation")
+                                          }
+                                        >
+                                          Reset
+                                        </Button>
+                                        <Image
+                                          src={imageCOI && imageCOI}
+                                          style={{
+                                            borderRadius: "3px",
+                                            border: "1px solid black",
+                                            width: 50,
+                                            height: 50,
+                                          }}
+                                        />
+                                      </Stack>
                                     </>
                                   )}
                                 </>
