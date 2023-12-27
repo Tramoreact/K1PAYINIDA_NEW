@@ -3,9 +3,10 @@ import { Link as RouterLink } from "react-router-dom";
 // @mui
 import { useTheme } from "@mui/material/styles";
 import { Box, Link, BoxProps } from "@mui/material";
-import Tramo from "../../assets/logo/tramoTrmao-Final-Logo.svg";
-import Neo from "../../assets/logo/neo-Neosprint_logo_black.svg";
-import Image from "../image/Image";
+import K1LOGO from "../../assets/logo/K1LOGO.svg";
+import NEOLOGO from "../../assets/logo/NEOLOGO.svg";
+import NRUPEELOGO from "../../assets/logo/NRUPEELOGO.svg";
+import PAYJUSTLOGO from "../../assets/logo/PAYJUSTLOGO.svg";
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +48,15 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
         {...other}
       >
         <img
-          src={process.env.REACT_APP_LOGO == "Tramo" ? Tramo : Neo}
+          src={
+            process.env.REACT_APP_LOGO == "K1LOGO"
+              ? K1LOGO
+              : process.env.REACT_APP_LOGO == "NEOLOGO"
+              ? NEOLOGO
+              : process.env.REACT_APP_LOGO == "NRUPEELOGO"
+              ? NRUPEELOGO
+              : PAYJUSTLOGO
+          }
           alt="LOGO"
           width={"100%"}
           height={"100%"}

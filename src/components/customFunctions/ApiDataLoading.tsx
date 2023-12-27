@@ -9,9 +9,9 @@ function ApiDataLoading() {
   return (
     <Stack flexDirection={"row"} justifyContent={"center"} my={2}>
       <m.div variants={varFade().in}>
-        <Lottie animationData={TramoLoading} />
+        {/* <Lottie animationData={TramoLoading} /> */}
 
-        {/* <CircularProgress sx={{ color: theme.palette.primary.main }} /> */}
+        <CircularProgress sx={{ color: theme.palette.primary.main }} />
       </m.div>
     </Stack>
   );

@@ -1,88 +1,88 @@
 // theme
-import palette from '../../theme/palette';
+import palette from "../../theme/palette";
 //
-import { ThemeColorPresetsValue } from './types';
+import { ThemeColorPresetsValue } from "./types";
 
 // ----------------------------------------------------------------------
 
-const themePalette = palette('light');
+const themePalette = palette("light");
 
 export const presets = [
   // DEFAULT
   {
-    name: 'default',
+    name: "default",
     ...themePalette.primary,
   },
   // CYAN
   {
-    name: 'cyan',
-    lighter: '#CCF4FE',
-    light: '#68CDF9',
-    main: '#078DEE',
-    dark: '#0351AB',
-    darker: '#012972',
-    contrastText: '#FFFFFF',
+    name: "cyan",
+    lighter: "#CCF4FE",
+    light: "#68CDF9",
+    main: "#078DEE",
+    dark: "#0351AB",
+    darker: "#012972",
+    contrastText: "#FFFFFF",
   },
-  // PURPLE
+  // PURPLE for PAYJUST
   {
-    name: 'purple',
-    lighter: '#EBD6FD',
-    light: '#B985F4',
-    main: '#7635dc',
-    dark: '#431A9E',
-    darker: '#200A69',
-    contrastText: '#FFFFFF',
+    name: "PURPLE",
+    lighter: "#34558E",
+    light: "#1A4080",
+    main: "#012B72",
+    dark: "#001259",
+    darker: "#00003F",
+    contrastText: "#FFFFFF",
   },
-  // BLUE
+  // BLUE for K1PAY
   {
-    name: 'blue',
-    lighter: '#D1E9FC',
-    light: '#76B0F1',
-    main: '#2065D1',
-    dark: '#103996',
-    darker: '#061B64',
-    contrastText: '#FFFFFF',
+    name: "Blue",
+    lighter: "#6948B1",
+    light: "#5631A8",
+    main: "#431A9E",
+    dark: "#2A0184",
+    darker: "#10006B",
+    contrastText: "#FFFFFF",
   },
   // ORANGE
   {
-    name: 'orange',
-    lighter: '#FEF4D4',
-    light: '#FED680',
-    main: '#fda92d',
-    dark: '#B66816',
-    darker: '#793908',
+    name: "orange",
+    lighter: "#FEF4D4",
+    light: "#FED680",
+    main: "#fda92d",
+    dark: "#B66816",
+    darker: "#793908",
     contrastText: themePalette.grey[800],
   },
-  // RED
+  // RED for TRAMO
   {
-    name: 'red',
-    lighter: '#FFE3D5',
-    light: '#FFC1AC',
-    main: '#f82228',
-    dark: '#B71833',
-    darker: '#7A0930',
-    contrastText: '#FFFFFF',
+    name: "red",
+    lighter: "#FFE3D5",
+    light: "#FFC1AC",
+    main: "#f82228",
+    dark: "#B71833",
+    darker: "#7A0930",
+    contrastText: "#FFFFFF",
   },
 
-  //GREEN
+  //GREEN for neosprint
   {
-    name: 'Green',
-    lighter: '#8ACBB2',
-    light: '#5BB793',
-    main: '#43AD84',
-    dark: '#2CA375',
-    darker: '#159966',
-    contrastText: '#FFFFFF',
+    name: "Green",
+    lighter: "#33BC77",
+    light: "#1AB366",
+    main: "#00AB55",
+    dark: "#00913C",
+    darker: "#007822",
+    contrastText: "#FFFFFF",
   },
-   //NPAY COLOR
-   {
-    name: 'lightRed',
-    lighter: '#f05757',
-    light: '#c24646',
-    main: '#ac3e3e',
-    dark: '#db5f5f',
-    darker: '#df7171',
-    contrastText: '#FFFFFF',
+  //Light Red for Nrupee
+  {
+    name: "LightRed",
+    lighter: "#F37979",
+    light: "#F16868",
+    main: "#F05757",
+    dark: "#D63E3E",
+    darker: "#BD2424",
+    contrastText: "#FFFFFF",
   },
 ];
 

@@ -34,9 +34,8 @@ export default function Recharges(props: any) {
     >
       <Card
         sx={{
-          margin: "5px 0px 0px -10px",
           height: "fit-content",
-          width: "70%",
+          width: { xs: "100%", sm: "70%" },
         }}
       >
         <Tabs
