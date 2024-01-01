@@ -43,7 +43,8 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           variant="h5"
           sx={{ mb: 5, maxWidth: 580, textAlign: "center" }}
         >
-          Join Tramo to drive the Financial Inclusion in the country!
+          Join {process.env.REACT_APP_COMPANY_NAME} to drive the Financial
+          Inclusion in the country!
         </Typography>
 
         <Image

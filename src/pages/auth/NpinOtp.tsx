@@ -242,8 +242,9 @@ export default function NpinOtp(props: any) {
 
             <Typography textAlign={"center"} fontSize={24} my={2}>
               We noticed that the agreement signing process for your onboarding
-              on the Tramo platform was unsuccessful. We apologize for any
-              inconvenience this may have caused.
+              on the {process.env.REACT_APP_COMPANY_NAME} platform was
+              unsuccessful. We apologize for any inconvenience this may have
+              caused.
             </Typography>
             <Typography textAlign={"center"} fontSize={24} my={2}>
               Helpline Number:{" "}

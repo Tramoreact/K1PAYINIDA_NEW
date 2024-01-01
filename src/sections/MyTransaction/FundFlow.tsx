@@ -723,9 +723,10 @@ function TransactionRow({ row }: childProps) {
             <Typography variant="body2" paddingBottom={1}>
               Note: This transaction receipt is generated automatically and dose
               not require a physical signature. It is not a tax invoice but
-              serves as a record of your transaction with Tramo. Please retain
-              it for your refrence, and if you have any queries, fell free to
-              contact our Customer Support team.
+              serves as a record of your transaction with{" "}
+              {process.env.REACT_APP_COMPANY_NAME}. Please retain it for your
+              refrence, and if you have any queries, fell free to contact our
+              Customer Support team.
             </Typography>
           </TableContainer>
           <Stack flexDirection={"row"}>

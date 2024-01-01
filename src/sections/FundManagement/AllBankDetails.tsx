@@ -542,7 +542,9 @@ export default function AllBankDetails() {
             <Tooltip title="Copy" placement="top">
               {/* <IconButton onClick={() => onCopy('Tramo technologies Pvt. Ltd.')}> */}
               <IconButton
-                onClick={() => onCopy("Tramo Technolab Private Limited")}
+                onClick={() =>
+                  onCopy("${process.env.REACT_APP_COMPANY_LEGAL_NAME}")
+                }
               >
                 <Iconify icon="eva:copy-fill" width={24} />
               </IconButton>
