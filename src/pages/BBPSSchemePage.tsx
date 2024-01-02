@@ -47,7 +47,6 @@ export default function BBPSSchemePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
-  const [bbpsVendor, setBPSvendor] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [tempTableData, setTempTableData] = useState([]);
   const [isFilter, setIsFilted] = useState(false);
@@ -110,7 +109,7 @@ export default function BBPSSchemePage() {
   useEffect(() => {
     user?.role !== "m_distributor" && getSchemeDetails(user?.bbpsSchemeId);
     user?.role === "m_distributor" && getDistributors();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -185,7 +184,9 @@ export default function BBPSSchemePage() {
     } else if (!data.subcategory && data.product) {
       setSearchData(
         tableData.filter((item: any) =>
-          item.product.productName.toLowerCase().match(data.product)
+          item.product.productName
+            .toLowerCase()
+            .match(data.product.toLowerCase())
         )
       );
     } else if (data.subcategory && data.product) {
@@ -193,7 +194,9 @@ export default function BBPSSchemePage() {
         tableData
           .filter((item: any) => item.subCategoryName == data.subcategory)
           .filter((item: any) =>
-            item.product.productName.toLowerCase().match(data.product)
+            item.product.productName
+              .toLowerCase()
+              .match(data.product.toLowerCase())
           )
       );
     } else {
@@ -309,7 +312,6 @@ export default function BBPSSchemePage() {
                         <SchemeRow
                           key={row._id}
                           row={row}
-                          bbpsVendor={bbpsVendor}
                           rowDetail={user?.role}
                         />
                       );
@@ -334,11 +336,11 @@ export default function BBPSSchemePage() {
   );
 }
 
-const SchemeRow = ({ row, bbpsVendor, rowDetail }: any) => {
+const SchemeRow = ({ row, rowDetail }: any) => {
   const [item, setItem] = useState(row);
 
   return (
-    <TableRow>
+    <TableRow hover>
       <TableCell>{item?.minSlab}</TableCell>
       <TableCell>{item?.maxSlab}</TableCell>
       <TableCell>{item?.subCategoryName}</TableCell>
