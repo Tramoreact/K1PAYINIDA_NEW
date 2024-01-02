@@ -55,6 +55,7 @@ import { useAuthContext } from "src/auth/useAuthContext";
 import CustomPagination from "src/components/customFunctions/CustomPagination";
 import FormProvider, { RHFSelect, RHFTextField } from "../components/hook-form";
 import { LoadingButton } from "@mui/lab";
+import Logo from "src/components/logo/Logo";
 
 // ----------------------------------------------------------------------
 
@@ -755,20 +756,38 @@ function TransactionRow({ row }: childProps) {
             boxShadow: 24,
             p: 4,
             borderRadius: "20px",
+            overflowY: 'scroll',
+            height: '60vh'
           }}
         >
           <Card sx={{ pt: 5, px: 5 }} ref={componentRef}>
             <Grid container>
-              <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                <Image
-                  disabledEffect
-                  alt="logo"
-                  src={LogoMain}
-                  sx={{ maxWidth: 120 }}
-                />
+              <Grid item xs={12} sm={10} sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignContent: 'space-between' }} >
+                <Grid>
+                  <Logo />
+                </Grid>
+                <Grid sx={{ mt: 3 }}>
+                  <Typography
+                    paragraph
+                    variant="overline"
+                    sx={{ color: "text.disabled" }}
+                  >
+                    Shop Details
+                  </Typography>
+                  <Typography variant="body2">
+                    Agent Name :{user?.firstName}
+                    {user?.lastName}{" "}
+                  </Typography>
+                  <Typography variant="body2">
+                    Mobile Number :{user?.contact_no}
+                  </Typography>
+                  <Typography variant="body2">
+                    Shop Name :{user?.shopAddress}
+                  </Typography>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+              <Divider />
+              <Grid item xs={12} sm={10} sx={{ mb: 5 }}>
                 <Box sx={{ textAlign: { sm: "right" } }}>
                   {/* <Label
                     variant="soft"
@@ -784,55 +803,55 @@ function TransactionRow({ row }: childProps) {
                   </Label> */}
                 </Box>
               </Grid>
+              <Grid item xs={12} sm={10} sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignContent: 'space-between' }}>
+                <Grid >
+                  <Typography
+                    paragraph
+                    variant="overline"
+                    sx={{ color: "text.disabled" }}
+                  >
+                    Sender Details
+                  </Typography>
 
-              <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                <Typography
-                  paragraph
-                  variant="overline"
-                  sx={{ color: "text.disabled" }}
-                >
-                  Sender Details
-                </Typography>
+                  <Typography variant="body2">
+                    Sender Name :{newRow?.moneyTransferSenderId?.remitterFN}
+                    {newRow?.moneyTransferSenderId?.remitterLN}{" "}
+                  </Typography>
 
-                <Typography variant="body2">
-                  Sender Name :{newRow?.agentDetails?.id?.firstName}
-                  {newRow?.agentDetails?.id?.lastName}{" "}
-                </Typography>
+                  <Typography variant="body2">
+                    Mobile Number :{newRow?.moneyTransferSenderId?.remitterMobile}
+                  </Typography>
 
-                <Typography variant="body2">
-                  Mobile Number :{newRow?.contact_no}
-                </Typography>
+                  <Typography variant="body2">
+                    Service Type : {newRow?.categoryName}
+                  </Typography>
+                </Grid>
 
-                <Typography variant="body2">
-                  Service Type : {newRow?.categoryName}
-                </Typography>
+                <Grid>
+                  <Typography
+                    paragraph
+                    variant="overline"
+                    sx={{ color: "text.disabled" }}
+                  >
+                    Benificary Details
+                  </Typography>
+
+                  <Typography variant="body2">
+                    Account Holder Name :{" "}
+                    {newRow?.moneyTransferBeneficiaryDetails?.beneName}
+                  </Typography>
+
+                  <Typography variant="body2">
+                    Bank Name :{" "}
+                    {newRow?.moneyTransferBeneficiaryDetails?.bankName}{" "}
+                  </Typography>
+
+                  <Typography variant="body2">
+                    {" "}
+                    IFSC :{newRow?.moneyTransferBeneficiaryDetails?.ifsc}
+                  </Typography>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                <Typography
-                  paragraph
-                  variant="overline"
-                  sx={{ color: "text.disabled" }}
-                >
-                  Benificary Details
-                </Typography>
-
-                <Typography variant="body2">
-                  Account Holder Name :{" "}
-                  {newRow?.moneyTransferBeneficiaryDetails?.beneName}
-                </Typography>
-
-                <Typography variant="body2">
-                  Bank Name :{" "}
-                  {newRow?.moneyTransferBeneficiaryDetails?.bankName}{" "}
-                </Typography>
-
-                <Typography variant="body2">
-                  {" "}
-                  IFSC :{newRow?.moneyTransferBeneficiaryDetails?.ifsc}
-                </Typography>
-              </Grid>
-
               <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                 <Typography
                   paragraph
@@ -857,7 +876,7 @@ function TransactionRow({ row }: childProps) {
                   Due date
                 </Typography>
 
-                <Typography variant="body2">{}</Typography>
+                <Typography variant="body2">{ }</Typography>
               </Grid>
             </Grid>
 
