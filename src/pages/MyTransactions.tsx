@@ -280,36 +280,36 @@ export default function MyTransactions() {
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.id?.firstName
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.id?.firstName
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.id?.firstName
-                      : "",
+                        ? item?.distributorDetails?.id?.firstName
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.id?.firstName
+                          : "",
 
                   "Opening Balance":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.oldMainWalletBalance
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.oldMainWalletBalance
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.oldMainWalletBalance
-                      : "",
+                        ? item?.distributorDetails?.oldMainWalletBalance
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.oldMainWalletBalance
+                          : "",
 
                   "Closing Balance":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.newMainWalletBalance
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.newMainWalletBalance
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.newMainWalletBalance
-                      : "",
+                        ? item?.distributorDetails?.newMainWalletBalance
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.newMainWalletBalance
+                          : "",
                   " Commission Amount":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.commissionAmount
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.commissionAmount
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.commissionAmount
-                      : "",
+                        ? item?.distributorDetails?.commissionAmount
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.commissionAmount
+                          : "",
                   amount: item?.amount,
                   credit: item?.credit,
                   debit: item?.debit,
@@ -469,8 +469,8 @@ export default function MyTransactions() {
                     user?.role == "m_distributor"
                       ? tableLabels
                       : user?.role == "distributor"
-                      ? tableLabels1
-                      : tableLabels2
+                        ? tableLabels1
+                        : tableLabels2
                   }
                 />
 
@@ -519,8 +519,8 @@ function TransactionRow({ row }: childProps) {
       rowFor.toLowerCase() == "money transfer"
         ? `moneyTransfer/checkStatus/` + row._id
         : rowFor.toLowerCase() == "recharges"
-        ? `agents/v1/checkStatus/` + row._id
-        : rowFor.toLowerCase() == "dmt2" &&
+          ? `agents/v1/checkStatus/` + row._id
+          : rowFor.toLowerCase() == "dmt2" &&
           `dmt2/transaction/status/` + row._id,
       "GET",
       "",
@@ -655,8 +655,8 @@ function TransactionRow({ row }: childProps) {
               user?.role === "agent"
                 ? newRow?.agentDetails?.creditedAmount
                 : user?.role === "distributor"
-                ? newRow?.distributorDetails?.creditedAmount
-                : newRow?.masterDistributorDetails?.creditedAmount
+                  ? newRow?.distributorDetails?.creditedAmount
+                  : newRow?.masterDistributorDetails?.creditedAmount
             )?.toFixed(2)}
           </Typography>
           <Typography variant="body2">
@@ -665,8 +665,8 @@ function TransactionRow({ row }: childProps) {
               user?.role === "agent"
                 ? newRow?.agentDetails?.oldMainWalletBalance
                 : user?.role === "distributor"
-                ? newRow?.distributorDetails?.oldMainWalletBalance
-                : newRow?.masterDistributorDetails?.oldMainWalletBalance
+                  ? newRow?.distributorDetails?.oldMainWalletBalance
+                  : newRow?.masterDistributorDetails?.oldMainWalletBalance
             )?.toFixed(2)}
           </Typography>
           <Typography variant="body2">
@@ -675,8 +675,8 @@ function TransactionRow({ row }: childProps) {
               user?.role === "agent"
                 ? newRow?.agentDetails?.newMainWalletBalance
                 : user?.role === "distributor"
-                ? newRow?.distributorDetails?.newMainWalletBalance
-                : newRow?.masterDistributorDetails?.newMainWalletBalance
+                  ? newRow?.distributorDetails?.newMainWalletBalance
+                  : newRow?.masterDistributorDetails?.newMainWalletBalance
             )?.toFixed(2)}
           </Typography>
         </TableCell>
@@ -729,15 +729,17 @@ function TransactionRow({ row }: childProps) {
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title="Download" placement="top">
-              <IconButton>
-                <img
-                  src={receipt_long}
-                  alt="Receipt Icon"
-                  onClick={openModal}
-                />
-              </IconButton>
-            </Tooltip>
+            {user?.role === "agent" && (
+              <Tooltip title="Download" placement="top">
+                <IconButton>
+                  <img
+                    src={receipt_long}
+                    alt="Receipt Icon"
+                    onClick={openModal}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </Stack>
         </TableCell>
       </TableRow>
@@ -757,7 +759,8 @@ function TransactionRow({ row }: childProps) {
             p: 4,
             borderRadius: "20px",
             overflowY: 'scroll',
-            height: '60vh'
+            height: '90vh',
+            width: "80%"
           }}
         >
           <Card sx={{ pt: 5, px: 5 }} ref={componentRef}>
@@ -786,7 +789,7 @@ function TransactionRow({ row }: childProps) {
                   </Typography>
                 </Grid>
               </Grid>
-              <Divider />
+
               <Grid item xs={12} sm={10} sx={{ mb: 5 }}>
                 <Box sx={{ textAlign: { sm: "right" } }}>
                   {/* <Label
@@ -803,7 +806,8 @@ function TransactionRow({ row }: childProps) {
                   </Label> */}
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={10} sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignContent: 'space-between' }}>
+              <Divider />
+              <Grid item xs={12} sm={11} sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignContent: 'space-between' }}>
                 <Grid >
                   <Typography
                     paragraph
