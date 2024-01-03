@@ -65,12 +65,12 @@ export default function DMTpay(props: any) {
     setConfirm(false);
     setCheckNPIN(false);
     setTxn(true);
+    reset(defaultValues);
   };
   const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => {
     setOpen1(false);
-    reset(defaultValues);
   };
   useEffect(() => {
     handleOpen1();
