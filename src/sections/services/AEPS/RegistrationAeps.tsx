@@ -194,7 +194,7 @@ export default function RegistrationAeps(props: any) {
             enqueueSnackbar(Response.data.message);
             UpdateUserDetail({
               fingPayAPESRegistrationStatus: true,
-              main_wallet_amount: user?.main_wallet_amount - 200,
+              main_wallet_amount: user?.main_wallet_amount - 0,
             });
           } else {
             enqueueSnackbar(Response.data.message);
