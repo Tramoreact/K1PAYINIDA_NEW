@@ -141,6 +141,7 @@ export default function WithdrawAttendance(props: any) {
             : UpdateUserDetail({
                 presenceAt: Date.now(),
               });
+          window.location.reload();
           setMessage(Response.data.message);
         } else if (Response.data.responseCode == 410) {
           enqueueSnackbar(Response.data.err.message);
