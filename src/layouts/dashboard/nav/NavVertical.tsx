@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // @mui
 import { Box, Stack, Drawer, Button } from "@mui/material";
 // hooks
@@ -30,6 +30,7 @@ type Props = {
 export default function NavVertical({ openNav, onCloseNav }: Props) {
   const { pathname } = useLocation();
   const { user, logout } = useAuthContext();
+  const navigate = useNavigate();
 
   const isDesktop = useResponsive("up", "lg");
 
@@ -90,7 +91,14 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Button variant="contained" sx={{ m: 2 }} onClick={logout}>
+      <Button
+        variant="contained"
+        sx={{ m: 2 }}
+        onClick={() => {
+          navigate("/login");
+          logout();
+        }}
+      >
         Logout
       </Button>
     </Scrollbar>
