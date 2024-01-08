@@ -343,6 +343,8 @@ export default function WithdrawAttendance(props: any) {
             name="remark"
             label="Remark"
             placeholder="Remark"
+            disabled
+            variant="filled"
             sx={{ width: "90%", margin: "auto" }}
           />
           <Stack
