@@ -25,6 +25,7 @@ import { useSnackbar } from "notistack";
 import Lottie from "lottie-react";
 import fingerScan from "../../../components/JsonAnimations/fingerprint-scan.json";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { fDateTime } from "src/utils/formatTime";
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ type FormValuesProps = {
 
 export default function WithdrawAttendance(props: any) {
   const { enqueueSnackbar } = useSnackbar();
-  const { user, UpdateUserDetail } = useAuthContext();
+  const { user, UpdateUserDetail, initialize } = useAuthContext();
   const theme = useTheme();
   const [message, setMessage] = useState("");
   const [arrofObj, setarrofObj] = useState<any>([]);
@@ -62,8 +63,8 @@ export default function WithdrawAttendance(props: any) {
   });
 
   const defaultValues = {
-    adhaar: "",
-    remark: "",
+    deviceName: "",
+    remark: `Pre-Withdrawal attendance, ${fDateTime(new Date())}`,
   };
 
   const methods = useForm<FormValuesProps>({
@@ -136,12 +137,13 @@ export default function WithdrawAttendance(props: any) {
         if (Response.data.code == 200) {
           enqueueSnackbar(Response.data.data.message);
           props.handleCloseAttendance();
-          props.attendance == "AP"
-            ? UpdateUserDetail({ attendanceAP: true })
-            : UpdateUserDetail({
-                presenceAt: Date.now(),
-              });
-          window.location.reload();
+          // props.attendance == "AP"
+          //   ? UpdateUserDetail({ attendanceAP: true })
+          //   : UpdateUserDetail({
+          //       presenceAt: Date.now(),
+          //     });
+          initialize();
+
           setMessage(Response.data.message);
         } else if (Response.data.responseCode == 410) {
           enqueueSnackbar(Response.data.err.message);

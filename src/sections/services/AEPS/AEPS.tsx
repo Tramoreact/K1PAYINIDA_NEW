@@ -620,11 +620,11 @@ export default function AEPS(props: any) {
   useEffect(() => {
     setTimeout(() => {
       setLocalAttendance(
-        Math.floor((user?.presenceAt + 150000 - Date.now()) / 1000)
+        Math.floor((+user?.presenceAt + 150000 - Date.now()) / 1000)
       );
       setAttend(true);
     }, 0);
-  }, []);
+  }, [user?.presenceAt]);
 
   useEffect(() => {
     localTime = setTimeout(() => {
@@ -651,7 +651,7 @@ export default function AEPS(props: any) {
       <Typography variant="h4"></Typography>
       {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (
         <RegistrationAeps />
-      ) : new Date(user?.presenceAt).toLocaleDateString() !==
+      ) : new Date(+user?.presenceAt).toLocaleDateString() !==
         new Date().toLocaleDateString() ? (
         <AttendenceAeps attendance={"AEPS"} />
       ) : (
