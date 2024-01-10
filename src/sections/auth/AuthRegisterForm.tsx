@@ -119,6 +119,7 @@ export default function AuthRegisterForm(props: any) {
   const [value2, setvalue2] = React.useState("agent");
   const [radioVal, setRadioVal] = React.useState("agent");
   const [refName, setRefName] = useState("");
+  const [refByCode, setRefByCode] = useState("");
   const [verifyLoad, setVerifyLoad] = useState(false);
   const [gOTP, setgOTP] = useState(false);
   const [refShow, setRefShow] = useState(false);
@@ -267,29 +268,36 @@ export default function AuthRegisterForm(props: any) {
   };
 
   const onSubmit = (data: FormValuesProps) => {
-    setFormValues({
-      ...formValues,
-      refCode: data.refCode,
-      mobileNumber: data.mobile,
-      email: data.email.toLowerCase(),
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    });
-    let body = {
-      email: data.email.toLowerCase(),
-      mobileNumber: data.mobile,
-    };
-    Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
-      console.log("=============>" + JSON.stringify(Response));
-      if (Response.status == 200) {
-        if (Response.data.code == 200) {
-          enqueueSnackbar(Response.data.message);
-          setgOTP(true);
-        } else {
-          enqueueSnackbar(Response.data.message);
+    if (
+      (value2 == "agent" && refByCode == "distributor") ||
+      (value2 == "distributor" && refByCode == "m_distributor")
+    ) {
+      setFormValues({
+        ...formValues,
+        refCode: data.refCode,
+        mobileNumber: data.mobile,
+        email: data.email.toLowerCase(),
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      });
+      let body = {
+        email: data.email.toLowerCase(),
+        mobileNumber: data.mobile,
+      };
+      Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
+        console.log("=============>" + JSON.stringify(Response));
+        if (Response.status == 200) {
+          if (Response.data.code == 200) {
+            enqueueSnackbar(Response.data.message);
+            setgOTP(true);
+          } else {
+            enqueueSnackbar(Response.data.message);
+          }
         }
-      }
-    });
+      });
+    } else {
+      enqueueSnackbar("Enter correct refcode ");
+    }
   };
 
   const openEditModal = (val: any) => {
@@ -330,6 +338,12 @@ export default function AuthRegisterForm(props: any) {
           setRefName(
             `${Response.data.data.firstName} ${Response.data.data.lastName}`
           );
+          setRefByCode(Response.data.data.role);
+          console.log(
+            ">>>>>>>>>>>>>>>>>>>ref>>>>>>>>>>>",
+            Response.data.data.role
+          );
+
           enqueueSnackbar(
             Response.data.message +
               ` ${Response.data.data.firstName} ${Response.data.data.lastName}`
