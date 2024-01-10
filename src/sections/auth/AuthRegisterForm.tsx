@@ -270,7 +270,8 @@ export default function AuthRegisterForm(props: any) {
   const onSubmit = (data: FormValuesProps) => {
     if (
       (value2 == "agent" && refByCode == "distributor") ||
-      (value2 == "distributor" && refByCode == "m_distributor")
+      (value2 == "distributor" && refByCode == "m_distributor") ||
+      value2 == "m_distributor"
     ) {
       setFormValues({
         ...formValues,
@@ -339,10 +340,6 @@ export default function AuthRegisterForm(props: any) {
             `${Response.data.data.firstName} ${Response.data.data.lastName}`
           );
           setRefByCode(Response.data.data.role);
-          console.log(
-            ">>>>>>>>>>>>>>>>>>>ref>>>>>>>>>>>",
-            Response.data.data.role
-          );
 
           enqueueSnackbar(
             Response.data.message +
