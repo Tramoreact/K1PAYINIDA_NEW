@@ -64,7 +64,7 @@ export default function WithdrawAttendance(props: any) {
 
   const defaultValues = {
     deviceName: "",
-    remark: `Pre-Withdrawal attendance, ${fDateTime(new Date())}`,
+    remark: `Attendance, ${fDateTime(new Date())}`,
   };
 
   const methods = useForm<FormValuesProps>({
@@ -143,7 +143,6 @@ export default function WithdrawAttendance(props: any) {
           //       presenceAt: Date.now(),
           //     });
           initialize();
-
           setMessage(Response.data.message);
         } else if (Response.data.responseCode == 410) {
           enqueueSnackbar(Response.data.err.message);
