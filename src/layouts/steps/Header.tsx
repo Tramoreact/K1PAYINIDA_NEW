@@ -14,6 +14,7 @@ import Iconify from "../../components/iconify";
 import { useSettingsContext } from "../../components/settings";
 import AccountPopover from "../dashboard/header/AccountPopover";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { useNavigate } from "react-router";
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,8 @@ type Props = {
 
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
+
+  const navigate = useNavigate();
 
   const { logout } = useAuthContext();
 
@@ -47,7 +50,13 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1.5 }}
       >
-        <Button variant="contained" onClick={logout}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate("/login");
+            logout();
+          }}
+        >
           Logout
         </Button>
       </Stack>
