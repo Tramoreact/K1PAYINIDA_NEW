@@ -16,6 +16,8 @@ import { useAuthContext } from "src/auth/useAuthContext";
 // ----------------------------------------------------------------------
 
 function NavHorizontal() {
+  const theme = useTheme();
+
   const { user } = useAuthContext();
 
   return (
@@ -28,14 +30,9 @@ function NavHorizontal() {
       }}
     >
       <Toolbar
-        // sx={{
-        //    ...bgBlur({
-        //     color: '#052542',
-        //   }),
-        // }}
         sx={{
           ...bgBlur({
-            color: "#052542",
+            color: theme.palette.background.default,
           }),
         }}
       >

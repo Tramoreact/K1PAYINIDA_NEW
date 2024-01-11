@@ -31,17 +31,13 @@ export const StyledItem = styled(ListItemButton, {
   };
 
   const activeSubStyle = {
-    color: theme.palette.primary.main,
+    color: theme.palette.text.primary,
     backgroundColor: "transparent",
   };
 
-  // const hoverStyle = {
-  //   color: theme.palette.text.primary,
-  //   backgroundColor: theme.palette.action.hover,
-  // };
   const hoverStyle = {
-    color: "white",
-    backgroundColor: "#ff4a4a38",
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.action.hover,
   };
 
   return {
@@ -49,8 +45,7 @@ export const StyledItem = styled(ListItemButton, {
     display: "inline-flex",
     textTransform: "capitalize",
     padding: theme.spacing(0, 0.75),
-    // color: theme.palette.text.secondary,
-    color: "white",
+    color: theme.palette.text.secondary,
     borderRadius: theme.shape.borderRadius,
     height: NAV.H_DASHBOARD_ITEM_HORIZONTAL,
     "&:hover": hoverStyle,
@@ -104,10 +99,9 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
     width: 160,
     pointerEvents: "auto",
     padding: theme.spacing(1),
-    marginTop: theme.spacing(0),
+    marginTop: theme.spacing(0.5),
     boxShadow: theme.customShadows.dropdown,
     borderRadius: Number(theme.shape.borderRadius) * 1.5,
-    // ...bgBlur({ color: theme.palette.background.default }),
-    ...bgBlur({ color: "#052542" }),
+    ...bgBlur({ color: theme.palette.background.default }),
   },
 }));

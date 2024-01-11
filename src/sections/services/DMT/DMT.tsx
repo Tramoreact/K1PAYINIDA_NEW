@@ -268,13 +268,7 @@ export default function DMT() {
             <Typography variant="caption">
               To comply with RBI guidelines, a valid sender mobile number is
               mandatory for money transfers. Please ensure you provide a valid
-              sender mobile number to proceed with the transaction. to know more{" "}
-              <a
-                href="https://tramo.in/domestic-money-transfer-guidelines/"
-                target="_tramo"
-              >
-                click here
-              </a>
+              sender mobile number to proceed with the transaction.
             </Typography>
             {remitter.remitterfetch && <DMTRemitterDetail />}
           </Grid>
