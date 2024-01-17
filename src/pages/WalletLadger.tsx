@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-
-// @mui
 import {
   Card,
   Stack,
@@ -8,19 +6,10 @@ import {
   TableHead,
   Modal,
   Button,
-  TextField,
+  tableCellClasses,
+  styled,
 } from "@mui/material";
-// redux
-// routes
-// components
-// sections
-
-import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-
-import * as Yup from "yup";
-// form
-
 import { useSnackbar } from "notistack";
 import DateRangePicker, {
   useDateRangePicker,
@@ -48,7 +37,7 @@ import { fDate, fDateTime } from "src/utils/formatTime";
 import { useAuthContext } from "src/auth/useAuthContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { Label } from '@mui/icons-material';
+
 // ----------------------------------------------------------------------
 
 type RowProps = {
@@ -71,7 +60,6 @@ export default function WalletLadger() {
   const { user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [ladgerData, setLadgerData] = useState([]);
-  const [refId, setRefId] = useState("");
   const [pageSize, setPageSize] = useState<any>(20);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [sendLoding, setSendLoading] = useState(false);
@@ -85,7 +73,7 @@ export default function WalletLadger() {
     { id: "productName", label: "Product/TransactionType " },
     { id: "walletType", label: "WalletType " },
     { id: "reason", label: "reason " },
-    { id: "remarks", label: "remarks" },
+
     { id: "walletId", label: "Wallet Id" },
   ];
   const distributortableLabels = [
@@ -96,7 +84,7 @@ export default function WalletLadger() {
     { id: "productName", label: "Product/TransactionType " },
     { id: "walletType", label: "WalletType " },
     { id: "reason", label: "reason " },
-    { id: "remarks", label: "remarks" },
+
     { id: "walletId", label: "Wallet Id" },
   ];
   const MDtableLabels = [
@@ -107,7 +95,7 @@ export default function WalletLadger() {
     { id: "productName", label: "Product/TransactionType " },
     { id: "walletType", label: "WalletType " },
     { id: "reason", label: "reason " },
-    { id: "remarks", label: "remarks" },
+    // { id: "remarks", label: "remarks" },
     { id: "walletId", label: "Wallet Id" },
   ];
 
@@ -146,20 +134,13 @@ export default function WalletLadger() {
           setWalletCount(Response.data.data.totalNumberOfRecords);
           enqueueSnackbar(Response.data.message);
           setSendLoading(false);
-          console.log(
-            "======getUser===data.data Transaction====>",
-            Response.data.data
-          );
         } else {
           enqueueSnackbar(Response.data.message);
-          console.log("======Transaction=======>" + Response);
           setSendLoading(false);
         }
       }
     });
   };
-
-  const filterWalletLadger = () => {};
 
   const ExportData = () => {
     let token = localStorage.getItem("token");
@@ -187,15 +168,10 @@ export default function WalletLadger() {
               "Response of the ==============walletLedger===========>",
               Response.data?.data?.data
             );
-
-            console.log("Dataapi", Dataapi);
-
             const formattedData = Response.data.data.data.map((item: any) => ({
               createdAt: new Date(item?.createdAt).toLocaleString(),
               client_ref_Id: item?.client_ref_Id,
-
               walletId: item?.walletId,
-
               "Opening Balance":
                 user?._id === item?.agentDetails?.id?._id
                   ? item?.agentDetails?.oldMainWalletBalance
@@ -262,24 +238,13 @@ export default function WalletLadger() {
         <title>Wallet Ladger | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
 
-      <Card>
+      <Stack sx={{ maxHeight: window.innerHeight - 220 }}>
         <Stack flexDirection={"row"} justifyContent={"end"}>
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={2}
             style={{ padding: "0 25px", marginBottom: "10px" }}
           >
-            <TextField
-              id="outlined-password-input"
-              label="Search By Ref Id"
-              size="small"
-              type="text"
-              onChange={(e) => setRefId(e.target.value)}
-            />
-            <Button variant="contained" onClick={() => filterWalletLadger()}>
-              Search
-            </Button>
-
             <FileFilterButton
               isSelected={!!isSelectedValuePicker}
               startIcon={<Iconify icon="eva:calendar-fill" />}
@@ -306,38 +271,39 @@ export default function WalletLadger() {
             </Button>
           </Stack>
         </Stack>
-        <Grid item xs={12} md={6} lg={8}>
-          <Scrollbar>
+        {sendLoding ? (
+          <ApiDataLoading />
+        ) : (
+          <Grid item xs={12} md={6} lg={8}>
             <TableContainer>
-              <Table
-                sx={{ minWidth: 720 }}
-                stickyHeader
-                aria-label="sticky table"
-              >
-                <TableHeadCustom
-                  headLabel={
-                    user?.role == "m_distributor"
-                      ? MDtableLabels
-                      : user?.role == "distributor"
-                      ? distributortableLabels
-                      : agenttableLabels
-                  }
-                />
-                {sendLoding ? (
-                  <ApiDataLoading />
-                ) : (
+              <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+                <Table
+                  sx={{ minWidth: 720 }}
+                  aria-label="customized table"
+                  stickyHeader
+                >
+                  <TableHeadCustom
+                    headLabel={
+                      user?.role == "m_distributor"
+                        ? MDtableLabels
+                        : user?.role == "distributor"
+                        ? distributortableLabels
+                        : agenttableLabels
+                    }
+                  />
+
                   <TableBody>
                     {Array.isArray(ladgerData) &&
                       ladgerData.map((row: any) => (
                         <LadgerRow key={row._id} row={row} />
                       ))}
                   </TableBody>
-                )}
-              </Table>
+                </Table>
+              </Scrollbar>
             </TableContainer>
-          </Scrollbar>
-        </Grid>
-      </Card>
+          </Grid>
+        )}
+      </Stack>
 
       <CustomPagination
         pageSize={pageSize}
@@ -408,27 +374,35 @@ const LadgerRow = ({ row }: any) => {
     );
   };
 
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "90%",
-    bgcolor: "#ffffff",
-    boxShadow: 24,
-    p: 4,
-  };
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 12,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(even)": {
+      backgroundColor: theme.palette.grey[300],
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  }));
 
   return (
     <>
-      <TableRow
+      <StyledTableRow
         key={row._id}
-        hover
         role="checkbox"
         tabIndex={-1}
         sx={{ borderBottom: "1px solid #dadada" }}
       >
-        <TableCell>
+        <StyledTableCell>
           <Typography
             variant="body2"
             sx={{ color: "text.secondary", cursor: "pointer" }}
@@ -438,23 +412,39 @@ const LadgerRow = ({ row }: any) => {
               : fDateTime(row?.transaction?.createdAt)}
           </Typography>
           <Typography variant="body2">{row?.walletId}</Typography>
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             {user?._id === row?.to?.id?._id ? (
               <>
-                <Typography> Name : {row?.to?.id?.firstName}</Typography>
-                <Typography>Role : {row?.to?.id?.role}</Typography>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Name :</Typography>
+                  <Typography variant="body2">
+                    {row?.to?.id?.firstName}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Role :</Typography>
+                  <Typography variant="body2">{row?.to?.id?.role}</Typography>
+                </Stack>
               </>
             ) : (
               <>
-                <Typography> Name : {row?.from?.id?.firstName}</Typography>
-                <Typography> Role : {row?.from?.id?.role}</Typography>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Name :</Typography>
+                  <Typography variant="body2">
+                    {row?.from?.id?.firstName}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Role :</Typography>
+                  <Typography variant="body2">{row?.from?.id?.role}</Typography>
+                </Stack>
               </>
             )}
           </Typography>
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             {user?._id === row?.to?.id?._id ? (
               <>
@@ -470,49 +460,64 @@ const LadgerRow = ({ row }: any) => {
               </>
             )}
           </Typography>
-        </TableCell>
-        <TableCell>
+        </StyledTableCell>
+        <StyledTableCell>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             {user?._id === row?.to?.id?._id ? (
               <>
-                <Typography>
-                  {" "}
-                  Opening :{row?.to?.oldMainWalletBalance?.toFixed(2)}
-                </Typography>
-
-                <Typography>
-                  Closing : {row?.to?.newMainWalletBalance?.toFixed(2)}
-                </Typography>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Opening :</Typography>
+                  <Typography variant="body2">
+                    {row?.to?.oldMainWalletBalance?.toFixed(2)}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Closing :</Typography>
+                  <Typography variant="body2">
+                    {row?.to?.newMainWalletBalance?.toFixed(2)}
+                  </Typography>
+                </Stack>
               </>
             ) : (
               <>
-                <Typography>
-                  {" "}
-                  Opening :{row?.from?.oldMainWalletBalance?.toFixed(2)}
-                </Typography>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Opening :</Typography>
+                  <Typography variant="body2">
+                    {row?.from?.oldMainWalletBalance?.toFixed(2)}
+                  </Typography>
+                </Stack>
 
-                <Typography>
-                  Closing : {row?.from?.newMainWalletBalance?.toFixed(2)}
-                </Typography>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="subtitle2">Closing :</Typography>
+                  <Typography variant="body2">
+                    {" "}
+                    {row?.from?.newMainWalletBalance?.toFixed(2)}
+                  </Typography>
+                </Stack>
               </>
             )}
           </Typography>
-        </TableCell>
+        </StyledTableCell>
 
-        <TableCell>
+        <StyledTableCell>
           {row?.transaction?.productName && (
-            <Typography variant="body1" sx={{ color: "text.secondary" }}>
-              {" "}
-              Product: {row?.transaction?.productName || "-"}
-            </Typography>
+            <Stack direction="row" gap={0.5}>
+              <Typography variant="subtitle2">Product :</Typography>
+              <Typography variant="body2">
+                {row?.transaction?.productName || "-"}
+              </Typography>
+            </Stack>
           )}
-          <Typography variant="body1" sx={{ color: "text.secondary" }}>
-            {" "}
-            Transaction Type: {row?.transaction?.transactionType}
-          </Typography>
-        </TableCell>
 
-        <TableCell>
+          <Stack direction="row" gap={0.5}>
+            <Typography variant="subtitle2">Transaction Type : </Typography>
+            <Typography variant="body2">
+              {row?.transaction?.transactionType}
+            </Typography>
+          </Stack>
+        </StyledTableCell>
+
+        <StyledTableCell>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             {user?._id === row?.to?.id?._id ? (
               <>
@@ -546,31 +551,27 @@ const LadgerRow = ({ row }: any) => {
               </>
             )}
           </Typography>
-        </TableCell>
+        </StyledTableCell>
 
-        <TableCell>
+        <StyledTableCell>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             {parseFloat(row?.reason) || "-"}
           </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography variant="body1" sx={{ color: "text.secondary" }}>
-            {parseFloat(row?.remarks) || "-"}
-          </Typography>
-        </TableCell>
+        </StyledTableCell>
+
         {row?.transaction?.clientRefId ? (
-          <TableCell onClick={() => openEditModal(row)}>
+          <StyledTableCell onClick={() => openEditModal(row)}>
             <Typography
               variant="body1"
               sx={{ color: "blue", textDecoration: "underline" }}
             >
               {row?.transaction?.clientRefId || "-"}
             </Typography>
-          </TableCell>
+          </StyledTableCell>
         ) : (
           "No Trasaction"
         )}
-      </TableRow>
+      </StyledTableRow>
 
       <Modal
         open={open}
@@ -608,218 +609,296 @@ const LadgerRow = ({ row }: any) => {
                     tabIndex={-1}
                     sx={{ borderBottom: "1px solid #dadada" }}
                   >
-                    {/* <TableCell>
-                      <Typography>{ToFromData?.transaction?.transactionType}</Typography>
-                      <Typography> {ToFromData?.transaction?.clientRefId || '-'}</Typography>
-                    </TableCell> */}
                     <TableCell>
                       {row?.transaction?.productName && (
-                        <Typography
-                          variant="body1"
-                          sx={{ color: "text.secondary" }}
-                        >
-                          {" "}
-                          Product: {row?.transaction?.productName || "-"}
-                        </Typography>
+                        <Stack direction="row" gap={0.5}>
+                          <Typography variant="subtitle2">Product:</Typography>
+                          <Typography variant="body2">
+                            {row?.transaction?.productName || "-"}
+                          </Typography>
+                        </Stack>
                       )}
-                      <Typography
-                        variant="body1"
-                        sx={{ color: "text.secondary" }}
-                      >
-                        {" "}
-                        Transaction Type: {row?.transaction?.transactionType}
-                      </Typography>
+
+                      <Stack gap={0.5}>
+                        <Typography variant="subtitle2">
+                          Transaction Type:
+                        </Typography>
+                        <Typography variant="body2">
+                          {row?.transaction?.transactionType}
+                        </Typography>
+                      </Stack>
                     </TableCell>
 
                     {user?.role == "agent" ? (
                       <>
                         <TableCell>
-                          Opening :{" "}
-                          <Typography>
-                            {" "}
-                            {ToFromData?.transaction?.agentDetails?.oldMainWalletBalance?.toFixed(
-                              2
-                            ) || "-"}
-                          </Typography>
-                          Closing :{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.agentDetails?.newMainWalletBalance?.toFixed(
-                              2
-                            )}
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Opening:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.agentDetails?.oldMainWalletBalance?.toFixed(
+                                2
+                              ) || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Closing:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.agentDetails?.newMainWalletBalance?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
                         </TableCell>
 
                         <TableCell>
-                          Commission{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.agentDetails
-                              ?.commissionAmount || "-"}
-                          </Typography>
-                          Credit :
-                          <Typography>
-                            {
-                              ToFromData?.transaction?.agentDetails
-                                ?.creditedAmount
-                            }
-                          </Typography>
-                          TDS:{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.agentDetails?.TDSAmount}
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Comm:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.agentDetails
+                                ?.commissionAmount || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Credit:</Typography>
+                            <Typography variant="body2">
+                              {
+                                ToFromData?.transaction?.agentDetails
+                                  ?.creditedAmount
+                              }
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">TDS:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.agentDetails?.TDSAmount?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
                         </TableCell>
                       </>
                     ) : user?.role == "distributor" ? (
                       <>
                         <TableCell>
-                          Opening :{" "}
-                          <Typography>
-                            {" "}
-                            {ToFromData?.transaction?.distributorDetails?.oldMainWalletBalance?.toFixed(
-                              2
-                            ) || "-"}
-                          </Typography>
-                          Closing :{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.distributorDetails?.newMainWalletBalance?.toFixed(
-                              2
-                            )}
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Opening:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.distributorDetails?.oldMainWalletBalance?.toFixed(
+                                2
+                              ) || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Closing:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.distributorDetails?.newMainWalletBalance?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
                         </TableCell>
 
                         <TableCell>
-                          Commission{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.distributorDetails
-                              ?.commissionAmount || "-"}
-                          </Typography>
-                          Credit :
-                          <Typography>
-                            {
-                              ToFromData?.transaction?.distributorDetails
-                                ?.creditedAmount
-                            }
-                          </Typography>
-                          TDS:{" "}
-                          <Typography>
-                            {
-                              ToFromData?.transaction?.distributorDetails
-                                ?.TDSAmount
-                            }
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Comm:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.distributorDetails
+                                ?.commissionAmount || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Credit:</Typography>
+                            <Typography variant="body2">
+                              {
+                                ToFromData?.transaction?.distributorDetails
+                                  ?.creditedAmount
+                              }
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">TDS:</Typography>
+                            <Typography variant="body2">
+                              {
+                                ToFromData?.transaction?.distributorDetails
+                                  ?.TDSAmount
+                              }
+                            </Typography>
+                          </Stack>
                         </TableCell>
                       </>
                     ) : (
                       <>
                         <TableCell>
-                          Opening :{" "}
-                          <Typography>
-                            {" "}
-                            {ToFromData?.transaction?.masterDistributorDetails?.oldMainWalletBalance?.toFixed(
-                              2
-                            ) || "-"}
-                          </Typography>
-                          Closing :{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.masterDistributorDetails?.newMainWalletBalance?.toFixed(
-                              2
-                            )}
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Opening:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.masterDistributorDetails?.oldMainWalletBalance?.toFixed(
+                                2
+                              ) || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">
+                              Closing:
+                            </Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.masterDistributorDetails?.newMainWalletBalance?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
                         </TableCell>
 
                         <TableCell>
-                          Commission{" "}
-                          <Typography>
-                            {ToFromData?.transaction?.masterDistributorDetails
-                              ?.commissionAmount || "-"}
-                          </Typography>
-                          Credit :
-                          <Typography>
-                            {
-                              ToFromData?.transaction?.masterDistributorDetails
-                                ?.creditedAmount
-                            }
-                          </Typography>
-                          TDS:{" "}
-                          <Typography>
-                            {
-                              ToFromData?.transaction?.masterDistributorDetails
-                                ?.TDSAmount
-                            }
-                          </Typography>
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Comm:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.masterDistributorDetails?.commissionAmount?.toFixed(
+                                2
+                              ) || "-"}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">Credit:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.masterDistributorDetails?.creditedAmount?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
+
+                          <Stack gap={0.5} direction="row">
+                            <Typography variant="subtitle2">TDS:</Typography>
+                            <Typography variant="body2">
+                              {ToFromData?.transaction?.masterDistributorDetails?.TDSAmount?.toFixed(
+                                2
+                              )}
+                            </Typography>
+                          </Stack>
                         </TableCell>
                       </>
                     )}
 
                     <TableCell>
-                      <Typography>
-                        {" "}
-                        Credit :{ToFromData?.transaction?.credit}
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        Debit :{ToFromData?.transaction?.debit}
-                      </Typography>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">Credit:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.credit?.toFixed(2)}
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">Debit:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.debit?.toFixed(2)}
+                        </Typography>
+                      </Stack>
                     </TableCell>
 
                     <TableCell>
-                      <Typography>
-                        {" "}
-                        TDS :{ToFromData?.transaction?.TDS}
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        GST : {ToFromData?.transaction?.GST}
-                      </Typography>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">TDS:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.TDS.toFixed(2)}
+                        </Typography>
+                      </Stack>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">GST:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.GST?.toFixed(2)}
+                        </Typography>
+                      </Stack>
                     </TableCell>
 
                     <TableCell>
-                      Status :{" "}
-                      <Typography>{ToFromData?.transaction?.status}</Typography>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">Status:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.status}
+                        </Typography>
+                      </Stack>
                     </TableCell>
 
                     <TableCell>
-                      Bank :{" "}
-                      <Typography>
-                        {
-                          ToFromData?.transaction
-                            ?.moneyTransferBeneficiaryDetails?.bankName
-                        }
-                      </Typography>
-                      Account Number :{" "}
-                      <Typography>
-                        {
-                          ToFromData?.transaction
-                            ?.moneyTransferBeneficiaryDetails?.accountNumber
-                        }
-                      </Typography>
-                      beneName :{" "}
-                      <Typography>
-                        {
-                          ToFromData?.transaction
-                            ?.moneyTransferBeneficiaryDetails?.beneName
-                        }
-                      </Typography>
-                      ifsc :{" "}
-                      <Typography>
-                        {
-                          ToFromData?.transaction
-                            ?.moneyTransferBeneficiaryDetails?.ifsc
-                        }
-                      </Typography>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">Bank:</Typography>
+                        <Typography variant="body2">
+                          {
+                            ToFromData?.transaction
+                              ?.moneyTransferBeneficiaryDetails?.bankName
+                          }
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">AccNumber:</Typography>
+                        <Typography variant="body2">
+                          {
+                            ToFromData?.transaction
+                              ?.moneyTransferBeneficiaryDetails?.accountNumber
+                          }
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">beneName:</Typography>
+                        <Typography variant="body2">
+                          {
+                            ToFromData?.transaction
+                              ?.moneyTransferBeneficiaryDetails?.beneName
+                          }
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">ifsc:</Typography>
+                        <Typography variant="body2">
+                          {
+                            ToFromData?.transaction
+                              ?.moneyTransferBeneficiaryDetails?.ifsc
+                          }
+                        </Typography>
+                      </Stack>
                     </TableCell>
                     <TableCell>
-                      Bank :{" "}
-                      <Typography>
-                        {ToFromData?.transaction?.operator?.key1}
-                      </Typography>
-                      IFSC :{" "}
-                      <Typography>
-                        {ToFromData?.transaction?.operator?.key2}
-                      </Typography>
-                      Account Number:{" "}
-                      <Typography>
-                        {ToFromData?.transaction?.operator?.key3}
-                      </Typography>
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">Bank:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.operator?.key1}
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">IFSC:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.operator?.key2}
+                        </Typography>
+                      </Stack>
+
+                      <Stack gap={0.5} direction="row">
+                        <Typography variant="subtitle2">AccNumber:</Typography>
+                        <Typography variant="body2">
+                          {ToFromData?.transaction?.operator?.key3}
+                        </Typography>
+                      </Stack>
                     </TableCell>
                     <TableCell>
                       <Typography>
