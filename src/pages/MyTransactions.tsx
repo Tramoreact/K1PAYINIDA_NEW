@@ -527,14 +527,16 @@ function TransactionRow({ row }: childProps) {
   const CheckTransactionStatus = (row: any) => {
     setLoading(true);
     let token = localStorage.getItem("token");
-    let rowFor = row.categoryName.toLowerCase();
+    let rowFor = row
     Api(
-      rowFor.toLowerCase() == "money transfer"
-        ? `moneyTransfer/checkStatus/` + row._id
-        : rowFor.toLowerCase() == "recharges"
-        ? `agents/v1/checkStatus/` + row._id
-        : rowFor.toLowerCase() == "dmt2" &&
-          `dmt2/transaction/status/` + row._id,
+      rowFor.categoryName.toLowerCase() == "money transfer"
+        ? `moneyTransfer/checkStatus/` + rowFor._id
+        : rowFor.categoryName.toLowerCase() == "recharges"
+          ? `agents/v1/checkStatus/` + rowFor._id
+          : rowFor.categoryName.toLowerCase() == "dmt2"
+            ? `dmt2/transaction/status/` + rowFor._id
+            : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
+            `settlement/checkStatus/` + rowFor._id,
       "GET",
       "",
       token
