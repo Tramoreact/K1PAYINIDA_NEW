@@ -37,6 +37,7 @@ export default function Header({ isOffset }: Props) {
             },
           }),
         }}
+        variant="dense"
       >
         <Logo />
 

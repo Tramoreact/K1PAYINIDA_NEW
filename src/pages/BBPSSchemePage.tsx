@@ -17,6 +17,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  styled,
+  tableCellClasses,
 } from "@mui/material";
 import { TableHeadCustom } from "src/components/table";
 import CustomPagination from "../components/customFunctions/CustomPagination";
@@ -33,6 +35,7 @@ import FormProvider, {
   RHFTextField,
 } from "../components/hook-form";
 import { useAuthContext } from "src/auth/useAuthContext";
+import Scrollbar from "src/components/scrollbar/Scrollbar";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -45,7 +48,7 @@ export default function BBPSSchemePage() {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(30);
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [tempTableData, setTempTableData] = useState([]);
@@ -295,29 +298,35 @@ export default function BBPSSchemePage() {
               </FormProvider>
 
               <TableContainer sx={{ overflow: "unset" }}>
-                <Table sx={{ minWidth: 720 }}>
-                  <TableHeadCustom
-                    headLabel={
-                      user?.role?.toLowerCase() == "m_distributor"
-                        ? tableLabels
-                        : user?.role?.toLowerCase() == "distributor"
-                        ? tableLabels1
-                        : tableLabels2
-                    }
-                  />
+                <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+                  <Table
+                    sx={{ minWidth: 720 }}
+                    stickyHeader
+                    aria-label="customized table"
+                  >
+                    <TableHeadCustom
+                      headLabel={
+                        user?.role?.toLowerCase() == "m_distributor"
+                          ? tableLabels
+                          : user?.role?.toLowerCase() == "distributor"
+                          ? tableLabels1
+                          : tableLabels2
+                      }
+                    />
 
-                  <TableBody sx={{ overflow: "auto" }}>
-                    {tempTableData.map((row: any) => {
-                      return (
-                        <SchemeRow
-                          key={row._id}
-                          row={row}
-                          rowDetail={user?.role}
-                        />
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                    <TableBody sx={{ overflow: "auto" }}>
+                      {tempTableData.map((row: any) => {
+                        return (
+                          <SchemeRow
+                            key={row._id}
+                            row={row}
+                            rowDetail={user?.role}
+                          />
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
               </TableContainer>
             </>
           )}
@@ -339,73 +348,94 @@ export default function BBPSSchemePage() {
 const SchemeRow = ({ row, rowDetail }: any) => {
   const [item, setItem] = useState(row);
 
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 12,
+      padding: 6,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(even)": {
+      backgroundColor: theme.palette.grey[300],
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  }));
+
   return (
-    <TableRow hover>
-      <TableCell>{item?.minSlab}</TableCell>
-      <TableCell>{item?.maxSlab}</TableCell>
-      <TableCell>{item?.subCategoryName}</TableCell>
-      <TableCell>{item?.product?.productName}</TableCell>
+    <StyledTableRow>
+      <StyledTableCell>{item?.minSlab}</StyledTableCell>
+      <StyledTableCell>{item?.maxSlab}</StyledTableCell>
+      <StyledTableCell>{item?.subCategoryName}</StyledTableCell>
+      <StyledTableCell>{item?.product?.productName}</StyledTableCell>
 
       {rowDetail == "m_distributor" && (
         <>
-          <TableCell>
+          <StyledTableCell>
             {item?.agentCommissionType == "flat"
               ? "Rs."
               : item?.agentCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.agentCommission}</TableCell>
-          <TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.agentCommission}</StyledTableCell>
+          <StyledTableCell>
             {item?.distributorCommissionType == "flat"
               ? "Rs."
               : item?.distributorCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.distributorCommission}</TableCell>
-          <TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.distributorCommission}</StyledTableCell>
+          <StyledTableCell>
             {item?.masterDistributorCommissionType == "flat"
               ? "Rs."
               : item?.masterDistributorCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.masterDistributorCommission}</TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.masterDistributorCommission}</StyledTableCell>
         </>
       )}
       {rowDetail == "distributor" && (
         <>
-          <TableCell>
+          <StyledTableCell>
             {item?.agentCommissionType == "flat"
               ? "Rs."
               : item?.agentCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.agentCommission}</TableCell>
-          <TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.agentCommission}</StyledTableCell>
+          <StyledTableCell>
             {item?.distributorCommissionType == "flat"
               ? "Rs."
               : item?.distributorCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.distributorCommission}</TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.distributorCommission}</StyledTableCell>
         </>
       )}
       {rowDetail == "agent" && (
         <>
-          <TableCell>
+          <StyledTableCell>
             {item?.agentCommissionType == "flat"
               ? "Rs."
               : item?.agentCommissionType == "percentage"
               ? "%"
               : "-"}
-          </TableCell>
-          <TableCell>{item?.agentCommission}</TableCell>
+          </StyledTableCell>
+          <StyledTableCell>{item?.agentCommission}</StyledTableCell>
         </>
       )}
-    </TableRow>
+    </StyledTableRow>
   );
 };
