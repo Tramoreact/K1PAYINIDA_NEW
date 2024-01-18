@@ -26,6 +26,8 @@ import { Api } from "src/webservices";
 import NPinReset from "../Settings/NPinReset";
 import { LoadingButton } from "@mui/lab";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { PATH_DASHBOARD } from "src/routes/paths";
+import { useNavigate } from "react-router";
 
 type FormValuesProps = {
   amount: string;
@@ -101,6 +103,7 @@ type childProps = {
 };
 
 const SettlementToBank = ({ userBankList }: childProps) => {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user, UpdateUserDetail } = useAuthContext();
   const [eligibleSettlementAmount, setEligibleSettlementAmount] = useState("");
@@ -145,6 +148,11 @@ const SettlementToBank = ({ userBankList }: childProps) => {
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
   } = methods;
+
+
+  function goTomybankaccount() {
+    navigate(PATH_DASHBOARD.fundmanagement.mybankaccount);
+  }
 
   useEffect(() => {
     getEligibleSettlementAmount();
@@ -195,6 +203,7 @@ const SettlementToBank = ({ userBankList }: childProps) => {
   return (
     <Box style={{ borderRadius: "20px" }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(settleToBank)}>
+      {userBankList.length ? (
         <Scrollbar sx={{ maxHeight: 600, pr: 1 }}>
           <Grid
             rowGap={3}
@@ -294,6 +303,11 @@ const SettlementToBank = ({ userBankList }: childProps) => {
             </Stack>
           </Grid>
         </Scrollbar>
+        ) : (
+          <Stack sx={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 20 }}>
+            <LoadingButton variant="contained" onClick={goTomybankaccount}>Add New Bank Account</LoadingButton>
+          </Stack>
+        )}
       </FormProvider>
     </Box>
   );
