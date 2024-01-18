@@ -46,6 +46,7 @@ import AllRequests from "./AllRequests";
 import Image from "src/components/image/Image";
 import neodeposit from "../../assets/icons/neodeposit.svg";
 import { convertToWords } from "src/components/customFunctions/ToWords";
+import Scrollbar from "src/components/scrollbar/Scrollbar";
 
 type FormValuesProps = {
   rupee: string;
@@ -258,214 +259,213 @@ function MyFundDeposits() {
 
   return (
     <>
-      <Grid
-        sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}
-      >
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Scrollbar sx={{ maxHeight: window.innerHeight - 100, p: 2 }}>
+        <Grid
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 2,
+          }}
+        >
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Card
+              sx={{
+                bgcolor: "#00000",
+                boxShadow: "5",
+                borderRadius: "10px",
+                p: 2,
+              }}
+            >
+              <Stack gap={1}>
+                <Tabs value={"active"} aria-label="basic tabs example">
+                  <Tab
+                    sx={{ mx: 1, textAlign: "start" }}
+                    value={"active"}
+                    label={
+                      <Grid
+                        display={"grid"}
+                        gridTemplateColumns={"repeat(2, auto)"}
+                        gap={1}
+                        alignItems={"center"}
+                      >
+                        <Image
+                          src={neodeposit}
+                          alt=""
+                          sx={{ width: 30, height: 30, objectFit: "cover" }}
+                        />
+                        <Stack>
+                          <Typography variant="h5">
+                            {"New Fund Request"}
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                    }
+                  />
+                </Tabs>
+
+                <FormControl variant="outlined" size="small">
+                  <InputLabel id="data-select-label">Select Bank</InputLabel>
+                  <Select
+                    labelId="data-select-label"
+                    id="data-select"
+                    value={selectedItem}
+                    onChange={handleSelectChange}
+                    label="Select an Bank"
+                  >
+                    {dataB.map((item: any) => (
+                      <MenuItem key={item._id} value={item}>
+                        {item.bank_details.bank_name}{" "}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl variant="outlined" size="small">
+                  <InputLabel id="data-select-label">Select Mode</InputLabel>
+                  <Select
+                    labelId="data-select-label"
+                    id="data-select"
+                    value={selectedModes}
+                    onChange={handleSelectModes}
+                    label="Select Mode"
+                  >
+                    {selectedMode.map((item: any) => (
+                      <MenuItem key={item._id} value={item}>
+                        {item.modeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Stack>
+                  {(minAmount || maxAmount) && (
+                    <Typography variant="overline" display="block" gutterBottom>
+                      Min Amount :{minAmount} And Max Amount : {maxAmount}
+                    </Typography>
+                  )}
+                  <RHFTextField name="amount" label="Amount" />
+                  {selectedModes?.transactionFeeValue && (
+                    <Typography variant="overline" display="block" gutterBottom>
+                      {/* Charge : {newAmmount} */}
+                      {selectedModes.transactionFeeType === "Charge" &&
+                      selectedModes?.transactionFeeValue?.for_Agent > 0 ? (
+                        <>
+                          <Stack direction="row" gap={6}>
+                            <Typography color={"red"}>
+                              Charge :{" "}
+                              {selectedModes?.transactionFeeValue?.for_Agent}{" "}
+                            </Typography>{" "}
+                            <Typography textAlign="end">
+                              {convertToWords(+watch("amount"))}
+                            </Typography>
+                          </Stack>
+                        </>
+                      ) : selectedModes.transactionFeeType === "Commission" &&
+                        selectedModes?.transactionFeeValue?.for_Agent > 0 ? (
+                        <>
+                          <Stack direction="row" gap={1}>
+                            <Typography color={"green"} variant="caption">
+                              {" "}
+                              Commission :{" "}
+                              {
+                                selectedModes?.transactionFeeValue?.for_Agent
+                              }{" "}
+                            </Typography>
+                            <Typography textAlign="end" variant="caption">
+                              {convertToWords(+watch("amount"))}
+                            </Typography>
+                          </Stack>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </Typography>
+                  )}
+                </Stack>
+                <RHFTextField
+                  type="number"
+                  name="mobile"
+                  label="Registered Mobile Number"
+                />
+                <Stack flexDirection={"row"} gap={1}>
+                  <RHFTextField name="branch" label="Branch" />
+                  <RHFTextField name="trxID" label="TRXID" />
+                </Stack>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DesktopDatePicker
+                    label="Date "
+                    inputFormat="DD/MM/YYYY"
+                    maxDate={dayjs(new Date())}
+                    minDate={dayjs(
+                      new Date().setDate(new Date().getDate() - 4)
+                    )}
+                    value={selectedDate}
+                    onChange={handleChange}
+                    renderInput={(params: any) => (
+                      <TextField {...params} sx={{ size: "small" }} />
+                    )}
+                  />
+                </LocalizationProvider>
+                <Stack>
+                  <Typography>Upload Receipt</Typography>
+                  <Upload
+                    file={uploadFile}
+                    onDrop={handleDropSingleFile}
+                    onDelete={() => setUploadFile(null)}
+                  />
+                  {uploadFile && (
+                    <Stack flexDirection={"row"} mt={1}>
+                      {success == "upload" && (
+                        <LoadingButton
+                          variant="contained"
+                          component="span"
+                          style={{ width: "fit-content" }}
+                          onClick={() => uploadDoc()}
+                        >
+                          Upload File
+                        </LoadingButton>
+                      )}
+                    </Stack>
+                  )}
+                </Stack>
+
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting || verifyLoding}
+                >
+                  Submit
+                </LoadingButton>
+
+                {/*  */}
+              </Stack>
+            </Card>
+          </FormProvider>
           <Stack
-            borderRadius={"10px"}
             sx={{
               bgcolor: "#00000",
               boxShadow: "5",
-              px: 2,
-              display: "grid",
-              gap: 1,
             }}
+            borderRadius={"10px"}
+            textAlign={"left"}
+            gap={2}
           >
-            <Tabs value={"active"} aria-label="basic tabs example">
-              <Tab
-                sx={{ mx: 3, textAlign: "start" }}
-                value={"active"}
-                label={
-                  <Grid
-                    display={"grid"}
-                    gridTemplateColumns={"repeat(2, auto)"}
-                    gap={1}
-                    alignItems={"center"}
-                  >
-                    <Image
-                      src={neodeposit}
-                      alt=""
-                      sx={{ width: 30, height: 30, objectFit: "cover" }}
-                    />
-                    <Stack>
-                      <Typography variant="h5">{"New Fund Request"}</Typography>
-                    </Stack>
-                  </Grid>
-                }
-              />
-            </Tabs>
-
-            <FormControl variant="outlined" size="small">
-              <InputLabel id="data-select-label">Select Bank</InputLabel>
-
-              {/* {verifyLoding ? (
-                <ApiDataLoading />
-              ) : ( */}
-              <Select
-                labelId="data-select-label"
-                id="data-select"
-                value={selectedItem}
-                onChange={handleSelectChange}
-                label="Select an Bank"
-              >
-                {dataB.map((item: any) => (
-                  <MenuItem key={item._id} value={item}>
-                    {item.bank_details.bank_name}{" "}
-                  </MenuItem>
-                ))}
-              </Select>
-              {/* )} */}
-            </FormControl>
-
-            <FormControl variant="outlined" size="small">
-              <InputLabel id="data-select-label">Select Mode</InputLabel>
-              <Select
-                labelId="data-select-label"
-                id="data-select"
-                value={selectedModes}
-                onChange={handleSelectModes}
-                label="Select Mode"
-              >
-                {selectedMode.map((item: any) => (
-                  <MenuItem key={item._id} value={item}>
-                    {item.modeName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Stack>
-              <Typography variant="overline" display="block" gutterBottom>
-                Min Amount :{minAmount} And Max Amount : {maxAmount}
-              </Typography>
-              <RHFTextField name="amount" label="Amount" />
-              {selectedModes?.transactionFeeValue && (
-                <Typography variant="overline" display="block" gutterBottom>
-                  {/* Charge : {newAmmount} */}
-                  {selectedModes.transactionFeeType === "Charge" &&
-                  selectedModes?.transactionFeeValue?.for_Agent > 0 ? (
-                    <>
-                      {" "}
-                      <Stack direction="row" gap={6}>
-                        <Typography color={"red"}>
-                          Charge :{" "}
-                          {selectedModes?.transactionFeeValue?.for_Agent}{" "}
-                        </Typography>{" "}
-                        <Typography textAlign="end">
-                          {convertToWords(+watch("amount"))}
-                        </Typography>
-                      </Stack>
-                    </>
-                  ) : selectedModes.transactionFeeType === "Commission" &&
-                    selectedModes?.transactionFeeValue?.for_Agent > 0 ? (
-                    <>
-                      <Stack direction="row" gap={6}>
-                        <Typography color={"green"}>
-                          {" "}
-                          Commission :{" "}
-                          {selectedModes?.transactionFeeValue?.for_Agent}{" "}
-                        </Typography>
-                        <Typography textAlign="end">
-                          {convertToWords(+watch("amount"))}
-                        </Typography>
-                      </Stack>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </Typography>
-              )}
-            </Stack>
-            <RHFTextField
-              type="number"
-              name="mobile"
-              label="Registered Mobile Number"
-            />
-            <Stack flexDirection={"row"} gap={2}>
-              <RHFTextField name="branch" label="Branch" />
-              <RHFTextField name="trxID" label="TRXID" />
-            </Stack>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                label="Date "
-                inputFormat="DD/MM/YYYY"
-                maxDate={dayjs(new Date())}
-                minDate={dayjs(new Date().setDate(new Date().getDate() - 4))}
-                value={selectedDate}
-                onChange={handleChange}
-                renderInput={(params: any) => (
-                  <TextField {...params} sx={{ size: "small" }} />
-                )}
-              />
-            </LocalizationProvider>
-            <Stack>
-              <Stack>Upload Receipt</Stack>
-              <Upload
-                file={uploadFile}
-                onDrop={handleDropSingleFile}
-                onDelete={() => setUploadFile(null)}
-              />
-              <Stack
-                flexDirection={"row"}
-                mt={2}
-                style={
-                  uploadFile != null
-                    ? { visibility: "visible" }
-                    : { visibility: "hidden" }
-                }
-              >
-                {success == "upload" ? (
-                  <LoadingButton
-                    variant="contained"
-                    component="span"
-                    style={{ width: "fit-content" }}
-                    onClick={() => uploadDoc()}
-                  >
-                    Upload File
-                  </LoadingButton>
-                ) : (
-                  ""
-                )}
-              </Stack>
-            </Stack>
-
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              loading={isSubmitting || verifyLoding}
-              sx={{ mt: 1 }}
-            >
-              Submit
-            </LoadingButton>
-
-            {/*  */}
+            <AllBankDetails />
           </Stack>
-        </FormProvider>
-        <Stack
-          sx={{
-            bgcolor: "#00000",
-            boxShadow: "5",
-          }}
-          borderRadius={"10px"}
-          textAlign={"left"}
-          gap={2}
-        >
-          <AllBankDetails />
-        </Stack>
 
-        <Stack
-          sx={{
-            bgcolor: "#00000",
-            boxShadow: "5",
-          }}
-          borderRadius={"10px"}
-          textAlign={"left"}
-          gap={2}
-        >
-          <InstantDepositAccount />
-        </Stack>
-      </Grid>
-      <Grid>
+          <Stack
+            sx={{
+              bgcolor: "#00000",
+              boxShadow: "5",
+            }}
+            borderRadius={"10px"}
+            textAlign={"left"}
+            gap={2}
+          >
+            <InstantDepositAccount />
+          </Stack>
+        </Grid>
+      </Scrollbar>
+      {/* <Grid>
         <Stack
           sx={{
             bgcolor: "#00000",
@@ -477,7 +477,7 @@ function MyFundDeposits() {
         >
           <AllRequests requestRaise={requestRaise} banklist={dataB} />
         </Stack>
-      </Grid>
+      </Grid> */}
     </>
   );
 }

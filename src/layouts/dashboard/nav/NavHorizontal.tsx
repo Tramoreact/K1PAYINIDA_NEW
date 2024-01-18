@@ -35,6 +35,7 @@ function NavHorizontal() {
             color: theme.palette.background.default,
           }),
         }}
+        variant="dense"
       >
         <NavSectionHorizontal
           data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
