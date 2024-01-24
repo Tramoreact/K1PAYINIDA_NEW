@@ -13,6 +13,7 @@ import {
   BillPayment,
   Recharges,
 } from "../sections/services";
+import ServiceUnderUpdate from "./ServiceUnderUpdate";
 
 // ----------------------------------------------------------------------
 
@@ -84,9 +85,10 @@ export default function Services(props: any) {
           (tab: any) =>
             tab.category_name == superCurrentTab && (
               <CategoryContext.Provider value={tab} key={tab.category_name}>
-                <Box sx={{ m: 3 }}>
+                <Box sx={{ m: 1 }}>
                   {superCurrentTab.toLowerCase() == "recharges" ? (
-                    <Recharges supCategory={tab} />
+                    // <Recharges supCategory={tab} />
+                    <ServiceUnderUpdate />
                   ) : superCurrentTab.toLowerCase() == "money transfer" ? (
                     <DMT />
                   ) : superCurrentTab.toLowerCase() == "aeps" ? (
@@ -94,13 +96,16 @@ export default function Services(props: any) {
                   ) : superCurrentTab.toLowerCase() == "indo nepal" ? (
                     <IndoNepal supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "bill payment" ? (
-                    <BillPayment supCategory={tab} />
+                    // <BillPayment supCategory={tab} />
+                    <ServiceUnderUpdate />
                   ) : superCurrentTab.toLowerCase() == "aadhaar pay" ? (
-                    <AadharPay supCategory={tab} />
+                    // <AadharPay supCategory={tab} />
+                    <ServiceUnderUpdate />
                   ) : superCurrentTab.toLowerCase() == "matm" ? (
                     <MATM supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "dmt1" ? (
-                    <DMT1 supCategory={tab} />
+                    // <DMT1 supCategory={tab} />
+                    <ServiceUnderUpdate />
                   ) : superCurrentTab.toLowerCase() == "dmt2" ? (
                     <DMT2 />
                   ) : null}

@@ -483,6 +483,31 @@ const LadgerRow = ({ row }: any) => {
               </>
             )}
           </Typography>
+          {user?.role === "agent" && (
+            <Typography variant="subtitle2" sx={{ color: "green" }}>
+              Commission :{" "}
+              {fCurrency(row?.transaction?.agentDetails?.commissionAmount)}
+            </Typography>
+          )}
+
+          {user?.role === "distributor" && (
+            <Typography variant="subtitle2">
+              Commission :{" "}
+              {fCurrency(
+                row?.transaction?.distributorDetails?.commissionAmount
+              )}
+            </Typography>
+          )}
+
+          {user?.role === "masterdistributor" && (
+            <Typography variant="subtitle2">
+              {" "}
+              Commission :{" "}
+              {fCurrency(
+                row?.transaction?.masterDistributorDetails?.commissionAmount
+              )}
+            </Typography>
+          )}
         </StyledTableCell>
 
         {row?.transaction?.clientRefId ? (

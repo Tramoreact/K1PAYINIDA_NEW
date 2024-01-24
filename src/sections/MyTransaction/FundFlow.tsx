@@ -224,7 +224,7 @@ export default function FundFlow() {
             fontSize: "20px",
           }}
         >
-          <Tabs
+          {/* <Tabs
             value={superCurrentTab}
             variant="scrollable"
             scrollButtons={false}
@@ -243,7 +243,7 @@ export default function FundFlow() {
                 }}
               />
             ))}
-          </Tabs>
+          </Tabs> */}
         </Box>
       </Box>
       <Stack flexDirection={"row"} justifyContent={"end"}>

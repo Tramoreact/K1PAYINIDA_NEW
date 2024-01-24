@@ -59,6 +59,7 @@ import Logo from "src/components/logo/Logo";
 import { fCurrency } from "src/utils/formatNumber";
 import useCopyToClipboard from "src/hooks/useCopyToClipboard";
 import { Icon } from "@iconify/react";
+import useResponsive from "src/hooks/useResponsive";
 
 // ----------------------------------------------------------------------
 
@@ -66,11 +67,13 @@ type FormValuesProps = {
   status: string;
   clientRefId: string;
   category: string;
+  product: string;
 };
 
 export default function MyTransactions() {
+  let token = localStorage.getItem("token");
+  const isMobile = useResponsive("up", "sm");
   const { user } = useAuthContext();
-  const { copy } = useCopyToClipboard();
   const { enqueueSnackbar } = useSnackbar();
   const [Loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -78,6 +81,7 @@ export default function MyTransactions() {
   const [categoryList, setCategoryList] = useState([]);
   const [sdata, setSdata] = useState([]);
   const [pageSize, setPageSize] = useState<any>(20);
+  const [ProductList, setProductList] = useState([]);
 
   const txnSchema = Yup.object().shape({
     status: Yup.string(),
@@ -88,6 +92,7 @@ export default function MyTransactions() {
     category: "",
     status: "",
     clientRefId: "",
+    product: "",
   };
 
   const methods = useForm<FormValuesProps>({
@@ -121,8 +126,19 @@ export default function MyTransactions() {
     shortLabel,
   } = useDateRangePicker(new Date(), new Date());
 
+  const getProductlist = (val: string) => {
+    Api(`product/get_ProductList/${val}`, "GET", "", token).then(
+      (Response: any) => {
+        if (Response.status == 200) {
+          if (Response.data.code == 200) {
+            setProductList(Response.data.data);
+          }
+        }
+      }
+    );
+  };
+
   const getCategoryList = () => {
-    let token = localStorage.getItem("token");
     Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
       if (Response.status == 200) {
         if (Response.data.code == 200) {
@@ -134,7 +150,6 @@ export default function MyTransactions() {
 
   const getTransaction = () => {
     setLoading(true);
-    let token = localStorage.getItem("token");
     let body = {
       pageInitData: {
         pageSize: pageSize,
@@ -143,6 +158,7 @@ export default function MyTransactions() {
       clientRefId: getValues("clientRefId"),
       status: getValues("status"),
       transactionType: "",
+      productId: getValues("product") || "",
       categoryId: getValues("category"),
     };
 
@@ -167,11 +183,10 @@ export default function MyTransactions() {
   };
 
   const filterTransaction = async (data: FormValuesProps) => {
+    setCurrentPage(1);
     try {
       setSdata([]);
-      setCurrentPage(1);
       setLoading(true);
-      let token = localStorage.getItem("token");
       let body = {
         pageInitData: {
           pageSize: pageSize,
@@ -181,6 +196,7 @@ export default function MyTransactions() {
         status: data.status,
         transactionType: "",
         categoryId: data.category,
+        productId: data.product,
       };
       await Api(`transaction/transactionByUser`, "POST", body, token).then(
         (Response: any) => {
@@ -277,7 +293,7 @@ export default function MyTransactions() {
               const Dataapi = Response.data.data.data;
               console.log("Dataapi", Dataapi);
 
-              const formattedData = Response.data.data.data.map(
+              const formattedData = Response.data?.data?.data.map(
                 (item: any) => ({
                   createdAt: new Date(item?.createdAt).toLocaleString(),
                   client_ref_Id: item?.client_ref_Id,
@@ -350,11 +366,7 @@ export default function MyTransactions() {
                 "======getUser===data.data ===Transaction====>",
                 Response
               );
-            } else {
-              enqueueSnackbar("Data Not Found ");
             }
-          } else {
-            console.log("======Transaction=======>" + Response);
           }
         }
       }
@@ -378,9 +390,13 @@ export default function MyTransactions() {
             gap={1}
           >
             <Stack
-              flexDirection={{ xs: "column", sm: "row" }}
-              flexBasis={{ xs: "100%", sm: "50%" }}
-              gap={1}
+              rowGap={1}
+              columnGap={1}
+              display="grid"
+              gridTemplateColumns={{
+                xs: "repeat(2, 1fr)",
+                sm: "repeat(5, 1fr)",
+              }}
             >
               <RHFSelect
                 name="category"
@@ -390,10 +406,31 @@ export default function MyTransactions() {
                   sx: { textTransform: "capitalize" },
                 }}
               >
-                <MenuItem value="">None</MenuItem>
+                <MenuItem value="">All</MenuItem>
                 {categoryList.map((item: any) => {
                   return (
-                    <MenuItem value={item._id}>{item?.category_name}</MenuItem>
+                    <MenuItem
+                      key={item._id}
+                      value={item._id}
+                      onClick={() => getProductlist(item._id)}
+                    >
+                      {item?.category_name}
+                    </MenuItem>
+                  );
+                })}
+              </RHFSelect>
+              <RHFSelect
+                name="product"
+                label="Product"
+                SelectProps={{
+                  native: false,
+                  sx: { textTransform: "capitalize" },
+                }}
+              >
+                <MenuItem value="">All</MenuItem>
+                {ProductList.map((item: any) => {
+                  return (
+                    <MenuItem value={item._id}>{item?.productName}</MenuItem>
                   );
                 })}
               </RHFSelect>
@@ -468,7 +505,13 @@ export default function MyTransactions() {
             {Loading ? (
               <ApiDataLoading />
             ) : (
-              <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+              <Scrollbar
+                sx={
+                  isMobile
+                    ? { maxHeight: window.innerHeight - 190 }
+                    : { maxHeight: window.innerHeight - 250 }
+                }
+              >
                 <Table size="small" aria-label="customized table" stickyHeader>
                   <TableHeadCustom
                     headLabel={
@@ -527,16 +570,16 @@ function TransactionRow({ row }: childProps) {
   const CheckTransactionStatus = (row: any) => {
     setLoading(true);
     let token = localStorage.getItem("token");
-    let rowFor = row
+    let rowFor = row;
     Api(
       rowFor.categoryName.toLowerCase() == "money transfer"
         ? `moneyTransfer/checkStatus/` + rowFor._id
         : rowFor.categoryName.toLowerCase() == "recharges"
-          ? `agents/v1/checkStatus/` + rowFor._id
-          : rowFor.categoryName.toLowerCase() == "dmt2"
-            ? `dmt2/transaction/status/` + rowFor._id
-            : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
-            `settlement/checkStatus/` + rowFor._id,
+        ? `agents/v1/checkStatus/` + rowFor._id
+        : rowFor.categoryName.toLowerCase() == "dmt2"
+        ? `dmt2/transaction/status/` + rowFor._id
+        : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
+          `settlement/checkStatus/` + rowFor._id,
       "GET",
       "",
       token
