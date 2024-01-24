@@ -452,7 +452,7 @@ export default function AEPS(props: any) {
         } else {
           handleCloseLoading();
           handleOpenError();
-          setFailedMessage("Internal Server Error");
+          setFailedMessage("Failed");
         }
       }
     );
