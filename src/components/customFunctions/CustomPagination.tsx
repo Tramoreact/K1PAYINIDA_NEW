@@ -6,7 +6,7 @@ export default function CustomPagination({ Count, pageSize, ...other }: any) {
     <Stack
       sx={{
         position: "fixed",
-        bottom: 10,
+        bottom: 5,
         left: "50%",
         transform: "translate(-50%)",
         bgcolor: "white",

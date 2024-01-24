@@ -59,6 +59,7 @@ import Logo from "src/components/logo/Logo";
 import { fCurrency } from "src/utils/formatNumber";
 import useCopyToClipboard from "src/hooks/useCopyToClipboard";
 import { Icon } from "@iconify/react";
+import useResponsive from "src/hooks/useResponsive";
 
 // ----------------------------------------------------------------------
 
@@ -70,8 +71,9 @@ type FormValuesProps = {
 };
 
 export default function MyTransactions() {
+  let token = localStorage.getItem("token");
+  const isMobile = useResponsive("up", "sm");
   const { user } = useAuthContext();
-  const { copy } = useCopyToClipboard();
   const { enqueueSnackbar } = useSnackbar();
   const [Loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -80,7 +82,6 @@ export default function MyTransactions() {
   const [sdata, setSdata] = useState([]);
   const [pageSize, setPageSize] = useState<any>(20);
   const [ProductList, setProductList] = useState([]);
-  console.log("ProductName==========================>", ProductList);
 
   const txnSchema = Yup.object().shape({
     status: Yup.string(),
@@ -126,14 +127,11 @@ export default function MyTransactions() {
   } = useDateRangePicker(new Date(), new Date());
 
   const getProductlist = (val: string) => {
-    let token = localStorage.getItem("token");
     Api(`product/get_ProductList/${val}`, "GET", "", token).then(
       (Response: any) => {
         if (Response.status == 200) {
           if (Response.data.code == 200) {
             setProductList(Response.data.data);
-          } else {
-            console.log("======getUser=======>" + Response);
           }
         }
       }
@@ -141,7 +139,6 @@ export default function MyTransactions() {
   };
 
   const getCategoryList = () => {
-    let token = localStorage.getItem("token");
     Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
       if (Response.status == 200) {
         if (Response.data.code == 200) {
@@ -153,7 +150,6 @@ export default function MyTransactions() {
 
   const getTransaction = () => {
     setLoading(true);
-    let token = localStorage.getItem("token");
     let body = {
       pageInitData: {
         pageSize: pageSize,
@@ -191,7 +187,6 @@ export default function MyTransactions() {
     try {
       setSdata([]);
       setLoading(true);
-      let token = localStorage.getItem("token");
       let body = {
         pageInitData: {
           pageSize: pageSize,
@@ -298,7 +293,7 @@ export default function MyTransactions() {
               const Dataapi = Response.data.data.data;
               console.log("Dataapi", Dataapi);
 
-              const formattedData = Response.data.data.data.map(
+              const formattedData = Response.data?.data?.data.map(
                 (item: any) => ({
                   createdAt: new Date(item?.createdAt).toLocaleString(),
                   client_ref_Id: item?.client_ref_Id,
@@ -371,11 +366,7 @@ export default function MyTransactions() {
                 "======getUser===data.data ===Transaction====>",
                 Response
               );
-            } else {
-              enqueueSnackbar("Data Not Found ");
             }
-          } else {
-            console.log("======Transaction=======>" + Response);
           }
         }
       }
@@ -399,9 +390,13 @@ export default function MyTransactions() {
             gap={1}
           >
             <Stack
-              flexDirection={{ xs: "column", sm: "row" }}
-              flexBasis={{ xs: "100%", sm: "50%" }}
-              gap={1}
+              rowGap={1}
+              columnGap={1}
+              display="grid"
+              gridTemplateColumns={{
+                xs: "repeat(2, 1fr)",
+                sm: "repeat(5, 1fr)",
+              }}
             >
               <RHFSelect
                 name="category"
@@ -510,7 +505,13 @@ export default function MyTransactions() {
             {Loading ? (
               <ApiDataLoading />
             ) : (
-              <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+              <Scrollbar
+                sx={
+                  isMobile
+                    ? { maxHeight: window.innerHeight - 190 }
+                    : { maxHeight: window.innerHeight - 250 }
+                }
+              >
                 <Table size="small" aria-label="customized table" stickyHeader>
                   <TableHeadCustom
                     headLabel={
