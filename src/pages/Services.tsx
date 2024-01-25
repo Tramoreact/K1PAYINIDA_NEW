@@ -87,26 +87,26 @@ export default function Services(props: any) {
               <CategoryContext.Provider value={tab} key={tab.category_name}>
                 <Box sx={{ m: 1 }}>
                   {superCurrentTab.toLowerCase() == "recharges" ? (
-                    // <Recharges supCategory={tab} />
-                    <ServiceUnderUpdate />
-                  ) : superCurrentTab.toLowerCase() == "money transfer" ? (
+                    <Recharges supCategory={tab} />
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "money transfer" ? (
                     <DMT />
                   ) : superCurrentTab.toLowerCase() == "aeps" ? (
                     <AEPS supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "indo nepal" ? (
                     <IndoNepal supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "bill payment" ? (
-                    // <BillPayment supCategory={tab} />
-                    <ServiceUnderUpdate />
-                  ) : superCurrentTab.toLowerCase() == "aadhaar pay" ? (
-                    // <AadharPay supCategory={tab} />
-                    <ServiceUnderUpdate />
-                  ) : superCurrentTab.toLowerCase() == "matm" ? (
+                    <BillPayment supCategory={tab} />
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "aadhaar pay" ? (
+                    <AadharPay supCategory={tab} />
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "matm" ? (
                     <MATM supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "dmt1" ? (
-                    // <DMT1 supCategory={tab} />
-                    <ServiceUnderUpdate />
-                  ) : superCurrentTab.toLowerCase() == "dmt2" ? (
+                    <DMT1 supCategory={tab} />
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "dmt2" ? (
                     <DMT2 />
                   ) : null}
                 </Box>
