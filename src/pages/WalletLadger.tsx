@@ -463,8 +463,9 @@ const LadgerRow = ({ row }: any) => {
                     }
                     sx={{ textTransform: "capitalize" }}
                   >
-                    {row?.to?.walletType} = {row?.to?.amount}
+                    {row?.to?.walletType}
                   </Label>
+                  :{" " + row?.to?.amount}
                 </Typography>
               </>
             ) : (
@@ -478,36 +479,12 @@ const LadgerRow = ({ row }: any) => {
                   }
                   sx={{ textTransform: "capitalize" }}
                 >
-                  {row?.from?.walletType}= {row?.from?.amount}
+                  {row?.from?.walletType}
                 </Label>
+                :{row?.from?.amount}
               </>
             )}
           </Typography>
-          {user?.role === "agent" && (
-            <Typography variant="subtitle2" sx={{ color: "green" }}>
-              Commission :{" "}
-              {fCurrency(row?.transaction?.agentDetails?.commissionAmount)}
-            </Typography>
-          )}
-
-          {user?.role === "distributor" && (
-            <Typography variant="subtitle2">
-              Commission :{" "}
-              {fCurrency(
-                row?.transaction?.distributorDetails?.commissionAmount
-              )}
-            </Typography>
-          )}
-
-          {user?.role === "masterdistributor" && (
-            <Typography variant="subtitle2">
-              {" "}
-              Commission :{" "}
-              {fCurrency(
-                row?.transaction?.masterDistributorDetails?.commissionAmount
-              )}
-            </Typography>
-          )}
         </StyledTableCell>
 
         {row?.transaction?.clientRefId ? (
