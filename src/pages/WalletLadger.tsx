@@ -450,10 +450,10 @@ const LadgerRow = ({ row }: any) => {
         </StyledTableCell>
 
         <StyledTableCell>
-          <Typography variant="body1" sx={{ color: "text.secondary" }}>
+          <Typography variant="body1">
             {user?._id === row?.to?.id?._id ? (
               <>
-                <Typography color={"error"}>
+                <Typography>
                   <Label
                     variant="soft"
                     color={
@@ -465,7 +465,12 @@ const LadgerRow = ({ row }: any) => {
                   >
                     {row?.to?.walletType}
                   </Label>
-                  :{" " + row?.to?.amount}
+                  :
+                  {row?.to?.walletType === "MAIN" ? (
+                    <>{row?.to?.newMainWalletBalance.toFixed(2)}</>
+                  ) : (
+                    <>{row?.to?.newAepsWalletBalance.toFixed(2)}</>
+                  )}
                 </Typography>
               </>
             ) : (
@@ -481,7 +486,12 @@ const LadgerRow = ({ row }: any) => {
                 >
                   {row?.from?.walletType}
                 </Label>
-                :{row?.from?.amount}
+                :
+                {row?.from?.walletType === "MAIN" ? (
+                  <>{row?.from?.newMainWalletBalance.toFixed(2)}</>
+                ) : (
+                  <>{row?.from?.newAepsWalletBalance.toFixed(2)}</>
+                )}
               </>
             )}
           </Typography>
