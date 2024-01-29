@@ -336,7 +336,7 @@ export default function DMT2BeneTable() {
   }
   return (
     <>
-      <Grid sx={{ maxHeight: window.innerHeight - 250 }}>
+      <Grid sx={{ maxHeight: window.innerHeight - 170 }}>
         {getBene.isLoading ? (
           <ApiDataLoading />
         ) : (
@@ -360,7 +360,7 @@ export default function DMT2BeneTable() {
                 sx={
                   isMobile
                     ? { maxHeight: window.innerHeight - 250 }
-                    : { maxHeight: window.innerHeight - 530 }
+                    : { maxHeight: window.innerHeight - 440 }
                 }
               >
                 <Table

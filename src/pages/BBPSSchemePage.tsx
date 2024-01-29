@@ -36,6 +36,7 @@ import FormProvider, {
 } from "../components/hook-form";
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
+import useResponsive from "src/hooks/useResponsive";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -45,8 +46,9 @@ type FormValuesProps = {
 };
 
 export default function BBPSSchemePage() {
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
+  const isMobile = useResponsive("up", "sm");
+  const { enqueueSnackbar } = useSnackbar();
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(30);
   const [isLoading, setIsLoading] = useState(false);
@@ -221,7 +223,7 @@ export default function BBPSSchemePage() {
     <>
       {user?.role === "m_distributor" && (
         <>
-          <FormControl sx={{ mt: 2, minWidth: 200 }}>
+          <FormControl sx={{ mt: 1, minWidth: 200 }}>
             <TextField
               id="outlined-select-currency-native"
               select
@@ -242,9 +244,6 @@ export default function BBPSSchemePage() {
               })}
             </TextField>
           </FormControl>
-          <Stack mt={1}>
-            <Divider />
-          </Stack>
         </>
       )}
 
@@ -253,12 +252,12 @@ export default function BBPSSchemePage() {
       ) : (
         <>
           {tableData.length > 0 && (
-            <>
+            <Stack mx={1}>
               <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Stack
                   flexDirection={"row"}
                   gap={1}
-                  my={1}
+                  mb={1}
                   width={{ xs: "100%", sm: "50%" }}
                 >
                   <RHFSelect
@@ -298,7 +297,13 @@ export default function BBPSSchemePage() {
               </FormProvider>
 
               <TableContainer sx={{ overflow: "unset" }}>
-                <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+                <Scrollbar
+                  sx={
+                    isMobile
+                      ? { maxHeight: window.innerHeight - 200 }
+                      : { maxHeight: window.innerHeight - 130 }
+                  }
+                >
                   <Table
                     sx={{ minWidth: 720 }}
                     stickyHeader
@@ -328,7 +333,7 @@ export default function BBPSSchemePage() {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-            </>
+            </Stack>
           )}
         </>
       )}

@@ -13,6 +13,7 @@ import {
   BillPayment,
   Recharges,
 } from "../sections/services";
+import ServiceUnderUpdate from "./ServiceUnderUpdate";
 
 // ----------------------------------------------------------------------
 
@@ -84,10 +85,11 @@ export default function Services(props: any) {
           (tab: any) =>
             tab.category_name == superCurrentTab && (
               <CategoryContext.Provider value={tab} key={tab.category_name}>
-                <Box sx={{ m: 3 }}>
+                <Box sx={{ m: 1 }}>
                   {superCurrentTab.toLowerCase() == "recharges" ? (
                     <Recharges supCategory={tab} />
-                  ) : superCurrentTab.toLowerCase() == "money transfer" ? (
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "money transfer" ? (
                     <DMT />
                   ) : superCurrentTab.toLowerCase() == "aeps" ? (
                     <AEPS supCategory={tab} />
@@ -95,13 +97,16 @@ export default function Services(props: any) {
                     <IndoNepal supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "bill payment" ? (
                     <BillPayment supCategory={tab} />
-                  ) : superCurrentTab.toLowerCase() == "aadhaar pay" ? (
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "aadhaar pay" ? (
                     <AadharPay supCategory={tab} />
-                  ) : superCurrentTab.toLowerCase() == "matm" ? (
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "matm" ? (
                     <MATM supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "dmt1" ? (
                     <DMT1 supCategory={tab} />
-                  ) : superCurrentTab.toLowerCase() == "dmt2" ? (
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "dmt2" ? (
                     <DMT2 />
                   ) : null}
                 </Box>
