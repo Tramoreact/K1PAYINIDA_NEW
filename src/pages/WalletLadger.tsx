@@ -489,7 +489,6 @@ const LadgerRow = ({ row }: any) => {
             </>
           )}
         </StyledTableCell>
-
         <StyledTableCell>
           <Typography variant="body1">
             {user?._id === row?.to?.id?._id ? (
