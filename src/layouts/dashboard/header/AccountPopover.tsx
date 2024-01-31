@@ -14,6 +14,7 @@ import MenuPopover from "../../../components/menu-popover";
 import { IconButtonAnimate } from "../../../components/animate";
 import { AwsDocSign } from "src/components/customFunctions/AwsDocSign";
 import { sentenceCase } from "change-case";
+import { fDateTime } from "src/utils/formatTime";
 
 // ----------------------------------------------------------------------
 
@@ -92,7 +93,7 @@ export default function AccountPopover() {
       <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
-        sx={{ width: 200, p: 0 }}
+        sx={{ width: 230, p: 0 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap textOverflow={"ellipsis"}>

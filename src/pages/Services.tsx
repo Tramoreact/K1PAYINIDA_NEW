@@ -96,8 +96,7 @@ export default function Services(props: any) {
                   ) : superCurrentTab.toLowerCase() == "indo nepal" ? (
                     <IndoNepal supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "bill payment" ? (
-                    // <BillPayment supCategory={tab} />
-                    <ServiceUnderUpdate />
+                    <BillPayment supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "aadhaar pay" ? (
                     // <AadharPay supCategory={tab} />
                     <ServiceUnderUpdate />
