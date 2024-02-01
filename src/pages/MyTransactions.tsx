@@ -81,6 +81,7 @@ export default function MyTransactions() {
   const [categoryList, setCategoryList] = useState([]);
   const [sdata, setSdata] = useState([]);
   const [pageSize, setPageSize] = useState<any>(20);
+  const [currentTab, setCurrentTab] = useState("all");
   const [ProductList, setProductList] = useState([]);
 
   const txnSchema = Yup.object().shape({
@@ -112,6 +113,8 @@ export default function MyTransactions() {
     getCategoryList();
     getTransaction();
   }, [currentPage]);
+
+  useEffect(() => setCurrentPage(1), [currentTab]);
 
   const {
     startDate,
@@ -158,8 +161,8 @@ export default function MyTransactions() {
       clientRefId: getValues("clientRefId"),
       status: getValues("status"),
       transactionType: "",
-      productId: getValues("product") || "",
       categoryId: getValues("category"),
+      productId: getValues("product") || "",
     };
 
     Api(`transaction/transactionByUser`, "POST", body, token).then(
@@ -169,6 +172,7 @@ export default function MyTransactions() {
           if (Response.data.code == 200) {
             setSdata(Response.data.data.data);
             setPageCount(Response.data.data.totalNumberOfRecords);
+            setCurrentTab("");
             enqueueSnackbar(Response.data.message);
           } else {
             enqueueSnackbar(Response.data.message);
@@ -225,6 +229,7 @@ export default function MyTransactions() {
     { id: "Date&Time", label: "Txn Details" },
     { id: "agent", label: "Agent" },
     { id: "dist", label: "Distributor" },
+    { id: "mode", label: "Mode" },
     { id: "Product", label: "Product" },
     { id: "Operator", label: "Operator/ Beneficiary" },
     { id: "Mobile Number", label: "Mobile Number" },
@@ -233,7 +238,7 @@ export default function MyTransactions() {
     { id: "Txn Amount", label: "Txn Amount" },
     { id: "Charge/Commission", label: "Charge/ Commission" },
     { id: "Closing Balance", label: "Closing Balance" },
-    { id: "GST/TDS", label: "GST/TDS" },
+    // { id: "GST/TDS", label: "GST/TDS" },
     { id: "status", label: "Status" },
     { id: "Action", label: "Action" },
   ];
@@ -241,6 +246,7 @@ export default function MyTransactions() {
     { id: "Date&Time", label: "Txn Details" },
 
     { id: "agent", label: "Agent" },
+    { id: "mode", label: "Mode" },
     { id: "Product", label: "Product" },
     { id: "Operator", label: "Operator/ Beneficiary" },
     { id: "Mobile Number", label: "Mobile Number" },
@@ -249,13 +255,13 @@ export default function MyTransactions() {
     { id: "Txn Amount", label: "Txn Amount" },
     { id: "Charge/ Commission", label: "Charge/ Commission" },
     { id: "Closing Balance", label: "Closing Balance" },
-    { id: "GST/TDS", label: "GST/TDS" },
+    // { id: "GST/TDS", label: "GST/TDS" },
     { id: "status", label: "Status" },
     { id: "Action", label: "Action" },
   ];
   const tableLabels2 = [
     { id: "Date&Time", label: "Txn Details" },
-
+    { id: "mode", label: "Mode" },
     { id: "Product", label: "Product" },
     { id: "Operator", label: "Operator/ Beneficiary" },
     { id: "Mobile Number", label: "Mobile Number" },
@@ -292,7 +298,6 @@ export default function MyTransactions() {
             if (Response.data.data.data.length) {
               const Dataapi = Response.data.data.data;
               console.log("Dataapi", Dataapi);
-
               const formattedData = Response.data?.data?.data.map(
                 (item: any) => ({
                   createdAt: new Date(item?.createdAt).toLocaleString(),
@@ -361,11 +366,8 @@ export default function MyTransactions() {
 
               const currentDate = fDateTime(new Date());
               XLSX.writeFile(wb, `Transaction${currentDate}.xlsx`);
-
-              console.log(
-                "======getUser===data.data ===Transaction====>",
-                Response
-              );
+            } else {
+              enqueueSnackbar("Data Not Found ");
             }
           }
         }
@@ -378,7 +380,7 @@ export default function MyTransactions() {
       <Helmet>
         <title> Transactions | {process.env.REACT_APP_COMPANY_NAME} </title>
       </Helmet>
-      <Stack sx={{ maxHeight: window.innerHeight - 220 }}>
+      <Stack>
         <FormProvider
           methods={methods}
           onSubmit={handleSubmit(filterTransaction)}
@@ -592,6 +594,8 @@ function TransactionRow({ row }: childProps) {
           enqueueSnackbar(Response.data.message, { variant: "error" });
         }
         setLoading(false);
+      } else {
+        setLoading(false);
       }
     });
   };
@@ -653,7 +657,6 @@ function TransactionRow({ row }: childProps) {
           </Typography>
         </StyledTableCell>
 
-        {/* Agent Detail */}
         {user?.role === "distributor" && (
           <StyledTableCell>
             <Stack flexDirection={"row"} gap={1}>
@@ -713,6 +716,12 @@ function TransactionRow({ row }: childProps) {
             </StyledTableCell>
           </>
         )}
+        {/* mode of payment */}
+        <StyledTableCell>
+          <Typography variant="body2">
+            {newRow?.modeOfPayment || "-"}
+          </Typography>
+        </StyledTableCell>
 
         {/* Product  */}
         <StyledTableCell>
@@ -762,9 +771,8 @@ function TransactionRow({ row }: childProps) {
         <StyledTableCell>
           <Stack flexDirection={"row"} justifyContent={"center"}>
             <Typography variant="body2" whiteSpace={"nowrap"} color={"error"}>
-              - {fCurrency(newRow.debit) || 0}
+              {user?.role === "agent" && <>-{fCurrency(newRow.debit)}/</>}
             </Typography>{" "}
-            /
             <Typography variant="body2" whiteSpace={"nowrap"} color={"green"}>
               +{" "}
               {fCurrency(
@@ -792,28 +800,24 @@ function TransactionRow({ row }: childProps) {
         </StyledTableCell>
 
         {/* GST/TDS */}
-        <StyledTableCell sx={{ whiteSpace: "nowrap" }}>
-          <Typography variant="body2">
-            GST :{" "}
-            {fCurrency(
-              user?.role == "agent"
-                ? newRow?.agentDetails?.GST
-                : user?.role == "distributor"
-                ? newRow?.distributorDetails?.GST
-                : newRow?.masterDistributorDetails?.GST
-            ) || 0}
-          </Typography>
-          <Typography variant="body2">
-            TDS :{" "}
-            {fCurrency(
-              user?.role == "agent"
-                ? newRow?.agentDetails?.TDSAmount
-                : user?.role == "distributor"
-                ? newRow?.distributorDetails?.TDSAmount
-                : newRow?.masterDistributorDetails?.TDSAmount
-            ) || 0}
-          </Typography>
-        </StyledTableCell>
+
+        {user?.role == "agent" && (
+          <StyledTableCell sx={{ whiteSpace: "nowrap" }}>
+            <Typography variant="body2">
+              GST :{" "}
+              {fCurrency(
+                (user?.role == "agent" && newRow?.agentDetails?.GST) || "0"
+              )}
+            </Typography>
+            <Typography variant="body2">
+              TDS :{" "}
+              {fCurrency(
+                (user?.role == "agent" && newRow?.agentDetails?.TDSAmount) ||
+                  "0"
+              )}
+            </Typography>
+          </StyledTableCell>
+        )}
 
         <StyledTableCell
           sx={{
@@ -849,7 +853,7 @@ function TransactionRow({ row }: childProps) {
                   color="primary"
                   aria-label="check transaction status"
                 >
-                  <img src={autorenew} alt="Receipt Icon" />
+                  <img src={autorenew} alt="Check Status" />
                 </IconButton>
               </Tooltip>
             )}
