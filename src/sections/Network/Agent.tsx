@@ -16,10 +16,12 @@ import {
 import { Api } from "src/webservices";
 import Scrollbar from "../../components/scrollbar";
 import { TableHeadCustom } from "../../components/table";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { fDateTime } from "src/utils/formatTime";
 import useResponsive from "src/hooks/useResponsive";
 import { CustomAvatar } from "src/components/custom-avatar";
+import { fCurrency } from "src/utils/formatNumber";
+
 // ----------------------------------------------------------------------
 
 type RowProps = {
@@ -153,9 +155,9 @@ function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
       <TableCell sx={{ padding: "0px" }}>
         <Stack direction="row" alignItems="center">
           <CustomAvatar
-            alt={row.firstName}
             name={row.firstName}
-            src={row.selfie && row.selfie[0]}
+            alt={row.firstName}
+            src={row.selfie[0]}
           />
 
           <Box sx={{ ml: 2 }}>
@@ -174,7 +176,7 @@ function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
         {row.contact_no}
       </TableCell>
       <TableCell sx={{ color: "#0D571C" }}>
-        {row.main_wallet_amount.toFixed(2)}
+        Rs. {fCurrency(row?.main_wallet_amount || "0")}
       </TableCell>
       <TableCell>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>

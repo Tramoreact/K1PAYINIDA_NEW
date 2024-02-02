@@ -22,6 +22,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { fDateTime } from "src/utils/formatTime";
 import useResponsive from "src/hooks/useResponsive";
 import { CustomAvatar } from "src/components/custom-avatar";
+import { fCurrency } from "src/utils/formatNumber";
 
 // ----------------------------------------------------------------------
 
@@ -230,8 +231,8 @@ function EcommerceBestSalesmanRow({
         <Stack direction="row" alignItems="center">
           <CustomAvatar
             alt={row.firstName}
+            src={row.selfie[0]}
             name={row.firstName}
-            src={row.selfie && row.selfie[0]}
           />
 
           <Box sx={{ ml: 2 }}>
@@ -253,7 +254,7 @@ function EcommerceBestSalesmanRow({
         {row.contact_no}
       </TableCell>
       <TableCell sx={{ color: "#0D571C" }}>
-        <Typography>{row.main_wallet_amount.toFixed(2)}</Typography>
+        <Typography> Rs.{fCurrency(row?.main_wallet_amount || "0")}</Typography>
       </TableCell>
       <TableCell>{fDateTime(row.createdAt)}</TableCell>
       <TableCell>{row.schemeId}</TableCell>
