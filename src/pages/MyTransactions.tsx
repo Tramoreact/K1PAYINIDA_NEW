@@ -930,20 +930,13 @@ function TransactionRow({ row }: childProps) {
                   >
                     <Stack>
                       <Logo />
-                    </Stack>
-                    <Grid sx={{ mt: 1 }}>
+                      <Grid >
                       <Stack flexDirection={"row"} gap={1}>
                         <Typography variant="subtitle2">
                           Agent Name:{" "}
                         </Typography>
                         <Typography variant="subtitle2">
                           {`${user?.firstName} ${user?.lastName}`}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">User code: </Typography>
-                        <Typography variant="subtitle2">
-                          {`${user?.userCode}`}
                         </Typography>
                       </Stack>
                       <Stack flexDirection={"row"} gap={1}>
@@ -965,18 +958,16 @@ function TransactionRow({ row }: childProps) {
                         </Typography>
                       </Stack>
                     </Grid>
-                  </Stack>
-                  <Divider />
-                  {/* sender & beneficiary  detail */}
-                  <Stack
+                    </Stack>
+                    <Stack
                     flexDirection={{ xs: "column", sm: "row" }}
                     justifyContent={"space-between"}
                     mt={3}
                   >
-                    <Grid sx={{ mt: 1 }}>
-                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                    <Grid sx={{ mt:4}}>
+                      {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
                         Sender Details
-                      </Typography>
+                      </Typography> */}
                       <Stack flexDirection={"row"} gap={1}>
                         <Typography variant="subtitle2">
                           Sender Name :{" "}
@@ -984,36 +975,13 @@ function TransactionRow({ row }: childProps) {
                         <Typography variant="body2">
                           {newRow?.moneyTransferSenderId?.remitterFN}
                           {newRow?.moneyTransferSenderId?.remitterLN}{" "}
+                          ({newRow?.moneyTransferSenderId?.remitterMobile})
                         </Typography>
                       </Stack>
                       <Stack flexDirection={"row"} gap={1}>
                         <Typography variant="subtitle2">
                           {" "}
-                          Mobile Number:{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferSenderId?.remitterMobile}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Service Type:{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.productName}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid sx={{ mt: 1 }}>
-                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                        Benificary Details
-                      </Typography>
-
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Account Holder Name:{" "}
+                         Account Holder Name:{" "}
                         </Typography>
                         <Typography variant="body2">
                           {newRow?.moneyTransferBeneficiaryDetails?.beneName}
@@ -1034,42 +1002,17 @@ function TransactionRow({ row }: childProps) {
                           Account Number:{" "}
                         </Typography>
                         <Typography variant="body2">
-                          {
-                            newRow?.moneyTransferBeneficiaryDetails
-                              ?.accountNumber
-                          }
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2"> IFSC : </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferBeneficiaryDetails?.ifsc}
+                          {newRow?.moneyTransferBeneficiaryDetails?.accountNumber}
                         </Typography>
                       </Stack>
                     </Grid>
                   </Stack>
-                  {/* careated at dat */}
-                  <Stack my={3}>
-                    <Typography variant="subtitle2">
-                      Transaction Date
-                    </Typography>
-                    <Typography variant="body2">
-                      {fDateTime(newRow?.createdAt)}
-                    </Typography>
+                  <Divider />
                   </Stack>
                 </Stack>
-
-                <Typography variant="subtitle1" my={1}>
-                  #Transaction Detail
-                </Typography>
-
-                <TableContainer sx={{ overflow: "unset" }}>
+                <TableContainer sx={{ overflow: "unset",border:"solid 1px",borderRadius:"5px" }}>
                   <Table>
                     <TableRow
-                      sx={{
-                        borderBottom: (theme) =>
-                          `solid 1.5px ${theme.palette.divider}`,
-                      }}
                     >
                       <StyledTableCell align="center">
                         <Typography variant="subtitle1">
@@ -1097,7 +1040,7 @@ function TransactionRow({ row }: childProps) {
                             `solid 1.5px ${theme.palette.divider}`,
                         }}
                       >
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Typography variant="body2" noWrap>
                             {newRow?.clientRefId}
                           </Typography>
@@ -1138,38 +1081,7 @@ function TransactionRow({ row }: childProps) {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <Stack my={2}>
-                  <Typography align="right" variant="h6" whiteSpace={"nowrap"}>
-                    Total Amount : {" " + fCurrency(newRow.amount)}
-                  </Typography>
-                </Stack>
-
-                <Divider sx={{ mt: 5 }} />
-
-                <Grid container>
-                  <Grid item xs={12} md={9} sx={{ py: 3 }}>
-                    <Typography variant="subtitle2">NOTES</Typography>
-
-                    <Typography variant="body2">
-                      This transaction receipt is generated automatically and
-                      dose not require a physical signature. It is not a tax
-                      invoice but serves as a record of your transaction with
-                      Tramo. Please retain it for your refrence, and if you have
-                      any queries, fell free to contact our Customer Support
-                      team.
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={12} md={3} sx={{ py: 3, textAlign: "right" }}>
-                    <Typography variant="subtitle2">
-                      Have a Question?
-                    </Typography>
-
-                    <Typography variant="body2">
-                      {process.env.REACT_APP_COMPANY_EMAIL}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                 <Divider />
               </Stack>
             </Scrollbar>
           </Card>
