@@ -52,7 +52,22 @@ export const MyStats = Loadable(lazy(() => import("../pages/MyStats")));
 
 //services
 export const Services = Loadable(lazy(() => import("../pages/Services")));
-
+export const Recharge = Loadable(
+  lazy(() => import("../sections/services/recharge/Recharges"))
+);
+export const DMT = Loadable(lazy(() => import("../sections/services/DMT/DMT")));
+export const DMTTwo = Loadable(
+  lazy(() => import("../sections/services/DMT2/DMT2"))
+);
+export const AEPS = Loadable(
+  lazy(() => import("../sections/services/AEPS/AEPS"))
+);
+export const BillPayment = Loadable(
+  lazy(() => import("../sections/services/billPayments/BillPayment"))
+);
+export const AadhaaryPay = Loadable(
+  lazy(() => import("../sections/services/aadharpay/AadharPay"))
+);
 //Network
 export const Network = Loadable(lazy(() => import("../pages/Network")));
 

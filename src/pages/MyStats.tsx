@@ -10,7 +10,9 @@ import {
   Box,
   Stack,
   Card,
+  Divider,
 } from "@mui/material";
+
 // components
 // sections
 import StatsWebsiteVisits from "../sections/MyStats/StatsWebsiteVisits";
@@ -28,11 +30,22 @@ import Graphgreen from "../assets/icons/Graph green.svg";
 import Graphorange from "../assets/icons/Graph orange.svg";
 import { useEffect, useState } from "react";
 import { fCurrency } from "src/utils/formatNumber";
-
+import SvgColor from "src/components/svg-color";
+import { useNavigate } from "react-router-dom";
+import Recharge from "../assets/services/Recharge.svg";
+import MoneyTransfer from "../assets/services/MoneyTransfer.svg";
+import DMT1 from "../assets/services/DMT1.svg";
+import DMT2 from "../assets/services/DMT2.svg";
+import BillPayment from "../assets/services/BillPayment.svg";
+import AEPS from "../assets/services/AEPS.svg";
+import MATM from "../assets/services/MATM.svg";
+import AadharPay from "../assets/services/AadharPay.svg";
+import IndoNepal from "../assets/services/IndoNepal.svg";
 // ----------------------------------------------------------------------
 
 export default function MyStats(props: any) {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const logo = [Group321, Group320, Frame10, Frame9, isolationMode, intersect];
   const [categoryList, setCategoryList] = useState([]);
@@ -219,6 +232,57 @@ export default function MyStats(props: any) {
         <title> My Stats | {process.env.REACT_APP_COMPANY_NAME} </title>
       </Helmet>
       <Grid width={"100%"}>
+        <Card
+          variant="outlined"
+          sx={{
+            width: "100%",
+          }}
+        >
+          <Box sx={{ p: 1.5, background: "#CCD5E3" }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography gutterBottom variant="h5" ml="3" component="div">
+                Services
+              </Typography>
+            </Stack>
+          </Box>
+          <Divider />
+          <Box
+            sx={{
+              p: 4,
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+            gap={10}
+          >
+            <img
+              src={Recharge}
+              onClick={() => navigate("/auth/service/recharge")}
+            />
+            <img
+              src={MoneyTransfer}
+              onClick={() => navigate("/auth/service/dmt")}
+            />
+
+            <img src={DMT1} />
+            <img src={DMT2} onClick={() => navigate("/auth/service/dmt2")} />
+            <img
+              src={BillPayment}
+              onClick={() => navigate("/auth/service/billpayment")}
+            />
+            <img src={AEPS} onClick={() => navigate("/auth/service/aeps")} />
+            <img src={MATM} />
+            <img
+              src={AadharPay}
+              onClick={() => navigate("/auth/service/aadhaarypay")}
+            />
+            <img src={IndoNepal} />
+          </Box>
+        </Card>
         <Stack sx={{ flexDirection: "row", gap: 1, marginTop: "10px" }}>
           <Card
             sx={{

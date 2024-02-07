@@ -37,6 +37,12 @@ import {
   ManageFundFlow,
   MyNetwrokFunds,
   UserProfilePage,
+  Recharge,
+  DMT,
+  AEPS,
+  DMTTwo,
+  BillPayment,
+  AadhaaryPay,
 } from "./elements";
 
 // ----------------------------------------------------------------------
@@ -114,6 +120,24 @@ export default function Router() {
         { path: "mystats", element: <MyStats /> },
         { path: "services", element: <Services /> },
         { path: "network", element: <Network /> },
+
+        {
+          path: "service",
+          children: [
+            {
+              element: <Navigate to="/auth/service/recharge" replace />,
+              index: true,
+            },
+
+            { path: "Recharge", element: <Recharge /> },
+            { path: "DMT", element: <DMT /> },
+            { path: "DMT2", element: <DMTTwo /> },
+            { path: "AEPS", element: <AEPS /> },
+            { path: "BillPayment", element: <BillPayment /> },
+            { path: "AadhaaryPay", element: <AadhaaryPay /> },
+          ],
+        },
+
         {
           path: "transaction",
           children: [

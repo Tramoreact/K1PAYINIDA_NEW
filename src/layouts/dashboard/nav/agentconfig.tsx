@@ -42,6 +42,38 @@ const agentNavConfig = [
       },
 
       {
+        title: "service",
+        path: PATH_DASHBOARD.service.dmt,
+        icon: ICONS.user,
+        children: [
+          {
+            title: "Recharge",
+            path: PATH_DASHBOARD.service.recharge,
+          },
+          {
+            title: "Money Transfer",
+            path: PATH_DASHBOARD.service.dmt,
+          },
+          {
+            title: "DMT2",
+            path: PATH_DASHBOARD.service.dmt2,
+          },
+          {
+            title: "AEPS",
+            path: PATH_DASHBOARD.service.aeps,
+          },
+          {
+            title: "billpayment",
+            path: PATH_DASHBOARD.service.billpayment,
+          },
+          {
+            title: "Aadhaary Pay",
+            path: PATH_DASHBOARD.service.aadhaarypay,
+          },
+        ],
+      },
+
+      {
         title: "Transactions",
         path: PATH_DASHBOARD.transaction.root,
         icon: ICONS.user,

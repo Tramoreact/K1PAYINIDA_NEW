@@ -582,7 +582,7 @@ function TransactionRow({ row }: childProps) {
         : rowFor.categoryName.toLowerCase() == "dmt2"
         ? `dmt2/transaction/status/` + rowFor._id
         : rowFor.categoryName.toLowerCase() == "bbps"
-        ? `/bbps/checkStatus/` + rowFor._id
+        ? `bbps/checkStatus/` + rowFor._id
         : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
           `settlement/checkStatus/` + rowFor._id,
       "GET",
@@ -930,90 +930,98 @@ function TransactionRow({ row }: childProps) {
                   >
                     <Stack>
                       <Logo />
-                      <Grid >
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          Agent Name:{" "}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          {`${user?.firstName} ${user?.lastName}`}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Mobile Number:{" "}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          {user?.contact_no}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Shop Name:{" "}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          {user?.shopAddress}
-                        </Typography>
-                      </Stack>
-                    </Grid>
+                      <Grid>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            Agent Name:{" "}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            {`${user?.firstName} ${user?.lastName}`}
+                          </Typography>
+                        </Stack>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            {" "}
+                            Mobile Number:{" "}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            {user?.contact_no}
+                          </Typography>
+                        </Stack>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            {" "}
+                            Shop Name:{" "}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            {user?.shopAddress}
+                          </Typography>
+                        </Stack>
+                      </Grid>
                     </Stack>
                     <Stack
-                    flexDirection={{ xs: "column", sm: "row" }}
-                    justifyContent={"space-between"}
-                    mt={3}
-                  >
-                    <Grid sx={{ mt:4}}>
-                      {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                      flexDirection={{ xs: "column", sm: "row" }}
+                      justifyContent={"space-between"}
+                      mt={3}
+                    >
+                      <Grid sx={{ mt: 4 }}>
+                        {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
                         Sender Details
                       </Typography> */}
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          Sender Name :{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferSenderId?.remitterFN}
-                          {newRow?.moneyTransferSenderId?.remitterLN}{" "}
-                          ({newRow?.moneyTransferSenderId?.remitterMobile})
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                         Account Holder Name:{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferBeneficiaryDetails?.beneName}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Bank Name:{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferBeneficiaryDetails?.bankName}
-                        </Typography>
-                      </Stack>
-                      <Stack flexDirection={"row"} gap={1}>
-                        <Typography variant="subtitle2">
-                          {" "}
-                          Account Number:{" "}
-                        </Typography>
-                        <Typography variant="body2">
-                          {newRow?.moneyTransferBeneficiaryDetails?.accountNumber}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                  </Stack>
-                  <Divider />
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            Sender Name :{" "}
+                          </Typography>
+                          <Typography variant="body2">
+                            {newRow?.moneyTransferSenderId?.remitterFN}
+                            {newRow?.moneyTransferSenderId?.remitterLN} (
+                            {newRow?.moneyTransferSenderId?.remitterMobile})
+                          </Typography>
+                        </Stack>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            {" "}
+                            Account Holder Name:{" "}
+                          </Typography>
+                          <Typography variant="body2">
+                            {newRow?.moneyTransferBeneficiaryDetails?.beneName}
+                          </Typography>
+                        </Stack>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            {" "}
+                            Bank Name:{" "}
+                          </Typography>
+                          <Typography variant="body2">
+                            {newRow?.moneyTransferBeneficiaryDetails?.bankName}
+                          </Typography>
+                        </Stack>
+                        <Stack flexDirection={"row"} gap={1}>
+                          <Typography variant="subtitle2">
+                            {" "}
+                            Account Number:{" "}
+                          </Typography>
+                          <Typography variant="body2">
+                            {
+                              newRow?.moneyTransferBeneficiaryDetails
+                                ?.accountNumber
+                            }
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                    </Stack>
+                    <Divider />
                   </Stack>
                 </Stack>
-                <TableContainer sx={{ overflow: "unset",border:"solid 1px",borderRadius:"5px" }}>
+                <TableContainer
+                  sx={{
+                    overflow: "unset",
+                    border: "solid 1px",
+                    borderRadius: "5px",
+                  }}
+                >
                   <Table>
-                    <TableRow
-                    >
+                    <TableRow>
                       <StyledTableCell align="center">
                         <Typography variant="subtitle1">
                           Transaction Id
@@ -1083,7 +1091,7 @@ function TransactionRow({ row }: childProps) {
                 </TableContainer>
               </Stack>
             </Scrollbar>
-            <Divider sx={{mt:2,border:"1px solid"}}/>
+            <Divider sx={{ mt: 2, border: "1px solid" }} />
           </Grid>
         </Grid>
       </Modal>

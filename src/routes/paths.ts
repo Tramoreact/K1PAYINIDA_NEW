@@ -26,6 +26,16 @@ export const PATH_DASHBOARD = {
   mystats: path(ROOTS_DASHBOARD, "/mystats"),
   services: path(ROOTS_DASHBOARD, "/services"),
   network: path(ROOTS_DASHBOARD, "/network"),
+  service: {
+    root: path(ROOTS_DASHBOARD, "/recharge"),
+    recharge: path(ROOTS_DASHBOARD, "/service/recharge"),
+    dmt: path(ROOTS_DASHBOARD, "/service/dmt"),
+    dmt2: path(ROOTS_DASHBOARD, "/service/dmt2"),
+    aeps: path(ROOTS_DASHBOARD, "/service/aeps"),
+    billpayment: path(ROOTS_DASHBOARD, "/service/billpayment"),
+    aadhaarypay: path(ROOTS_DASHBOARD, "/service/aadhaarypay"),
+  },
+
   transaction: {
     root: path(ROOTS_DASHBOARD, "/transaction"),
     mytransaction: path(ROOTS_DASHBOARD, "/transaction/mytransaction"),
