@@ -918,7 +918,7 @@ function TransactionRow({ row }: childProps) {
               onAfterPrint={closeModal}
             />
           </Stack>
-          <Card ref={componentRef} sx={{ p: 3 }}>
+          <Grid ref={componentRef} sx={{ p: 3 }}>
             <Scrollbar sx={{ maxHeight: 600 }}>
               <Stack sx={{ pr: 2 }}>
                 <Stack>
@@ -1081,10 +1081,10 @@ function TransactionRow({ row }: childProps) {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                 <Divider />
               </Stack>
             </Scrollbar>
-          </Card>
+            <Divider sx={{mt:2,border:"1px solid"}}/>
+          </Grid>
         </Grid>
       </Modal>
     </>
