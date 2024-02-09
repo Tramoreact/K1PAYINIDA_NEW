@@ -455,16 +455,16 @@ function Bbps_One() {
                       )
                     )}
                     <Stack mt={2}>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => navigate("/auth/mystats")}
-                sx={{ width: "fit-content", margin: "auto",ml:1}}
-                // startIcon={<SendIcon />}
-              >
-                Back
-              </Button>
-            </Stack>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => navigate("/auth/mystats")}
+                        sx={{ width: "fit-content", margin: "auto", ml: 1 }}
+                        // startIcon={<SendIcon />}
+                      >
+                        Back
+                      </Button>
+                    </Stack>
                     <Stack rowGap={3} columnGap={2} display="grid">
                       {paramList?.map((item: any, index: number) => {
                         return (

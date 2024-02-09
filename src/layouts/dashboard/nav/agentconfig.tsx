@@ -63,7 +63,7 @@ const agentNavConfig = [
             path: PATH_DASHBOARD.service.aeps,
           },
           {
-            title: "Bill ayment",
+            title: "Bill Payment",
             path: PATH_DASHBOARD.service.billpayment,
           },
           {
