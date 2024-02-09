@@ -28,6 +28,7 @@ import { useAuthContext } from "src/auth/useAuthContext";
 import useResponsive from "src/hooks/useResponsive";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TextToSpeak } from "src/components/customFunctions/TextToSpeak";
+import { useNavigate } from "react-router";
 
 type FormValuesProps = {
   operator: {
@@ -63,6 +64,7 @@ const style = {
 };
 
 function Bbps_One() {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const [categoryListOne, setCategoryListOne] = useState<any>([]);
@@ -452,6 +454,17 @@ function Bbps_One() {
                         </Typography>
                       )
                     )}
+                    <Stack mt={2}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => navigate("/auth/mystats")}
+                sx={{ width: "fit-content", margin: "auto",ml:1}}
+                // startIcon={<SendIcon />}
+              >
+                Back
+              </Button>
+            </Stack>
                     <Stack rowGap={3} columnGap={2} display="grid">
                       {paramList?.map((item: any, index: number) => {
                         return (

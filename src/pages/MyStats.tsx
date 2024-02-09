@@ -55,34 +55,26 @@ export default function MyStats(props: any) {
     status: "Success",
     volume: "",
     count: "",
-    color: "#36B37E",
-    logo: Framegreen,
-    graph: Graphgreen,
+    color: "#1C1C1C",
   });
   const [Pending, setPending] = useState<any>({
     status: "Pending",
     volume: "",
     count: "",
-    color: "#FFAB00",
-    logo: Framegreen,
-    graph: Graphgreen,
+    color: "#1C1C1C",
   });
   const [Failed, setFailed] = useState<any>({
     status: "Failed",
     volume: "",
     count: "",
-    color: "#FF5630",
-    logo: Frameorange,
-    graph: Graphorange,
+    color: "#1C1C1C",
   });
 
   const [Total, setTotal] = useState<any>({
     status: "Transactions",
     volume: "",
     count: "",
-    color: "#3340A1",
-    logo: Framegreen,
-    graph: Graphgreen,
+    color: "#1C1C1C",
   });
 
   const Values = [
@@ -286,7 +278,7 @@ export default function MyStats(props: any) {
         <Stack sx={{ flexDirection: "row", gap: 1, marginTop: "10px" }}>
           <Card
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "#E3F4FF",
               borderRadius: "15px",
               boxShadow: "30px",
               width: "33%",
@@ -298,53 +290,34 @@ export default function MyStats(props: any) {
                   fontFamily: "Public Sans",
                   fontSize: "18px",
                   fontWeight: 600,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "left",
                 }}
               >
                 <Typography style={{ color: Success.color }}>
                   {Success.status}
                 </Typography>
-                <Typography>{Success.count}</Typography>
+                <Typography variant="h3">{Success.count}</Typography>
               </Stack>
-              <Stack
-                sx={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
-                <img
-                  src={Success.logo}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
-                <img
-                  src={Success.graph}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
-              </Stack>
+
               <Typography
                 sx={{
                   fontFamily: "Public Sans",
                   fontSize: "15px",
                   fontWeight: 100,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "right",
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography>Rs.{fCurrency(Success?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Success?.volume || "0")}</Typography>
               </Typography>
             </CardContent>
           </Card>
 
           <Card
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "#E5ECF6",
               borderRadius: "15px",
               boxShadow: "30px",
               width: "33%",
@@ -356,53 +329,33 @@ export default function MyStats(props: any) {
                   fontFamily: "Public Sans",
                   fontSize: "18px",
                   fontWeight: 600,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "left",
                 }}
               >
                 <Typography style={{ color: Pending.color }}>
                   {Pending.status}
                 </Typography>
-                <Typography>{Pending.count}</Typography>
-              </Stack>
-              <Stack
-                sx={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
-                <img
-                  src={Pending.logo}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
-                <img
-                  src={Pending.graph}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
+                <Typography variant="h3">{Pending.count}</Typography>
               </Stack>
               <Typography
                 sx={{
                   fontFamily: "Public Sans",
                   fontSize: "15px",
                   fontWeight: 100,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "right",
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography> Rs.{fCurrency(Pending?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Pending?.volume || "0")}</Typography>
               </Typography>
             </CardContent>
           </Card>
 
           <Card
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "#E3F4FF",
               borderRadius: "15px",
               boxShadow: "30px",
               width: "33%",
@@ -414,53 +367,33 @@ export default function MyStats(props: any) {
                   fontFamily: "Public Sans",
                   fontSize: "18px",
                   fontWeight: 600,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "left",
                 }}
               >
                 <Typography style={{ color: Failed.color }}>
                   {Failed.status}
                 </Typography>
-                <Typography>{Failed.count}</Typography>
-              </Stack>
-              <Stack
-                sx={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
-                <img
-                  src={Failed.logo}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
-                <img
-                  src={Failed.graph}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
+                <Typography variant="h3">{Failed.count}</Typography>
               </Stack>
               <Typography
                 sx={{
                   fontFamily: "Public Sans",
                   fontSize: "15px",
                   fontWeight: 100,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "right",
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography> Rs. {fCurrency(Failed?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Failed?.volume || "0")}</Typography>
               </Typography>
             </CardContent>
           </Card>
 
           <Card
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "#E5ECF6",
               borderRadius: "15px",
               boxShadow: "30px",
               width: "33%",
@@ -472,46 +405,26 @@ export default function MyStats(props: any) {
                   fontFamily: "Public Sans",
                   fontSize: "18px",
                   fontWeight: 600,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "left",
                 }}
               >
                 <Typography style={{ color: Total.color }}>
                   {Total.status}
                 </Typography>
-                <Typography>{Total.count}</Typography>
-              </Stack>
-              <Stack
-                sx={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
-                <img
-                  src={Total.logo}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
-                <img
-                  src={Total.graph}
-                  alt="logo"
-                  style={{
-                    width: "40px",
-                    height: "30px",
-                  }}
-                />
+                <Typography variant="h3">{Total.count}</Typography>
               </Stack>
               <Typography
                 sx={{
                   fontFamily: "Public Sans",
                   fontSize: "15px",
                   fontWeight: 100,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  justifyContent: "right",
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography> Rs. {fCurrency(Total?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Total?.volume || "0")}</Typography>
               </Typography>
             </CardContent>
           </Card>

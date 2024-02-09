@@ -25,6 +25,7 @@ import { useSnackbar } from "notistack";
 import Lottie from "lottie-react";
 import fingerScan from "../../../components/JsonAnimations/fingerprint-scan.json";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { Navigate, useNavigate } from "react-router";
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ type FormValuesProps = {
 };
 
 export default function AttendenceAeps(props: any) {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user, UpdateUserDetail, initialize } = useAuthContext();
   const theme = useTheme();
@@ -98,6 +100,7 @@ export default function AttendenceAeps(props: any) {
   //   ********************************jquery start here for capture device ***************************
 
   const Attendence = () => {
+
     handleOpenLoading();
     let token = localStorage.getItem("token");
     let body = {
@@ -355,6 +358,17 @@ export default function AttendenceAeps(props: any) {
             >
               Scan fingure to continue
             </Button>
+            <Stack mt={5}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => navigate("/auth/mystats")}
+                sx={{ width: "fit-content", margin: "auto", ml:25 }}
+                // startIcon={<SendIcon />}
+              >
+                Back
+              </Button>
+            </Stack>
           </Stack>
         </Stack>
       </FormProvider>
