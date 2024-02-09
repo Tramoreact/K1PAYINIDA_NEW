@@ -22,12 +22,14 @@ import FormProvider, {
   RHFSelect,
   RHFCodes,
 } from "../../../components/hook-form";
+import SendIcon from "@mui/icons-material/Send";
 import { useSnackbar } from "notistack";
 import _ from "lodash";
 import { LoadingButton } from "@mui/lab";
 import DMTRemitterDetail from "./DMTRemitterDetail";
 import DMTbeneficiary from "./DMTbeneficiary";
-
+import { useNavigate } from "react-router";
+import FastRewindSharpIcon from "@mui/icons-material/FastRewindSharp";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -75,6 +77,7 @@ const Reducer = (state: any, action: any) => {
 };
 
 export default function DMT() {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [remitter, remitterDispatch] = useReducer(Reducer, initialRemitter);
 
@@ -243,12 +246,16 @@ export default function DMT() {
             <Box
               rowGap={2}
               columnGap={2}
+              ml={3}
               display="grid"
               sx={{ position: "relative" }}
               gridTemplateColumns={{
                 xs: "repeat(1, 1fr)",
               }}
             >
+              <Typography variant="h3" component="h1" paragraph>
+                Money Transfer
+              </Typography>
               <RHFTextField
                 name="mobileNumber"
                 type="number"
@@ -269,11 +276,22 @@ export default function DMT() {
                 }}
               />
             </Box>
-            <Typography variant="caption">
+            <Typography variant="body2" sx={{ marginLeft: 3 }}>
               To comply with RBI guidelines, a valid sender mobile number is
               mandatory for money transfers. Please ensure you provide a valid
               sender mobile number to proceed with the transaction.
             </Typography>
+
+            <Stack mt={5}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => navigate("/auth/mystats")}
+                // startIcon={<SendIcon />}
+              >
+                Back
+              </Button>
+            </Stack>
             {remitter.remitterfetch && <DMTRemitterDetail />}
           </Grid>
           <Grid item xs={12} sm={8}>

@@ -447,7 +447,11 @@ export default function AadharPay(props: any) {
       <Helmet>
         <title>Aadhar Pay | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
-      <Typography variant="h4"></Typography>
+
+      <Typography variant="h3" component="h1" paragraph>
+        AADHAAR PAY
+      </Typography>
+
       {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (
         <RegistrationAeps />
       ) : !user?.attendanceAP ? (

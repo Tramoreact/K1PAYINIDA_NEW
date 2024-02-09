@@ -1,12 +1,12 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 // @mui
-import { Stack, Container } from '@mui/material';
+import { Stack, Container } from "@mui/material";
 // hooks
-import useOffSetTop from '../../hooks/useOffSetTop';
+import useOffSetTop from "../../hooks/useOffSetTop";
 // config
-import { HEADER } from '../../config';
+import { HEADER } from "../../config";
 //
-import Header from './Header';
+import Header from "./Header";
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +21,11 @@ export default function CompactLayout() {
         <Stack
           sx={{
             py: 12,
-            m: 'auto',
+            m: "auto",
             maxWidth: 400,
-            minHeight: '100vh',
-            textAlign: 'center',
-            justifyContent: 'center',
+            minHeight: "100vh",
+            textAlign: "center",
+            justifyContent: "center",
           }}
         >
           <Outlet />

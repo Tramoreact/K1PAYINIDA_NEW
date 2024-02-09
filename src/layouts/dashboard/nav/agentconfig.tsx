@@ -23,17 +23,17 @@ const agentNavConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: "My Stats",
+    subheader: "GENERAL",
     items: [
       {
-        title: "My Stats",
+        title: "Dashboard",
         path: PATH_DASHBOARD.mystats,
         icon: ICONS.dashboard,
       },
     ],
   },
   {
-    subheader: "Dashboard",
+    subheader: "",
     items: [
       {
         title: "services",
@@ -42,8 +42,8 @@ const agentNavConfig = [
       },
 
       {
-        title: "service",
-        path: PATH_DASHBOARD.service.dmt,
+        title: "Services",
+        path: PATH_DASHBOARD.service.root,
         icon: ICONS.user,
         children: [
           {
@@ -63,12 +63,12 @@ const agentNavConfig = [
             path: PATH_DASHBOARD.service.aeps,
           },
           {
-            title: "billpayment",
+            title: "Bill ayment",
             path: PATH_DASHBOARD.service.billpayment,
           },
           {
             title: "Aadhaary Pay",
-            path: PATH_DASHBOARD.service.aadhaarypay,
+            path: PATH_DASHBOARD.service.aadhaarpay,
           },
         ],
       },

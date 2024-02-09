@@ -23,7 +23,7 @@ const distributorNavConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: "My Stats",
+    subheader: "GENRERAL",
     items: [
       {
         title: "My Stats",

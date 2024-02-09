@@ -1,7 +1,7 @@
 import { memo } from "react";
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
+import { AppBar, Box, BoxProps, Stack, Toolbar } from "@mui/material";
 // config
 import { HEADER } from "../../../config";
 // utils
@@ -41,7 +41,6 @@ function NavHorizontal() {
           data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
         />
       </Toolbar>
-
       <Shadow />
     </AppBar>
   );

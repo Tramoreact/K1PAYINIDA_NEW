@@ -667,7 +667,10 @@ export default function AEPS(props: any) {
         <title>AEPS | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
 
-      <Typography variant="h4"></Typography>
+      <Typography variant="h3" component="h1" paragraph>
+        AEPS
+      </Typography>
+
       {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (
         <RegistrationAeps />
       ) : new Date(user?.presenceAt).toLocaleDateString() !==

@@ -155,13 +155,13 @@ function Searchbar() {
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
-        {!open && (
+        {/* {!open && (
           <IconButtonAnimate onClick={handleOpen}>
             <Iconify icon="eva:search-fill" />
           </IconButtonAnimate>
-        )}
+        )} */}
 
-        <Slide direction="down" in={open} mountOnEnter unmountOnExit>
+        {/* <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
             <Autocomplete
               sx={{ width: 1, height: 1 }}
@@ -255,7 +255,7 @@ function Searchbar() {
               }}
             />
           </StyledSearchbar>
-        </Slide>
+        </Slide> */}
       </div>
     </ClickAwayListener>
   );

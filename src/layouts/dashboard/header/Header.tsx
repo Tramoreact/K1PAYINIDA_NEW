@@ -1,6 +1,6 @@
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { Stack, AppBar, Toolbar, IconButton } from "@mui/material";
+import { Stack, AppBar, Toolbar, IconButton, Divider } from "@mui/material";
 // utils
 import { bgBlur } from "../../../utils/cssStyles";
 // hooks

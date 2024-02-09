@@ -18,13 +18,13 @@ export default function Recharges(props: any) {
   const [currentTab, setCurrentTab] = useState("Mobile Prepaid");
 
   useEffect(() => {
-    setCurrentTab(categoryContext.sub_category[0].sub_category_name);
-    setSubcategoryId(categoryContext.sub_category[0]._id);
+    setCurrentTab(categoryContext?.sub_category[0].sub_category_name);
+    setSubcategoryId(categoryContext?.sub_category[0]._id);
   }, []);
 
   const changeTab = (val: any) => {
-    setCurrentTab(val.sub_category_name);
-    setSubcategoryId(val._id);
+    setCurrentTab(val?.sub_category_name);
+    setSubcategoryId(val?._id);
   };
 
   return (
@@ -43,7 +43,7 @@ export default function Recharges(props: any) {
           aria-label="basic tabs example"
           sx={{ background: "#F4F6F8" }}
         >
-          {categoryContext.sub_category.map((tab: any) => (
+          {categoryContext?.sub_category?.map((tab: any) => (
             <Tab
               key={tab._id}
               sx={{ mx: 3 }}

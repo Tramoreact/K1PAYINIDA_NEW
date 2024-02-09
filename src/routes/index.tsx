@@ -42,7 +42,7 @@ import {
   AEPS,
   DMTTwo,
   BillPayment,
-  AadhaaryPay,
+  AadhaarPay,
 } from "./elements";
 
 // ----------------------------------------------------------------------
@@ -125,16 +125,16 @@ export default function Router() {
           path: "service",
           children: [
             {
-              element: <Navigate to="/auth/service/recharge" replace />,
+              element: <Navigate to="/auth/service/dmt" replace />,
               index: true,
             },
 
-            { path: "Recharge", element: <Recharge /> },
-            { path: "DMT", element: <DMT /> },
-            { path: "DMT2", element: <DMTTwo /> },
-            { path: "AEPS", element: <AEPS /> },
-            { path: "BillPayment", element: <BillPayment /> },
-            { path: "AadhaaryPay", element: <AadhaaryPay /> },
+            { path: "recharge", element: <Recharge /> },
+            { path: "dmt", element: <DMT /> },
+            { path: "dmt2", element: <DMTTwo /> },
+            { path: "aeps", element: <AEPS /> },
+            { path: "billpayment", element: <BillPayment /> },
+            { path: "aadhaarpay", element: <AadhaarPay /> },
           ],
         },
 

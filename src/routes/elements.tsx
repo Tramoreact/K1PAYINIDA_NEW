@@ -65,7 +65,7 @@ export const AEPS = Loadable(
 export const BillPayment = Loadable(
   lazy(() => import("../sections/services/billPayments/BillPayment"))
 );
-export const AadhaaryPay = Loadable(
+export const AadhaarPay = Loadable(
   lazy(() => import("../sections/services/aadharpay/AadharPay"))
 );
 //Network

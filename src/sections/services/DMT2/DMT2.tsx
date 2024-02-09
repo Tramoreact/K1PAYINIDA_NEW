@@ -27,7 +27,8 @@ import _ from "lodash";
 import { LoadingButton } from "@mui/lab";
 import DMT2RemitterDetail from "./DMT2RemitterDetail";
 import DMT2BeneTable from "./DMT2BeneTable";
-
+import { useNavigate } from "react-router";
+import SendIcon from "@mui/icons-material/Send";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -75,6 +76,7 @@ const Reducer = (state: any, action: any) => {
 };
 
 export default function DMT2() {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [remitter, remitterDispatch] = useReducer(Reducer, initialRemitter);
 
@@ -238,12 +240,16 @@ export default function DMT2() {
             <Box
               rowGap={2}
               columnGap={2}
+              ml={3}
               display="grid"
               sx={{ position: "relative" }}
               gridTemplateColumns={{
                 xs: "repeat(1, 1fr)",
               }}
             >
+              <Typography variant="h3" component="h1" paragraph>
+                DMT2
+              </Typography>
               <RHFTextField
                 name="mobileNumber"
                 type="number"
@@ -263,11 +269,22 @@ export default function DMT2() {
                 }}
               />
             </Box>
-            <Typography variant="caption">
+            <Typography variant="body2" sx={{ marginLeft: 3 }}>
               To comply with RBI guidelines, a valid sender mobile number is
               mandatory for DMT2. Please ensure you provide a valid sender
               mobile number to proceed with the transaction.
             </Typography>
+
+            <Stack mt={5}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => navigate("/auth/mystats")}
+                // startIcon={<SendIcon />}
+              >
+                Back
+              </Button>
+            </Stack>
             {remitter.remitterfetch && <DMT2RemitterDetail />}
           </Grid>
           <Grid item sm={8} sx={{ width: "100%" }}>

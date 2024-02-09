@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // @mui
-import { Box, Stack, Drawer, Button } from "@mui/material";
+import { Box, Typography, Stack, Drawer, Button, Divider } from "@mui/material";
 // hooks
 import useResponsive from "../../../hooks/useResponsive";
 // config
@@ -19,6 +19,7 @@ import distributorNavConfig from "./distributorconfig";
 import { useAuthContext } from "src/auth/useAuthContext";
 import Label from "src/components/label/Label";
 import { fCurrency } from "src/utils/formatNumber";
+import { CustomAvatar } from "src/components/custom-avatar";
 
 // ----------------------------------------------------------------------
 
@@ -84,13 +85,24 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
           </>
         )}
       </Stack>
-
+      <Stack flexDirection="row" gap={1} margin={4}>
+        <CustomAvatar
+          name={user?.firstName ? user?.lastName : ""}
+          alt={user?.firstName}
+          src={user?.firstName && user?.selfie[0]}
+        />
+        <Stack>
+          <Typography>{user?.role}</Typography>
+          <Typography>
+            {user?.firstName} {user?.lastName}
+          </Typography>
+        </Stack>
+      </Stack>
+      <Divider />
       <NavSectionVertical
         data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
       />
-
       <Box sx={{ flexGrow: 1 }} />
-
       <Button
         variant="contained"
         sx={{ m: 2 }}
