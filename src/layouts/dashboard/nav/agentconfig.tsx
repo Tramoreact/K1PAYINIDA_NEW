@@ -35,11 +35,11 @@ const agentNavConfig = [
   {
     subheader: "",
     items: [
-      {
-        title: "services",
-        path: PATH_DASHBOARD.services,
-        icon: ICONS.ecommerce,
-      },
+      // {
+      //   title: "services",
+      //   path: PATH_DASHBOARD.services,
+      //   icon: ICONS.ecommerce,
+      // },
 
       {
         title: "Services",

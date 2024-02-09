@@ -247,9 +247,9 @@ export default function MyStats(props: any) {
               p: 4,
               display: "flex",
               width: "100%",
-              justifyContent: "space-between",
+              justifyContent: "center",
             }}
-            gap={10}
+            gap={6}
           >
             <img
               src={Recharge}
@@ -270,7 +270,7 @@ export default function MyStats(props: any) {
             <img src={MATM} />
             <img
               src={AadharPay}
-              onClick={() => navigate("/auth/service/aadhaarypay")}
+              onClick={() => navigate("/auth/service/aadhaarpay")}
             />
             <img src={IndoNepal} />
           </Box>
@@ -310,7 +310,10 @@ export default function MyStats(props: any) {
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Success?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ ml: 2 }}>
+                  {" "}
+                  ₹ {fCurrency(Success?.volume || "0")}
+                </Typography>
               </Typography>
             </CardContent>
           </Card>
@@ -348,7 +351,10 @@ export default function MyStats(props: any) {
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Pending?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ ml: 2 }}>
+                  {" "}
+                  ₹ {fCurrency(Pending?.volume || "0")}
+                </Typography>
               </Typography>
             </CardContent>
           </Card>
@@ -386,7 +392,10 @@ export default function MyStats(props: any) {
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Failed?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ ml: 2 }}>
+                  {" "}
+                  ₹ {fCurrency(Failed?.volume || "0")}
+                </Typography>
               </Typography>
             </CardContent>
           </Card>
@@ -424,7 +433,10 @@ export default function MyStats(props: any) {
                 }}
               >
                 <Typography>{"Transaction Value"}</Typography>
-                <Typography variant="h6" sx={{ml:2}}> ₹ {fCurrency(Total?.volume || "0")}</Typography>
+                <Typography variant="h6" sx={{ ml: 2 }}>
+                  {" "}
+                  ₹ {fCurrency(Total?.volume || "0")}
+                </Typography>
               </Typography>
             </CardContent>
           </Card>
