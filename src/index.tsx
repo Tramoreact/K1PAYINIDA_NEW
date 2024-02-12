@@ -22,6 +22,7 @@ import { AuthProvider } from "./auth/JwtContext";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import MyServices from "./pages/auth/MyServices";
 
 // ----------------------------------------------------------------------
 

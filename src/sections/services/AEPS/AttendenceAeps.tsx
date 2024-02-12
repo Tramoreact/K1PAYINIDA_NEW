@@ -100,7 +100,6 @@ export default function AttendenceAeps(props: any) {
   //   ********************************jquery start here for capture device ***************************
 
   const Attendence = () => {
-
     handleOpenLoading();
     let token = localStorage.getItem("token");
     let body = {
@@ -358,7 +357,7 @@ export default function AttendenceAeps(props: any) {
             >
               Scan fingure to continue
             </Button>
-            <Stack mt={5}>
+            {/* <Stack mt={5}>
               <Button
                 variant="contained"
                 size="small"
@@ -368,7 +367,7 @@ export default function AttendenceAeps(props: any) {
               >
                 Back
               </Button>
-            </Stack>
+            </Stack> */}
           </Stack>
         </Stack>
       </FormProvider>

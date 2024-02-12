@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import React from "react";
-
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 // @mui
 import {
   Grid,
@@ -42,7 +42,7 @@ import AttendenceAeps from "./AttendenceAeps";
 import Lottie from "lottie-react";
 import fingerScan from "../../../components/JsonAnimations/fingerprint-scan.json";
 import { useAuthContext } from "src/auth/useAuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WithdrawAttendance from "./WithdrawAttendance";
 import MenuPopover from "src/components/menu-popover/MenuPopover";
 import Iconify from "src/components/iconify/Iconify";
@@ -133,7 +133,7 @@ export default function AEPS(props: any) {
   const [openAttendance, setOpenAttendance] = React.useState(false);
   const handleOpenAttendance = () => setOpenAttendance(true);
   const handleCloseAttendance = () => setOpenAttendance(false);
-
+  const navigate = useNavigate();
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
     setOpenPopover(event.currentTarget);
@@ -667,9 +667,15 @@ export default function AEPS(props: any) {
         <title>AEPS | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
 
-      <Typography variant="h3" component="h1" paragraph>
-        AEPS
-      </Typography>
+      <Stack flexDirection="row" gap={1}>
+        <ArrowBackIosNewOutlinedIcon
+          onClick={() => navigate("/auth/mystats")}
+          sx={{ height: "30px", width: "30px", marginTop: "10px" }}
+        />
+        <Typography variant="h3" component="h1" paragraph>
+          AEPS
+        </Typography>
+      </Stack>
 
       {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (
         <RegistrationAeps />

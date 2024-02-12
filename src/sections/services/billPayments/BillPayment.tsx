@@ -1,9 +1,10 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Bbps_One from "./Bbps_One";
 import Bbps_Two from "./Bbps_Two";
 import { useSnackbar } from "notistack";
-
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import { useNavigate } from "react-router";
 // ----------------------------------------------------------------------
 
 //--------------------------------------------------------------------
@@ -12,6 +13,8 @@ export default function BillPayment(props: any) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [currentTab, setCurrentTab] = React.useState("bbps1");
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -25,9 +28,16 @@ export default function BillPayment(props: any) {
           <Tab value={'bbps2'} label={<Typography>BBPS 2</Typography>} />
         </Tabs>
       </Box> */}
-      <Typography variant="h3" my={1}>
-        Bill Payment
-      </Typography>
+
+      <Stack flexDirection="row" gap={1}>
+        <ArrowBackIosNewOutlinedIcon
+          onClick={() => navigate("/auth/mystats")}
+          sx={{ height: "30px", width: "30px", marginTop: "10px" }}
+        />
+        <Typography variant="h3" component="h1" paragraph>
+          Bill Payment
+        </Typography>
+      </Stack>
       <Bbps_One />
       {/* {currentTab == 'bbps1' ?  : null} */}
     </>

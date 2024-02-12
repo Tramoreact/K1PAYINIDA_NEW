@@ -22,7 +22,7 @@ import FormProvider, {
   RHFSelect,
   RHFCodes,
 } from "../../../components/hook-form";
-import SendIcon from "@mui/icons-material/Send";
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useSnackbar } from "notistack";
 import _ from "lodash";
 import { LoadingButton } from "@mui/lab";
@@ -253,9 +253,16 @@ export default function DMT() {
                 xs: "repeat(1, 1fr)",
               }}
             >
-              <Typography variant="h3" component="h1" paragraph>
-                Money Transfer
-              </Typography>
+              <Stack flexDirection="row" gap={1}>
+                <ArrowBackIosNewOutlinedIcon
+                  onClick={() => navigate("/auth/mystats")}
+                  sx={{ height: "30px", width: "30px", marginTop: "10px" }}
+                />
+                <Typography variant="h3" component="h1" paragraph>
+                  Money Transfer
+                </Typography>
+              </Stack>
+
               <RHFTextField
                 name="mobileNumber"
                 type="number"
@@ -282,16 +289,6 @@ export default function DMT() {
               sender mobile number to proceed with the transaction.
             </Typography>
 
-            <Stack mt={5}>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => navigate("/auth/mystats")}
-                // startIcon={<SendIcon />}
-              >
-                Back
-              </Button>
-            </Stack>
             {remitter.remitterfetch && <DMTRemitterDetail />}
           </Grid>
           <Grid item xs={12} sm={8}>

@@ -44,6 +44,7 @@ import {
   BillPayment,
   AadhaarPay,
 } from "./elements";
+import MyServices from "src/pages/auth/MyServices";
 
 // ----------------------------------------------------------------------
 

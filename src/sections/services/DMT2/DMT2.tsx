@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import React, { useEffect, useReducer, useState } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 // @mui
 import {
   Grid,
@@ -247,9 +247,15 @@ export default function DMT2() {
                 xs: "repeat(1, 1fr)",
               }}
             >
-              <Typography variant="h3" component="h1" paragraph>
-                DMT2
-              </Typography>
+              <Stack flexDirection="row" gap={1}>
+                <ArrowBackIosNewOutlinedIcon
+                  onClick={() => navigate("/auth/mystats")}
+                  sx={{ height: "30px", width: "30px", marginTop: "10px" }}
+                />
+                <Typography variant="h3" component="h1" paragraph>
+                  DMT2
+                </Typography>
+              </Stack>
               <RHFTextField
                 name="mobileNumber"
                 type="number"
@@ -275,7 +281,7 @@ export default function DMT2() {
               mobile number to proceed with the transaction.
             </Typography>
 
-            <Stack mt={5}>
+            {/* <Stack mt={5}>
               <Button
                 variant="contained"
                 size="small"
@@ -284,7 +290,7 @@ export default function DMT2() {
               >
                 Back
               </Button>
-            </Stack>
+            </Stack> */}
             {remitter.remitterfetch && <DMT2RemitterDetail />}
           </Grid>
           <Grid item sm={8} sx={{ width: "100%" }}>

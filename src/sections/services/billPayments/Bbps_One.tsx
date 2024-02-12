@@ -454,7 +454,7 @@ function Bbps_One() {
                         </Typography>
                       )
                     )}
-                    <Stack mt={2}>
+                    {/* <Stack mt={2}>
                       <Button
                         variant="contained"
                         size="small"
@@ -464,7 +464,7 @@ function Bbps_One() {
                       >
                         Back
                       </Button>
-                    </Stack>
+                    </Stack> */}
                     <Stack rowGap={3} columnGap={2} display="grid">
                       {paramList?.map((item: any, index: number) => {
                         return (

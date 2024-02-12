@@ -20,6 +20,7 @@ import FormProvider, {
   RHFTextField,
   RHFSelect,
 } from "../../../components/hook-form";
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useSnackbar } from "notistack";
 import { StyledSection } from "src/layouts/login/styles";
 import Image from "src/components/image/Image";
@@ -30,6 +31,7 @@ import aadharPayImg from "../../../assets/images/aadharpay.png";
 import RegistrationAeps from "../AEPS/RegistrationAeps";
 import AttendenceAeps from "../AEPS/AttendenceAeps";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { useNavigate } from "react-router";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -74,6 +76,8 @@ export default function AadharPay(props: any) {
   const handleClose1 = () => {
     setOpen1(false);
   };
+
+  const navigate = useNavigate();
 
   const DMTSchema = Yup.object().shape({
     device: Yup.string().required("device is a required field"),
@@ -448,9 +452,15 @@ export default function AadharPay(props: any) {
         <title>Aadhar Pay | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
 
-      <Typography variant="h3" component="h1" paragraph>
-        AADHAAR PAY
-      </Typography>
+      <Stack flexDirection="row" gap={1}>
+        <ArrowBackIosNewOutlinedIcon
+          onClick={() => navigate("/auth/mystats")}
+          sx={{ height: "30px", width: "30px", marginTop: "10px" }}
+        />
+        <Typography variant="h3" component="h1" paragraph>
+          AADHAAR PAY
+        </Typography>
+      </Stack>
 
       {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (
         <RegistrationAeps />
