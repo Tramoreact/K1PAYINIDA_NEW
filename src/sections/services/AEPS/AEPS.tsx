@@ -126,7 +126,7 @@ export default function AEPS(props: any) {
   const [openT, setOpenT] = React.useState(false);
   const handleOpenT = () => setOpenT(true);
   const handleCloseT = () => setOpenT(false);
-
+  const [categoryList, setCategoryList] = useState<any>([]);
   // modal for withdrawal attendence
   const [attend, setAttend] = React.useState(true);
   const [localAttendance, setLocalAttendance] = React.useState(0);
@@ -203,6 +203,24 @@ export default function AEPS(props: any) {
   useEffect(() => {
     getBankList();
     getAepsProduct();
+  }, []);
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
+      console.log("======getcategory_list====>", Response);
+      if (Response.status == 200) {
+        if (Response.data.code == 200) {
+          setCategoryList(Response?.data?.data[1]);
+
+          setCurrentTab(
+            Response?.data?.data[7]?.sub_category[0].sub_category_name
+          );
+          // setSubcategoryId(Response?.data?.data[7]?.sub_category[0]._id);
+        } else {
+        }
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -290,7 +308,7 @@ export default function AEPS(props: any) {
       bankName: getValues("bank.bankName"),
       adhaarNumber: getValues("aadharNumber"),
       productId: productId,
-      categoryId: props.supCategory._id,
+      categoryId: categoryList?.supCategory?._id,
       captureResponse: {
         errCode: arrofObj[0].errcode || "",
         errInfo: arrofObj[0].errinfo || "",
@@ -351,7 +369,7 @@ export default function AEPS(props: any) {
       adhaarNumber: getValues("aadharNumber"),
       amount: Number(getValues("amount")),
       productId: productId,
-      categoryId: props.supCategory._id,
+      categoryId: categoryList?.supCategory?._id,
       captureResponse: {
         errCode: arrofObj[0].errcode,
         errInfo: arrofObj[0].errinfo,
@@ -418,7 +436,7 @@ export default function AEPS(props: any) {
       bankName: getValues("bank.bankName"),
       adhaarNumber: getValues("aadharNumber"),
       productId: productId,
-      categoryId: props.supCategory._id,
+      categoryId: categoryList?.supCategory?._id,
       captureResponse: {
         errCode: arrofObj[0].errcode,
         errInfo: arrofObj[0].errinfo,
@@ -774,11 +792,11 @@ export default function AEPS(props: any) {
                             }}
                             options={bankList.map((option: any) => option)}
                             getOptionLabel={(option: any) => option.bankName}
-                            renderOption={(props, option) => (
+                            renderOption={(categoryList, option) => (
                               <Box
                                 component="li"
                                 sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-                                {...props}
+                                {...categoryList}
                               >
                                 {option.bankName}
                               </Box>
