@@ -248,31 +248,49 @@ export default function MyStats(props: any) {
               display: "flex",
               width: "100%",
               justifyContent: "center",
+              // cursor: "pointer",
             }}
             gap={6}
           >
-            <img
-              src={Recharge}
-              onClick={() => navigate("/auth/service/recharge")}
-            />
-            <img
-              src={MoneyTransfer}
-              onClick={() => navigate("/auth/service/dmt")}
-            />
-
-            <img src={DMT1} />
-            <img src={DMT2} onClick={() => navigate("/auth/service/dmt2")} />
-            <img
-              src={BillPayment}
-              onClick={() => navigate("/auth/service/billpayment")}
-            />
-            <img src={AEPS} onClick={() => navigate("/auth/service/aeps")} />
-            <img src={MATM} />
-            <img
-              src={AadharPay}
-              onClick={() => navigate("/auth/service/aadhaarpay")}
-            />
-            <img src={IndoNepal} />
+            <Stack sx={{ cursor: "pointer" }}>
+              <img
+                src={Recharge}
+                onClick={() => navigate("/auth/service/recharge")}
+              />
+            </Stack>
+            <Stack sx={{ cursor: "pointer" }}>
+              <img
+                src={MoneyTransfer}
+                onClick={() => navigate("/auth/service/dmt")}
+              />
+            </Stack>
+            <Stack>
+              <img src={DMT1} />
+            </Stack>
+            <Stack sx={{ cursor: "pointer" }}>
+              <img src={DMT2} onClick={() => navigate("/auth/service/dmt2")} />
+            </Stack>
+            <Stack sx={{ cursor: "pointer" }}>
+              <img
+                src={BillPayment}
+                onClick={() => navigate("/auth/service/billpayment")}
+              />
+            </Stack>
+            <Stack sx={{ cursor: "pointer" }}>
+              <img src={AEPS} onClick={() => navigate("/auth/service/aeps")} />
+            </Stack>
+            <Stack>
+              <img src={MATM} />
+            </Stack>
+            <Stack sx={{ cursor: "pointer" }}>
+              <img
+                src={AadharPay}
+                onClick={() => navigate("/auth/service/aadhaarpay")}
+              />
+            </Stack>
+            <Stack>
+              <img src={IndoNepal} />
+            </Stack>
           </Box>
         </Card>
         <Stack sx={{ flexDirection: "row", gap: 1, marginTop: "10px" }}>
