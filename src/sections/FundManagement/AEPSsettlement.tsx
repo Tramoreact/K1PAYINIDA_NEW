@@ -28,6 +28,8 @@ import { useAuthContext } from "src/auth/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { PATH_DASHBOARD } from "src/routes/paths";
 import { DialogAnimate } from "src/components/animate";
+import dayjs from "dayjs";
+import { fDate, fDateTime } from "src/utils/formatTime";
 
 type FormValuesProps = {
   amount: number | null | string;
@@ -109,12 +111,16 @@ const SettlementToBank = ({ userBankList }: childProps) => {
   const [eligibleSettlementAmount, setEligibleSettlementAmount] = useState("");
   const [transferTo, setTransferTo] = useState<boolean | null>(null);
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
+  const [defaultAccountNumber, setDefaultAccountNumber] = useState("");
+  const [defaultIfsc, setDefaultIfsc] = useState("");
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset(defaultValues);
+    setValue("accountNumber", defaultAccountNumber);
+    setValue("ifsc", defaultIfsc);
   };
 
   const FilterSchema = Yup.object().shape({
@@ -165,11 +171,28 @@ const SettlementToBank = ({ userBankList }: childProps) => {
 
   useEffect(() => {
     getEligibleSettlementAmount();
-    userBankList.map((item: any) => {
-      if (item.isDefaultBank === true) {
-        setValue("accountNumber", item.accountNumber);
-      }
-    });
+    setValue(
+      "ifsc",
+      userBankList.filter((item: any) => {
+        return item.isDefaultBank == true;
+      })[0]?.ifsc
+    );
+    setValue(
+      "accountNumber",
+      userBankList.filter((item: any) => {
+        return item.isDefaultBank == true;
+      })[0]?.accountNumber
+    );
+    setDefaultAccountNumber(
+      userBankList.filter((item: any) => {
+        return item.isDefaultBank == true;
+      })[0]?.accountNumber
+    );
+    setDefaultIfsc(
+      userBankList.filter((item: any) => {
+        return item.isDefaultBank == true;
+      })[0]?.ifsc
+    );
   }, [userBankList]);
 
   const getEligibleSettlementAmount = () => {
@@ -188,6 +211,7 @@ const SettlementToBank = ({ userBankList }: childProps) => {
   };
 
   const settleToBank = () => {
+    setIsSubmitLoading(true);
     let token = localStorage.getItem("token");
     let body = {
       amount: String(getValues("amount")),
@@ -207,12 +231,18 @@ const SettlementToBank = ({ userBankList }: childProps) => {
         if (Response.status == 200) {
           if (Response.data.code == 200) {
             initialize();
-            handleClose();
             reset(defaultValues);
+            setValue("accountNumber", defaultAccountNumber);
+            setValue("ifsc", defaultIfsc);
             enqueueSnackbar(Response.data.message);
           } else {
-            enqueueSnackbar(Response.data.message);
+            enqueueSnackbar(Response.data.message, { variant: "error" });
           }
+          handleClose();
+          setIsSubmitLoading(false);
+        } else {
+          enqueueSnackbar("Failed", { variant: "error" });
+          setIsSubmitLoading(false);
         }
       }
     );
@@ -331,8 +361,8 @@ const SettlementToBank = ({ userBankList }: childProps) => {
               <Stack sx={{ p: 4 }} gap={1}>
                 <Typography variant="h6">Confirmation</Typography>
                 <Typography>
-                  Are you sure to settle Rs. {getValues("amount")} to main
-                  wallet
+                  Are you sure to settle{" "}
+                  <strong> Rs. {getValues("amount")}</strong> to Bank Account
                 </Typography>
                 <Stack
                   flexDirection={"row"}

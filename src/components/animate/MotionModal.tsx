@@ -10,6 +10,7 @@ import {
   varFade,
 } from "./variants";
 import MotionContainer from "./MotionContainer";
+import React from "react";
 
 // ----------------------------------------------------------------------
 
@@ -25,8 +26,8 @@ const style = {
   transform: "translate(-50%, -50%)",
 };
 
-export default function MotionModal({
-  open = false,
+export default React.memo(function MotionModal({
+  open,
   onClose,
   children,
   width = { xs: "100%", sm: 500 },
@@ -45,7 +46,7 @@ export default function MotionModal({
           {...other}
         >
           <Box sx={{ ...style, width }} component={MotionContainer}>
-            <m.div variants={varFade().inUp}>
+            <m.div variants={varBounce().inUp}>
               <Stack
                 sx={{
                   backgroundColor: "#fff",
@@ -62,4 +63,4 @@ export default function MotionModal({
       )}
     </AnimatePresence>
   );
-}
+});
