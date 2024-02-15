@@ -310,36 +310,36 @@ export default function MyTransactions() {
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.id?.firstName
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.id?.firstName
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.id?.firstName
-                      : "",
+                        ? item?.distributorDetails?.id?.firstName
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.id?.firstName
+                          : "",
 
                   "Opening Balance":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.oldMainWalletBalance
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.oldMainWalletBalance
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.oldMainWalletBalance
-                      : "",
+                        ? item?.distributorDetails?.oldMainWalletBalance
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.oldMainWalletBalance
+                          : "",
 
                   "Closing Balance":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.newMainWalletBalance
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.newMainWalletBalance
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.newMainWalletBalance
-                      : "",
+                        ? item?.distributorDetails?.newMainWalletBalance
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.newMainWalletBalance
+                          : "",
                   " Commission Amount":
                     user?._id === item?.agentDetails?.id?._id
                       ? item?.agentDetails?.commissionAmount
                       : user?._id === item?.distributorDetails?.id?._id
-                      ? item?.distributorDetails?.commissionAmount
-                      : user?._id === item?.masterDistributorDetails?.id?._id
-                      ? item?.masterDistributorDetails?.commissionAmount
-                      : "",
+                        ? item?.distributorDetails?.commissionAmount
+                        : user?._id === item?.masterDistributorDetails?.id?._id
+                          ? item?.masterDistributorDetails?.commissionAmount
+                          : "",
                   amount: item?.amount,
                   credit: item?.credit,
                   debit: item?.debit,
@@ -521,8 +521,8 @@ export default function MyTransactions() {
                       user?.role == "m_distributor"
                         ? tableLabels
                         : user?.role == "distributor"
-                        ? tableLabels1
-                        : tableLabels2
+                          ? tableLabels1
+                          : tableLabels2
                     }
                   />
 
@@ -567,8 +567,13 @@ function TransactionRow({ row }: childProps) {
   const [newRow, setNewRow] = useState(row);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [textFieldValue, setTextFieldValue] = useState('');
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  const handleTextFieldChange = (event: any) => {
+    setTextFieldValue(event.target.value);
+  };
 
   const CheckTransactionStatus = (row: any) => {
     setLoading(true);
@@ -578,13 +583,13 @@ function TransactionRow({ row }: childProps) {
       rowFor.categoryName.toLowerCase() == "money transfer"
         ? `moneyTransfer/checkStatus/` + rowFor._id
         : rowFor.categoryName.toLowerCase() == "recharges"
-        ? `agents/v1/checkStatus/` + rowFor._id
-        : rowFor.categoryName.toLowerCase() == "dmt2"
-        ? `dmt2/transaction/status/` + rowFor._id
-        : rowFor.categoryName.toLowerCase() == "bbps"
-        ? `bbps/checkStatus/` + rowFor._id
-        : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
-          `settlement/checkStatus/` + rowFor._id,
+          ? `agents/v1/checkStatus/` + rowFor._id
+          : rowFor.categoryName.toLowerCase() == "dmt2"
+            ? `dmt2/transaction/status/` + rowFor._id
+            : rowFor.categoryName.toLowerCase() == "bbps"
+              ? `bbps/checkStatus/` + rowFor._id
+              : rowFor.transactionType == "Wallet To Bank Account Settlement" &&
+              `settlement/checkStatus/` + rowFor._id,
       "GET",
       "",
       token
@@ -769,8 +774,8 @@ function TransactionRow({ row }: childProps) {
               user?.role === "agent"
                 ? newRow?.agentDetails?.oldMainWalletBalance
                 : user?.role === "distributor"
-                ? newRow?.distributorDetails?.oldMainWalletBalance
-                : newRow?.masterDistributorDetails?.oldMainWalletBalance
+                  ? newRow?.distributorDetails?.oldMainWalletBalance
+                  : newRow?.masterDistributorDetails?.oldMainWalletBalance
             )}
           </Typography>
         </StyledTableCell>
@@ -794,8 +799,8 @@ function TransactionRow({ row }: childProps) {
                 user?.role === "agent"
                   ? newRow?.agentDetails?.creditedAmount
                   : user?.role === "distributor"
-                  ? newRow?.distributorDetails?.creditedAmount
-                  : newRow?.masterDistributorDetails?.creditedAmount
+                    ? newRow?.distributorDetails?.creditedAmount
+                    : newRow?.masterDistributorDetails?.creditedAmount
               ) || 0}
             </Typography>
           </Stack>
@@ -808,8 +813,8 @@ function TransactionRow({ row }: childProps) {
               user?.role === "agent"
                 ? newRow?.agentDetails?.newMainWalletBalance
                 : user?.role === "distributor"
-                ? newRow?.distributorDetails?.newMainWalletBalance
-                : newRow?.masterDistributorDetails?.newMainWalletBalance
+                  ? newRow?.distributorDetails?.newMainWalletBalance
+                  : newRow?.masterDistributorDetails?.newMainWalletBalance
             )}
           </Typography>
         </StyledTableCell>
@@ -828,7 +833,7 @@ function TransactionRow({ row }: childProps) {
               TDS :{" "}
               {fCurrency(
                 (user?.role == "agent" && newRow?.agentDetails?.TDSAmount) ||
-                  "0"
+                "0"
               )}
             </Typography>
           </StyledTableCell>
@@ -888,17 +893,11 @@ function TransactionRow({ row }: childProps) {
           </Stack>
         </StyledTableCell>
       </StyledTableRow>
-      <Modal
-        open={modalOpen}
-        onClose={closeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={modalOpen} onClose={closeModal}>
         <Grid sx={style}>
           <Stack
             flexDirection={"row"}
             justifyContent={"flex-end"}
-            mt={1}
             mx={1}
           >
             <Tooltip title="Close" onClick={closeModal}>
@@ -919,179 +918,250 @@ function TransactionRow({ row }: childProps) {
             />
           </Stack>
           <Grid ref={componentRef} sx={{ p: 3 }}>
-            <Scrollbar sx={{ maxHeight: 600 }}>
-              <Stack sx={{ pr: 2 }}>
+            <Grid container spacing={0}>
+              <Grid item xs={12} sm={4}>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">
+                    Agent Name:{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {`${user?.firstName} ${user?.lastName}`}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">User code: </Typography>
+                  <Typography variant="caption">
+                    {`${user?.userCode}`}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">
+                    {" "}
+                    Mobile Number:{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {user?.contact_no}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">
+                    {" "}
+                    Shop Name:{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {user?.shopAddress}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1} mt={4}>
+                  <Typography variant="caption">
+                    Sender Name :{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {newRow?.moneyTransferSenderId?.remitterFN}
+                    {newRow?.moneyTransferSenderId?.remitterLN}{" "}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">
+                    {" "}
+                    Mobile Number:{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {newRow?.moneyTransferSenderId?.remitterMobile}
+                  </Typography>
+                </Stack>
+                <Stack flexDirection={"row"} gap={1}>
+                  <Typography variant="caption">
+                    {" "}
+                    Service Type:{" "}
+                  </Typography>
+                  <Typography variant="caption">
+                    {newRow?.productName}
+                  </Typography>
+                </Stack>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6">PAYMENT RECEIPT</Typography>
+              </Grid>
+              <Grid item xs={10} sm={4}>
+                <Logo />
+                <Typography variant="body2">
+                  TRX Date: {fDateTime(newRow?.createdAt)}
+                </Typography>
                 <Stack>
-                  {/* shop detail */}
-                  <Stack
-                    flexDirection={{ xs: "column", sm: "row" }}
-                    justifyContent={"space-between"}
-                    mb={1}
-                  >
-                    <Stack>
-                      <Logo />
-                      <Grid>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            Agent Name:{" "}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            {`${user?.firstName} ${user?.lastName}`}
-                          </Typography>
-                        </Stack>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            {" "}
-                            Mobile Number:{" "}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            {user?.contact_no}
-                          </Typography>
-                        </Stack>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            {" "}
-                            Shop Name:{" "}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            {user?.shopAddress}
-                          </Typography>
-                        </Stack>
-                      </Grid>
-                    </Stack>
-                    <Stack
-                      flexDirection={{ xs: "column", sm: "row" }}
-                      justifyContent={"space-between"}
-                      mt={3}
-                    >
-                      <Grid sx={{ mt: 4 }}>
-                        {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                        Sender Details
-                      </Typography> */}
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            Sender Name :{" "}
-                          </Typography>
-                          <Typography variant="body2">
-                            {newRow?.moneyTransferSenderId?.remitterFN}
-                            {newRow?.moneyTransferSenderId?.remitterLN} (
-                            {newRow?.moneyTransferSenderId?.remitterMobile})
-                          </Typography>
-                        </Stack>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            {" "}
-                            Account Holder Name:{" "}
-                          </Typography>
-                          <Typography variant="body2">
-                            {newRow?.moneyTransferBeneficiaryDetails?.beneName}
-                          </Typography>
-                        </Stack>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            {" "}
-                            Bank Name:{" "}
-                          </Typography>
-                          <Typography variant="body2">
-                            {newRow?.moneyTransferBeneficiaryDetails?.bankName}
-                          </Typography>
-                        </Stack>
-                        <Stack flexDirection={"row"} gap={1}>
-                          <Typography variant="subtitle2">
-                            {" "}
-                            Account Number:{" "}
-                          </Typography>
-                          <Typography variant="body2">
-                            {
-                              newRow?.moneyTransferBeneficiaryDetails
-                                ?.accountNumber
-                            }
-                          </Typography>
-                        </Stack>
-                      </Grid>
-                    </Stack>
-                    <Divider />
+                  <Typography variant="subtitle1">
+                    Benificary Details
+                  </Typography>
+
+                  <Stack flexDirection={"row"}>
+                    <Typography variant="body2">
+                      {" "}
+                      Account Holder Name:{" "}
+                    </Typography>
+                    <Typography variant="body2">
+                      {newRow?.moneyTransferBeneficiaryDetails?.beneName}
+                    </Typography>
+                  </Stack>
+                  <Stack flexDirection={"row"} gap={1}>
+                    <Typography variant="body2">
+                      {" "}
+                      Bank Name:{" "}
+                    </Typography>
+                    <Typography variant="body2">
+                      {newRow?.moneyTransferBeneficiaryDetails?.bankName}
+                    </Typography>
+                  </Stack>
+                  <Stack flexDirection={"row"} gap={1}>
+                    <Typography variant="body2">
+                      {" "}
+                      Account Number:{" "}
+                    </Typography>
+                    <Typography variant="body2">
+                      {
+                        newRow?.moneyTransferBeneficiaryDetails
+                          ?.accountNumber
+                      }
+                    </Typography>
+                  </Stack>
+                  <Stack flexDirection={"row"} gap={1}>
+                    <Typography variant="body2"> IFSC : </Typography>
+                    <Typography variant="body2">
+                      {newRow?.moneyTransferBeneficiaryDetails?.ifsc}
+                    </Typography>
                   </Stack>
                 </Stack>
-                <TableContainer
-                  sx={{
-                    overflow: "unset",
-                    border: "solid 1px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <Table>
-                    <TableRow>
-                      <StyledTableCell align="center">
-                        <Typography variant="subtitle1">
-                          Transaction Id
-                        </Typography>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <Typography variant="subtitle1">Service</Typography>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <Typography variant="subtitle1">UTR</Typography>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <Typography variant="subtitle1">Status</Typography>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <Typography variant="subtitle1">Amount</Typography>
-                      </StyledTableCell>
-                    </TableRow>
-
-                    <TableBody>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Scrollbar sx={{ maxHeight: 600 }}>
+                <Stack sx={{ pr: 2 }}>
+                  <TableContainer sx={{ overflow: "unset", border: "solid 1px" }}>
+                    <Table>
                       <TableRow
                         sx={{
                           borderBottom: (theme) =>
                             `solid 1.5px ${theme.palette.divider}`,
                         }}
                       >
-                        <TableCell align="center">
-                          <Typography variant="body2" noWrap>
-                            {newRow?.clientRefId}
+                        <StyledTableCell align="center">
+                          <Typography variant="subtitle2">
+                            Transaction Id
                           </Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Typography variant="body2" noWrap>
-                            {newRow?.productName}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell align="center">
-                          <Typography variant="body2" noWrap>
-                            {newRow?.vendorUtrNumber || "-"}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell align="center">
-                          <Label
-                            variant="soft"
-                            color={
-                              (newRow.status === "failed" && "error") ||
-                              ((newRow.status === "pending" ||
-                                newRow.status === "in_process") &&
-                                "warning") ||
-                              "success"
-                            }
-                            sx={{ textTransform: "capitalize" }}
-                          >
-                            {newRow.status ? sentenceCase(newRow.status) : ""}
-                          </Label>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Typography variant="body2" noWrap>
-                            Rs.{fCurrency(newRow?.amount)}
-                          </Typography>
-                        </TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Typography variant="subtitle2">Service</Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Typography variant="subtitle2">UTR</Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Typography variant="subtitle2">Status</Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Typography variant="subtitle2">Amount</Typography>
+                        </StyledTableCell>
                       </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Stack>
-            </Scrollbar>
-            <Divider sx={{ mt: 2, border: "1px solid" }} />
+
+                      <TableBody>
+                        <TableRow
+                          sx={{
+                            borderBottom: (theme) =>
+                              `solid 1.5px ${theme.palette.divider}`,
+                          }}
+                        >
+                          <TableCell align="left">
+                            <Typography variant="body2" noWrap>
+                              {newRow?.clientRefId}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" noWrap>
+                              {newRow?.productName}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Typography variant="body2" noWrap>
+                              {newRow?.vendorUtrNumber || "-"}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Label
+                              variant="soft"
+                              color={
+                                (newRow.status === "failed" && "error") ||
+                                ((newRow.status === "pending" ||
+                                  newRow.status === "in_process") &&
+                                  "warning") ||
+                                "success"
+                              }
+                              sx={{ textTransform: "capitalize" }}
+                            >
+                              {newRow.status ? sentenceCase(newRow.status) : ""}
+                            </Label>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" noWrap>
+                              Rs.{fCurrency(newRow?.amount)}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <Stack >
+                    <Typography align="left" variant="body2" whiteSpace={"nowrap"}>
+                      Transaction Amount : {" " + fCurrency(newRow.amount)}
+                    </Typography>
+                    <Typography align="left" variant="body2" whiteSpace={"nowrap"}>
+                      Agent Convienience Fee:    <TextField
+                        variant="standard"
+                        size="small"
+                        value={textFieldValue}
+                        onChange={handleTextFieldChange}
+                      />
+                    </Typography>
+                    <Grid item xs={12} md={9}>
+                      <Typography variant="caption">The convienience fee charged is the sole responsibility of the Agent. K1 assumes no libiility for the imposition of this fee and any associated consequences or issues arising from its application rest entirely with the Agent </Typography>
+                    </Grid>
+                    <Typography align="left" variant="body1" whiteSpace={"nowrap"}>Total Amount:{`${+textFieldValue + +newRow.amount}`}</Typography>
+                  </Stack>
+                  <Typography variant="subtitle2">NOTES</Typography>
+                  <Grid container>
+                    <Grid item xs={12} md={9}>
+                      <Typography variant="caption">
+                        This transaction receipt is generated automatically and
+                        dose not require a physical signature. It is not a tax
+                        invoice but serves as a record of your transaction with
+                        Tramo. Please retain it for your refrence, and if you have
+                        any queries, fell free to contact our Customer Support
+                        team.
+                      </Typography>
+                      <Typography>
+                        <Stack
+                          flexDirection={{ xs: "column", sm: "row" }}
+                          sx={{ color: "white", bgcolor: "darkblue", pt: 1, pb: 1 }}
+                          justifyContent="space-between"
+                        >
+                          <Typography variant="caption">
+                            Helpline Numbers +{process.env.REACT_APP_COMPANY_MOBILE} ,{" "}
+                            {process.env.REACT_APP_COMPANY_MOBILEOTHER}
+                          </Typography>
+                          <Typography variant="caption">
+                            Timings : 08:00AM to 10:00 PM (Mon-Sun)
+                          </Typography>
+                          <Typography variant="caption">
+                            {process.env.REACT_APP_COMPANY_EMAIL}
+                          </Typography>
+                        </Stack>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Stack>
+              </Scrollbar>
+            </Grid>
+            <Divider variant="fullWidth" style={{ borderWidth: '2px', borderStyle: 'dashed ' }} />
           </Grid>
         </Grid>
       </Modal>
