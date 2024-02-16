@@ -136,9 +136,9 @@ function MyNetworkTableRow({ row, gopro }: MyNetworkTableRowProps) {
         <TableCell>
           <Stack direction="row" alignItems="center">
             <CustomAvatar
-              alt={row.firstName}
               name={row.firstName}
-              src={row?.selfie && row?.selfie[0]}
+              alt={row.firstName}
+              src={row.selfie[0]}
             />
 
             <Box sx={{ ml: 2 }}>

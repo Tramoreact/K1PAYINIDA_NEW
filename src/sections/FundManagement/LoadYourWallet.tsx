@@ -533,14 +533,11 @@ export default function LoadYourWallet() {
                 onClick={(e) => copyToClipboard(e.currentTarget.textContent)}
                 sx={{ cursor: "pointer" }}
               >
-                {userTab == "Distributor" ? (
-                  dBankTab.name
-                ) : userTab == "Master Distributor" ? (
-                  mdBankTab.name
-                ) : (
-                  <>{process.env.REACT_APP_COMPANY_LEGAL_NAME}</>
-                )}
-
+                {userTab == "Distributor"
+                  ? dBankTab.name
+                  : userTab == "Master Distributor"
+                  ? mdBankTab.name
+                  : "Tramo Technolab Private Limited"}{" "}
                 <Icon
                   style={{ fontSize: "20px", float: "right" }}
                   icon="uil:copy"

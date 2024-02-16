@@ -47,6 +47,7 @@ import Image from "src/components/image/Image";
 import neodeposit from "../../assets/icons/neodeposit.svg";
 import { convertToWords } from "src/components/customFunctions/ToWords";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
+import TrasactionModal from "src/components/customFunctions/TrasactionModal";
 
 type FormValuesProps = {
   rupee: string;
@@ -111,8 +112,6 @@ function MyFundDeposits() {
 
   const handleSelectChange = (event: any) => {
     setSelectedItem(event.target.value);
-
-    console.log("ids>>================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", event);
 
     setSelectedBankID(event.target.value._id);
     let token = localStorage.getItem("token");
@@ -215,47 +214,93 @@ function MyFundDeposits() {
   };
 
   const onSubmit = async (data: FormValuesProps) => {
-    setVerifyLoading(true);
-    let token = localStorage.getItem("token");
-    let body = {
-      bankId: selectedBankID,
-      modeId: selectedModeId,
-      // amount: allAmount,
-      amount: data.amount,
-      date_of_deposit: formattedDate,
-      transactional_details: {
-        branch: data.branch,
-        trxId: data.trxID,
-        mobile: data.mobile,
-      },
-      request_to: "ADMIN",
-      transactionSlip: docUrl,
-    };
+    if (docUrl !== "") {
+      setVerifyLoading(true);
+      let token = localStorage.getItem("token");
+      let body = {
+        bankId: selectedBankID,
+        modeId: selectedModeId,
 
-    Api(`agent/fundManagement/raiseRequest`, "POST", body, token).then(
-      (Response: any) => {
-        if (Response.status == 200) {
-          if (Response.data.code == 200) {
-            setRequestRaise(Response.data.Id);
+        amount: data.amount,
+        date_of_deposit: formattedDate,
+        transactional_details: {
+          branch: data.branch,
+          trxId: data.trxID,
+          mobile: data.mobile,
+        },
+        request_to: "ADMIN",
+        transactionSlip: docUrl,
+      };
 
-            setVerifyLoading(false);
-            reset(defaultValues);
-            setSelectedItem("");
-            setMaxAmount("");
-            setMinAmount("");
-            setSelectedModes([]);
-            setUploadFile("");
-            // setAllAmount();
+      Api(`agent/fundManagement/raiseRequest`, "POST", body, token).then(
+        (Response: any) => {
+          if (Response.status == 200) {
+            if (Response.data.code == 200) {
+              setRequestRaise(Response.data.Id);
 
-            enqueueSnackbar(Response.data.message);
-          } else {
-            enqueueSnackbar(Response.data.message);
-            setVerifyLoading(false);
+              setVerifyLoading(false);
+              reset(defaultValues);
+              setSelectedItem("");
+              setMaxAmount("");
+              setMinAmount("");
+              setSelectedModes([]);
+              setUploadFile("");
+              setDocUrl("");
+              enqueueSnackbar(Response.data.message);
+            } else {
+              enqueueSnackbar(Response.data.message);
+              setVerifyLoading(false);
+            }
           }
         }
-      }
-    );
+      );
+    } else {
+      enqueueSnackbar("Please upload Trasaction slip");
+    }
   };
+
+  // const onSubmit = async (data: FormValuesProps) => {
+  //   setVerifyLoading(true);
+  //   let token = localStorage.getItem("token");
+  //   let body = {
+  //     bankId: selectedBankID,
+  //     modeId: selectedModeId,
+  //     // amount: allAmount,
+  //     amount: data.amount,
+  //     date_of_deposit: formattedDate,
+  //     transactional_details: {
+  //       branch: data.branch,
+  //       trxId: data.trxID,
+  //       mobile: data.mobile,
+  //     },
+  //     request_to: "ADMIN",
+  //     transactionSlip: docUrl,
+  //   };
+
+  //   Api(`agent/fundManagement/raiseRequest`, "POST", body, token).then(
+  //     (Response: any) => {
+  //       if (Response.status == 200) {
+  //         if (Response.data.code == 200) {
+  //           setRequestRaise(Response.data.Id);
+
+  //           setVerifyLoading(false);
+  //           reset(defaultValues);
+  //           setSelectedItem("");
+  //           setMaxAmount("");
+  //           setMinAmount("");
+  //           setSelectedModes([]);
+  //           setUploadFile("");
+  //           // setAllAmount();
+
+  //           enqueueSnackbar(Response.data.message);
+  //         } else {
+  //           enqueueSnackbar(Response.data.message);
+  //           setVerifyLoading(false);
+  //         }
+  //       }
+  //     }
+  //   );
+  // };
 
   return (
     <>
@@ -478,6 +523,8 @@ function MyFundDeposits() {
           <AllRequests requestRaise={requestRaise} banklist={dataB} />
         </Stack>
       </Grid> */}
+
+      {requestRaise && <TrasactionModal TrasactionCode={requestRaise} />}
     </>
   );
 }

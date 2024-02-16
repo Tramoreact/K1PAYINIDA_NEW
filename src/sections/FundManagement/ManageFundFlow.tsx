@@ -309,7 +309,7 @@ export default function ManageFundFlow() {
                             }}
                           >
                             <CustomAvatar
-                              src={item?.selfie && item?.selfie[0]}
+                              src={item?.selfie[0]}
                               alt={item?.firstName}
                               name={item?.firstName}
                             />

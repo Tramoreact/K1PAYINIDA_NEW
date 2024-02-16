@@ -90,8 +90,9 @@ export const BBPSScheme = Loadable(
 
 //Fund Requests
 export const MyFundDeposits = Loadable(
-  lazy(() => import("../sections/FundManagement/MyFundDeposites"))
+  lazy(() => import("../sections/FundManagement/MyFundDeposite"))
 );
+
 export const MyBankAccount = Loadable(
   lazy(() => import("../sections/FundManagement/MyBankAccount"))
 );

@@ -537,14 +537,12 @@ export default function AllBankDetails() {
           <Typography variant="h5">Beneficiary Name</Typography>
           <Stack flexDirection={"row"} justifyContent={"space-between"}>
             <Typography>
-              {process.env.REACT_APP_COMPANY_NAME} 
+              {process.env.REACT_APP_COMPANY_NAME} Technolab Private Limited
             </Typography>
             <Tooltip title="Copy" placement="top">
               {/* <IconButton onClick={() => onCopy('Tramo technologies Pvt. Ltd.')}> */}
               <IconButton
-                onClick={() =>
-                  onCopy("${process.env.REACT_APP_COMPANY_LEGAL_NAME}")
-                }
+                onClick={() => onCopy("Tramo Technolab Private Limited")}
               >
                 <Iconify icon="eva:copy-fill" width={24} />
               </IconButton>

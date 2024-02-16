@@ -231,6 +231,7 @@ const SettlementToBank = ({ userBankList }: childProps) => {
         if (Response.status == 200) {
           if (Response.data.code == 200) {
             initialize();
+            handleClose();
             reset(defaultValues);
             setValue("accountNumber", defaultAccountNumber);
             setValue("ifsc", defaultIfsc);
@@ -238,7 +239,6 @@ const SettlementToBank = ({ userBankList }: childProps) => {
           } else {
             enqueueSnackbar(Response.data.message, { variant: "error" });
           }
-          handleClose();
           setIsSubmitLoading(false);
         } else {
           enqueueSnackbar("Failed", { variant: "error" });
