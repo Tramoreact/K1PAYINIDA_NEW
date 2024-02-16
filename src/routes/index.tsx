@@ -40,11 +40,10 @@ import {
   Recharge,
   DMT,
   AEPS,
-  DMTTwo,
   BillPayment,
   AadhaarPay,
+  DMT2,
 } from "./elements";
-import MyServices from "src/pages/auth/MyServices";
 
 // ----------------------------------------------------------------------
 
@@ -132,7 +131,7 @@ export default function Router() {
 
             { path: "recharge", element: <Recharge /> },
             { path: "dmt", element: <DMT /> },
-            { path: "dmt2", element: <DMTTwo /> },
+            { path: "dmt2", element: <DMT2 /> },
             { path: "aeps", element: <AEPS /> },
             { path: "billpayment", element: <BillPayment /> },
             { path: "aadhaarpay", element: <AadhaarPay /> },

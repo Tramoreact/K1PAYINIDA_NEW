@@ -50,13 +50,7 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1.5 }}
       >
-        <Button
-          variant="contained"
-          onClick={() => {
-            navigate("/login");
-            logout();
-          }}
-        >
+        <Button variant="contained" onClick={logout}>
           Logout
         </Button>
       </Stack>

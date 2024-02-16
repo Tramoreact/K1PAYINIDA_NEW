@@ -56,7 +56,7 @@ export const Recharge = Loadable(
   lazy(() => import("../sections/services/recharge/Recharges"))
 );
 export const DMT = Loadable(lazy(() => import("../sections/services/DMT/DMT")));
-export const DMTTwo = Loadable(
+export const DMT2 = Loadable(
   lazy(() => import("../sections/services/DMT2/DMT2"))
 );
 export const AEPS = Loadable(

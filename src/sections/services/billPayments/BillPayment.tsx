@@ -31,7 +31,7 @@ export default function BillPayment(props: any) {
 
       <Stack flexDirection="row" gap={1}>
         <ArrowBackIosNewOutlinedIcon
-          onClick={() => navigate("/auth/mystats")}
+          onClick={() => navigate(-1)}
           sx={{
             height: "30px",
             width: "30px",

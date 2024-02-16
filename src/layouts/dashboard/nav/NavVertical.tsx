@@ -103,14 +103,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
       />
       <Box sx={{ flexGrow: 1 }} />
-      <Button
-        variant="contained"
-        sx={{ m: 2 }}
-        onClick={() => {
-          navigate("/login");
-          logout();
-        }}
-      >
+      <Button variant="contained" sx={{ m: 2 }} onClick={logout}>
         Logout
       </Button>
     </Scrollbar>

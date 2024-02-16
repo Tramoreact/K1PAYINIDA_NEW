@@ -1531,7 +1531,7 @@ function PersonalIdentification(props: any) {
 
 function ConstitutionIdentification() {
   const { enqueueSnackbar } = useSnackbar();
-  const { user, UpdateUserDetail, initialize } = useAuthContext();
+  const { user, UpdateUserDetail, initialize, logout } = useAuthContext();
 
   //Gst Certificate
 
@@ -3702,10 +3702,7 @@ function ConstitutionIdentification() {
               style={{ width: "200px" }}
               variant="contained"
               size="large"
-              onClick={() => {
-                navigate("/login");
-                localStorage.clear();
-              }}
+              onClick={logout}
             >
               Logout
             </Button>
