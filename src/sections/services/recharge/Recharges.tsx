@@ -12,15 +12,20 @@ import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutl
 import { useNavigate } from "react-router";
 // ----------------------------------------------------------------------
 
-export const SubCategoryContext = React.createContext("");
+export const SubCategoryContext = React.createContext({
+  categoryId: "",
+  subcategoryId: "",
+});
 
-export default function Recharges(props: any) {
+export default function Recharges() {
   const navigate = useNavigate();
-  const categoryContext: any = useContext(CategoryContext);
   const [subcategoryId, setSubcategoryId] = useState("");
   const [currentTab, setCurrentTab] = useState("Mobile Prepaid");
-  const [categoryList, setCategoryList] = useState<any>([]);
-  const [superCurrentTab, setSuperCurrentTab] = useState("");
+  const [categoryList, setCategoryList] = useState({
+    category_name: "",
+    sub_category: [],
+    _id: "",
+  });
 
   const changeTab = (val: any) => {
     setCurrentTab(val?.sub_category_name);
@@ -30,25 +35,23 @@ export default function Recharges(props: any) {
   useEffect(() => {
     let token = localStorage.getItem("token");
     Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
-      console.log("======getcategory_list====>", Response);
       if (Response.status == 200) {
         if (Response.data.code == 200) {
-          setCategoryList(Response?.data?.data[7]);
-
-          setCurrentTab(
-            Response?.data?.data[7]?.sub_category[0].sub_category_name
-          );
-          setSubcategoryId(Response?.data?.data[7]?.sub_category[0]._id);
-        } else {
+          Response?.data?.data?.map((item: any) => {
+            if (item.category_name == "RECHARGES") {
+              setCategoryList({
+                category_name: item.category_name,
+                sub_category: item.sub_category,
+                _id: item._id,
+              });
+              setCurrentTab(item?.sub_category[0]?.sub_category_name);
+              setSubcategoryId(item?.sub_category[0]?._id);
+            }
+          });
         }
       }
     });
   }, []);
-
-  // useEffect(() => {
-  //   setCurrentTab(categoryList?.sub_category[0].sub_category_name);
-  //   setSubcategoryId(categoryList?.sub_category[0]._id);
-  // }, []);
 
   return (
     <>
@@ -91,7 +94,12 @@ export default function Recharges(props: any) {
               />
             ))}
           </Tabs>
-          <SubCategoryContext.Provider value={subcategoryId}>
+          <SubCategoryContext.Provider
+            value={{
+              categoryId: categoryList._id,
+              subcategoryId: subcategoryId,
+            }}
+          >
             {categoryList?.sub_category?.map(
               (tab: any) =>
                 tab.sub_category_name == currentTab && (

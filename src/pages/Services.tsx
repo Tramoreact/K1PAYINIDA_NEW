@@ -87,7 +87,7 @@ export default function Services(props: any) {
               <CategoryContext.Provider value={tab} key={tab.category_name}>
                 <Box sx={{ m: 1 }}>
                   {superCurrentTab.toLowerCase() == "recharges" ? (
-                    <Recharges supCategory={tab} />
+                    <Recharges />
                   ) : // <ServiceUnderUpdate />
                   superCurrentTab.toLowerCase() == "money transfer" ? (
                     <DMT />

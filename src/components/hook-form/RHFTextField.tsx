@@ -20,7 +20,7 @@ export default function RHFTextField({ name, ...other }: Props) {
         <TextField
           {...field}
           size="small"
-          autoComplete="off"
+          // autoComplete="off"
           fullWidth
           value={
             !!name.match(/mobile/i) ? field.value?.slice(0, 10) : field.value

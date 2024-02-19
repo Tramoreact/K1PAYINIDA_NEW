@@ -255,9 +255,13 @@ function MobilePrepaid() {
   };
 
   useEffect(() => {
-    subCategoryContext &&
-      getProductFilter(categoryContext._id, subCategoryContext);
-  }, [subCategoryContext]);
+    subCategoryContext?.subcategoryId &&
+      subCategoryContext?.categoryId &&
+      getProductFilter(
+        subCategoryContext?.categoryId,
+        subCategoryContext?.subcategoryId
+      );
+  }, [subCategoryContext?.subcategoryId]);
 
   useEffect(() => {
     if (watch("mobileNumber").length === 10) {
@@ -273,18 +277,11 @@ function MobilePrepaid() {
     let token = localStorage.getItem("token");
     Api(`agents/v1/getOperator/${val}`, "GET", "", token).then(
       (Response: any) => {
-        console.log("==========>>getOperator Filter", Response);
         if (Response.status == 200) {
           if (Response.data.code == 200) {
             setValue("operator", Response.data.data.operatorid);
             setValue("operatorName", Response.data.data.plan_operator);
             setValue("circle", Response.data.data.circle);
-            console.log("=====getOperator filter code 200", Response.data.data);
-          } else {
-            console.log(
-              "==============>>> getOperator mobile number",
-              Response.massage
-            );
           }
         }
       }
@@ -299,13 +296,9 @@ function MobilePrepaid() {
       productFor: "",
     };
     Api("product/product_Filter", "POST", body, token).then((Response: any) => {
-      console.log("==========>>product Filter", Response);
       if (Response.status == 200) {
         if (Response.data.code == 200) {
           setOperatorList(Response.data.data);
-          console.log("=====product filter code 200", Response.data.data);
-        } else {
-          console.log("==============>>> post mobile number", Response.massage);
         }
       }
     });
@@ -367,11 +360,11 @@ function MobilePrepaid() {
               main_wallet_amount:
                 Response?.data?.data?.agentDetails?.newMainWalletBalance,
             });
-            handleClose1();
           } else {
             enqueueSnackbar(Response.data.message);
             rechargeDispatch({ type: "RECHARGE_FETCH_FAILURE" });
           }
+          handleClose1();
         } else {
           enqueueSnackbar("Failed");
           rechargeDispatch({ type: "RECHARGE_FETCH_FAILURE" });
