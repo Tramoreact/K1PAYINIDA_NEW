@@ -1,16 +1,18 @@
 import { m, AnimatePresence } from "framer-motion";
 // @mui
-import { Dialog, Box, Paper, DialogProps, Modal, Stack } from "@mui/material";
-//
 import {
-  varBgColor,
-  varBgKenburns,
-  varBgPan,
-  varBounce,
-  varFade,
-} from "./variants";
+  Dialog,
+  Box,
+  Paper,
+  DialogProps,
+  Modal,
+  Stack,
+  Button,
+} from "@mui/material";
+//
+import { varFade } from "./variants";
 import MotionContainer from "./MotionContainer";
-import React from "react";
+import Scrollbar from "../scrollbar/Scrollbar";
 
 // ----------------------------------------------------------------------
 
@@ -26,11 +28,11 @@ const style = {
   transform: "translate(-50%, -50%)",
 };
 
-export default React.memo(function MotionModal({
-  open,
+export default function MotionModal({
+  open = false,
   onClose,
   children,
-  width = { xs: "100%", sm: 500 },
+  width = { xs: "100%", sm: 500, md: 700, lg: 900 },
   sx,
   ...other
 }: Props) {
@@ -46,7 +48,7 @@ export default React.memo(function MotionModal({
           {...other}
         >
           <Box sx={{ ...style, width }} component={MotionContainer}>
-            <m.div variants={varBounce().inUp}>
+            <m.div variants={varFade().inUp}>
               <Stack
                 sx={{
                   backgroundColor: "#fff",
@@ -55,7 +57,15 @@ export default React.memo(function MotionModal({
                   p: 4,
                 }}
               >
-                {children}
+                <Scrollbar
+                  sx={{
+                    maxHeight: `${window.innerHeight - 100}px`,
+                    maxWidth: `${window.innerWidth - 100}px`,
+                    pr: 1,
+                  }}
+                >
+                  {children}
+                </Scrollbar>
               </Stack>
             </m.div>
           </Box>
@@ -63,4 +73,4 @@ export default React.memo(function MotionModal({
       )}
     </AnimatePresence>
   );
-});
+}
