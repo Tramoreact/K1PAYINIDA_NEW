@@ -50,6 +50,9 @@ import PrivacyPolicy from "./TermAndConditions/PrivacyPolicy";
 import GrievancePolicy from "./TermAndConditions/GrievancePolicy";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { useAuthContext } from "src/auth/useAuthContext";
+// import { requestPermission } from "./firebase";
+import MotionModal from "src/components/animate/MotionModal";
+// import CircularWithValueLabel from "src/components/customFunctions/ProgressCircular";
 
 // ----------------------------------------------------------------------
 
@@ -118,12 +121,17 @@ export default function AuthRegisterForm(props: any) {
   const [showPassword2, setconfirmPassword] = useState(false);
   const [value2, setvalue2] = React.useState("agent");
   const [radioVal, setRadioVal] = React.useState("agent");
+  const [timer, setTimer] = useState(0);
+  const [timerEmail, setTimerEmail] = useState(0);
   const [refName, setRefName] = useState("");
-  const [refByCode, setRefByCode] = useState("");
   const [verifyLoad, setVerifyLoad] = useState(false);
+  const [ClearForm, setClearForm] = useState(true);
   const [gOTP, setgOTP] = useState(false);
+  const [resendotpMobile, setResendOtp] = useState(false);
+  const [resendotpEmail, setResendotpEmail] = useState(false);
+  const [refByCode, setRefByCode] = useState("");
   const [refShow, setRefShow] = useState(false);
-  const [checkbox, setCheckbox] = useState(true);
+  const [checkbox, setCheckbox] = useState(false);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -136,10 +144,13 @@ export default function AuthRegisterForm(props: any) {
     // role: '',
   });
 
-  const handleClearClick = () => {
+  const handleClearClick = (event: React.SyntheticEvent) => {
+    reset(formValues);
     setRefName("");
     setValue("refCode", "");
+    setRefShow(false);
     setFormValues({ ...formValues, refCode: "" });
+    setgOTP(false);
   };
 
   const RegisterSchema = Yup.object().shape({
@@ -238,6 +249,7 @@ export default function AuthRegisterForm(props: any) {
   const {
     register: otpForm,
     reset: otpReset,
+    watch: watchOpt,
     setValue: otpSetValue,
     handleSubmit: handleOtpSubmit,
     formState: { errors: error2, isSubmitting: isSubmitting2 },
@@ -266,6 +278,61 @@ export default function AuthRegisterForm(props: any) {
     setRefShow(false);
     setFormValues({ ...formValues, refCode: "" });
   };
+
+  useEffect(() => {
+    let time = setTimeout(() => {
+      setTimer(timer - 1);
+    }, 1000);
+    if (timer == 0) {
+      clearTimeout(time);
+      // setOtpSend(false);
+      setResendOtp(false);
+    }
+  }, [timer]);
+
+  useEffect(() => {
+    let time = setTimeout(() => {
+      setTimerEmail(timerEmail - 1);
+    }, 1000);
+    if (timerEmail == 0) {
+      clearTimeout(time);
+      // setOtpSend(false);
+
+      setResendotpEmail(false);
+    }
+  }, [timerEmail]);
+
+  // const onSubmit = (data: FormValuesProps) => {
+  //   setFormValues({
+  //     ...formValues,
+  //     refCode: data.refCode,
+  //     mobileNumber: data.mobile,
+  //     email: data.email.toLowerCase(),
+  //     password: data.password,
+  //     confirmPassword: data.confirmPassword,
+  //   });
+  //   let body = {
+  //     email: data.email.toLowerCase(),
+  //     mobileNumber: data.mobile,
+  //   };
+  //   Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
+  //     console.log("=============>" + JSON.stringify(Response));
+  //     if (Response.status == 200) {
+  //       if (Response.data.code == 200) {
+  //         enqueueSnackbar(Response.data.message);
+  //         setgOTP(true);
+  //         setTimer(60);
+  //         setTimerEmail(60);
+  //         // setCheckbox(false);
+  //         setResendOtp(true);
+  //         setResendotpEmail(true);
+  //         setClearForm(false);
+  //       } else {
+  //         enqueueSnackbar(Response.data.message);
+  //       }
+  //     }
+  //   });
+  // };
 
   const onSubmit = (data: FormValuesProps) => {
     if (
@@ -300,13 +367,13 @@ export default function AuthRegisterForm(props: any) {
       enqueueSnackbar("Enter correct refcode ");
     }
   };
-
   const openEditModal = (val: any) => {
     setModalEdit(true);
   };
 
   const handleClose = () => {
     setModalEdit(false);
+    setCheckbox(true);
   };
 
   const resendOtp = (email: string, mobile: string) => {
@@ -319,6 +386,27 @@ export default function AuthRegisterForm(props: any) {
       if (Response.status == 200) {
         if (Response.data.code == 200) {
           enqueueSnackbar(Response.data.message);
+          setTimer(60);
+          setResendOtp(true);
+        } else {
+          enqueueSnackbar(Response.data.message);
+        }
+      }
+    });
+  };
+
+  const resendOtpEmail = (email: string, mobile: string) => {
+    let body = {
+      email: email.toLowerCase(),
+      mobileNumber: mobile,
+    };
+    Api(`auth/sendOTP`, "POST", body, "").then((Response: any) => {
+      console.log("=============>" + JSON.stringify(Response));
+      if (Response.status == 200) {
+        if (Response.data.code == 200) {
+          enqueueSnackbar(Response.data.message);
+          setTimerEmail(60);
+          setResendotpEmail(true);
         } else {
           enqueueSnackbar(Response.data.message);
         }
@@ -385,14 +473,24 @@ export default function AuthRegisterForm(props: any) {
     });
   };
 
+  // useEffect(() => requestPermission(), []);
+
   const createUser = () => {
+    let rfcode;
+    if (value2 == "distributor") {
+      rfcode = "MD_" + formValues.refCode;
+    } else if (value2 == "agent") {
+      rfcode = "D_" + formValues.refCode;
+    }
+
     const body = {
       contactNo: formValues.mobileNumber,
       email: formValues.email?.toLowerCase(),
       password: formValues.password,
       role: value2 == "m_distributor" ? value2 : radioVal,
       application_no: Math.floor(Math.random() * 10000000),
-      referralCode: formValues.refCode,
+      referralCode: rfcode,
+      FCM_token: sessionStorage.getItem("fcm"),
     };
     Api(`auth/create_account`, "POST", body, "").then((Response: any) => {
       console.log("=============> Create" + JSON.stringify(Response));
@@ -431,11 +529,16 @@ export default function AuthRegisterForm(props: any) {
   }, [watch("mobile")]);
 
   const HandleClearrefCode = () => {
-    reset(formValues);
+    reset();
     setRefName("");
     setValue("refCode", "");
     setFormValues({ ...formValues, refCode: "" });
     setRefShow(false);
+    setgOTP(false);
+    HandleEmailCode();
+    HandleMobileCode();
+    setCheckbox(false);
+    clearTimeout(timer);
   };
 
   const HandleMobileCode = () => {
@@ -456,11 +559,15 @@ export default function AuthRegisterForm(props: any) {
     otpSetValue("otp6", "");
   };
 
+  const handleChangeCheck = (event: any) => {
+    setCheckbox(event.target.checked);
+  };
+
   return (
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing={2}>
-          <TabContext value={value2}>
+        <Stack spacing={1}>
+          {/* <TabContext value={value2}>
             <TabList
               variant="scrollable"
               scrollButtons={false}
@@ -503,7 +610,44 @@ export default function AuthRegisterForm(props: any) {
                 value="m_distributor"
               />
             </TabList>
-          </TabContext>
+          </TabContext> */}
+          <Typography variant="subtitle1">You want to signup as:</Typography>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={value2}
+            onChange={handleChangeTab}
+            row
+          >
+            <FormControlLabel
+              label="Agent"
+              value="agent"
+              control={<Radio />}
+              disabled={gOTP}
+            />
+            <FormControlLabel
+              label="Distributor"
+              value="distributor"
+              control={<Radio />}
+              disabled={gOTP}
+            />
+            <FormControlLabel
+              label="Master Distributor"
+              value="m_distributor"
+              control={<Radio />}
+              disabled={gOTP}
+            />
+          </RadioGroup>
+
+          {(value2 == "agent" || value2 == "distributor") && (
+            <Stack mt={2}>
+              <Typography variant="subtitle1">
+                {" "}
+                You want to work under
+              </Typography>
+            </Stack>
+          )}
+
           {value2 == "agent" && (
             <FormControl>
               <RadioGroup
@@ -514,9 +658,16 @@ export default function AuthRegisterForm(props: any) {
                 onChange={handleChangeRadio}
               >
                 <FormControlLabel
+                  value="company"
+                  control={<Radio />}
+                  label="Comapny"
+                  disabled
+                />
+                <FormControlLabel
                   value="agent"
                   control={<Radio />}
-                  label="Netwrok Agent"
+                  label="Distributor"
+                  disabled={gOTP}
                 />
               </RadioGroup>
             </FormControl>
@@ -532,9 +683,16 @@ export default function AuthRegisterForm(props: any) {
                 onChange={handleChangeRadio}
               >
                 <FormControlLabel
+                  value="company"
+                  control={<Radio />}
+                  label="Comapny"
+                  disabled
+                />
+                <FormControlLabel
                   value="distributor"
                   control={<Radio />}
-                  label="Netwrok Distributor"
+                  label="Master Distributor"
+                  disabled={gOTP}
                 />
               </RadioGroup>
             </FormControl>
@@ -546,62 +704,71 @@ export default function AuthRegisterForm(props: any) {
               gap: 1,
             }}
           >
-            {radioVal === "directagent" ||
-              radioVal === "directdistributor" ||
-              (value2 !== "m_distributor" && (
-                <Stack sx={{ position: "relative" }}>
-                  <TextField
-                    disabled={gOTP}
-                    error={!!errors.refCode}
-                    label="Referral Code"
-                    size="small"
-                    {...register("refCode", {
-                      onChange: (e) =>
-                        setFormValues({
-                          ...formValues,
-                          refCode: e.target.value,
-                        }),
-                      required: true,
-                    })}
-                    sx={{ width: 265 }}
-                  />
-                  {!!errors.refCode && (
-                    <FormHelperText error sx={{ pl: 2 }}>
-                      Please check your Ref Code.
-                    </FormHelperText>
-                  )}
-                  {formValues.refCode && (
-                    <LoadingButton
-                      variant="contained"
-                      size="medium"
-                      loading={loading}
-                      sx={{ position: "absolute", marginLeft: "190px", top: 2 }}
-                      onClick={() => {
-                        setLoading(true);
-                        verifyRef(formValues.refCode);
-                      }}
-                      disabled={refShow}
-                    >
-                      Check
-                    </LoadingButton>
-                  )}
-                </Stack>
-              ))}
+            <Stack>
+              {radioVal === "directagent" ||
+                radioVal === "directdistributor" ||
+                (value2 !== "m_distributor" && (
+                  <Stack sx={{ position: "relative" }}>
+                    <TextField
+                      disabled={gOTP}
+                      error={!!errors.refCode}
+                      label="Referral Code"
+                      size="small"
+                      {...register("refCode", {
+                        onChange: (e) =>
+                          setFormValues({
+                            ...formValues,
+                            refCode: e.target.value,
+                          }),
+                        required: true,
+                      })}
+                      sx={{ width: 265 }}
+                    />
+                    {!!errors.refCode && (
+                      <FormHelperText error sx={{ pl: 2 }}>
+                        Please check your Ref Code.
+                      </FormHelperText>
+                    )}
+                    {formValues.refCode && (
+                      <LoadingButton
+                        variant="contained"
+                        size="medium"
+                        loading={loading}
+                        sx={{
+                          position: "absolute",
+                          marginLeft: "190px",
+                          top: 1,
+                        }}
+                        onClick={() => {
+                          setLoading(true);
+                          verifyRef(formValues.refCode);
+                        }}
+                        disabled={refShow}
+                      >
+                        Check
+                      </LoadingButton>
+                    )}
+                  </Stack>
+                ))}
+            </Stack>
+            <Stack ml={10}>
+              {refName && (
+                <Stack flexDirection="row" gap={1}>
+                  <Typography sx={{ color: "green" }} mt={1}>
+                    {refName}
+                  </Typography>
 
-            {refName && (
-              <Stack justifyContent="row" gap={1}>
-                <Typography variant="h5">
-                  {refName}{" "}
                   <Button
                     variant="outlined"
                     size="medium"
                     onClick={HandleClearrefCode}
+                    disabled={gOTP}
                   >
                     Clear
                   </Button>
-                </Typography>
-              </Stack>
-            )}
+                </Stack>
+              )}
+            </Stack>
           </Stack>
           <Stack
             sx={{
@@ -634,7 +801,7 @@ export default function AuthRegisterForm(props: any) {
               disabled={gOTP}
               name="password"
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type="password"
             />
             <RHFTextField
               disabled={gOTP}
@@ -647,32 +814,47 @@ export default function AuthRegisterForm(props: any) {
             <Stack flexDirection="row" alignItems="start">
               <Checkbox
                 {...label}
+                checked={checkbox}
                 color={"primary"}
-                onClick={() => setCheckbox(!checkbox)}
+                onChange={handleChangeCheck}
+                disabled={gOTP}
               />
+
               <p style={{ fontSize: "12px", margin: "0 auto" }}>
                 You agree to receive automated promotional, transactional
                 messages from {process.env.REACT_APP_COMPANY_NAME}. Also agree
-                our <Link onClick={openEditModal}> terms & conditions</Link>,
-                privacy policies and cookies policy.
+                our Terms & Conditions Privacy Policies and Cookies Policy.
               </p>
             </Stack>
           </FormControl>
         </Stack>
 
-        {!gOTP && (
+        <Stack flexDirection="row" gap={2}>
           <LoadingButton
             fullWidth
             size="small"
             variant="contained"
-            disabled={checkbox}
+            disabled={!checkbox || gOTP}
             // onClick={sendOTP}
             loading={isSubmitting}
             type="submit"
           >
             Generate OTP
           </LoadingButton>
-        )}
+
+          {/* <CircularWithValueLabel /> */}
+
+          <Button
+            variant="outlined"
+            fullWidth
+            size="small"
+            disabled={ClearForm}
+            onClick={HandleClearrefCode}
+          >
+            {" "}
+            Clear
+          </Button>
+        </Stack>
       </FormProvider>
 
       <FormProvider methods={method2} onSubmit={handleOtpSubmit(formSubmit)}>
@@ -684,28 +866,50 @@ export default function AuthRegisterForm(props: any) {
               style={{ textAlign: "left", marginBottom: "0" }}
             >
               Mobile Verification Code &nbsp;
-              <Link
+              {/* <Link
                 sx={{ cursor: "pointer" }}
                 variant="subtitle2"
                 style={{ float: "right" }}
                 onClick={() => resendOtp("", formValues.mobileNumber)}
               >
                 Resend code
-              </Link>
+              </Link> */}
             </Typography>
-            <Stack flexDirection="row" gap={2}>
+            <Stack flexDirection="row" gap={1}>
               <RHFCodes
                 keyName="code"
                 inputs={["code1", "code2", "code3", "code4", "code5", "code6"]}
               />
-              <Button
-                variant="outlined"
-                size="medium"
-                style={{ float: "right" }}
-                onClick={HandleMobileCode}
-              >
-                Clear
-              </Button>
+              <Stack>
+                <Stack rowGap={0.5}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      float: "right",
+                      fontSize: "10px",
+                      height: "25px",
+                    }}
+                    onClick={() => resendOtp("", formValues.mobileNumber)}
+                    size="small"
+                    disabled={resendotpMobile}
+                  >
+                    <Typography sx={{ whiteSpace: "nowrap" }} variant="caption">
+                      {" "}
+                      Resend code {timer !== 0 && `(${timer})`}{" "}
+                    </Typography>
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    style={{ float: "right", fontSize: "10px", height: "25px" }}
+                    onClick={HandleMobileCode}
+                    size="small"
+                    disabled={watchOpt("code1") == ""}
+                  >
+                    Clear
+                  </Button>
+                </Stack>
+              </Stack>
             </Stack>
             {(!!error2.code1 ||
               !!error2.code2 ||
@@ -723,28 +927,42 @@ export default function AuthRegisterForm(props: any) {
               style={{ textAlign: "left", marginBottom: "0" }}
             >
               Email Verification Code &nbsp;
-              <Link
-                sx={{ cursor: "pointer" }}
-                variant="subtitle2"
-                style={{ float: "right" }}
-                onClick={() => resendOtp(formValues.email, "")}
-              >
-                Resend code
-              </Link>
             </Typography>
-            <Stack flexDirection="row" gap={2}>
+            <Stack
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+
+                gap: 1,
+              }}
+            >
               <RHFCodes
                 keyName="otp"
                 inputs={["otp1", "otp2", "otp3", "otp4", "otp5", "otp6"]}
               />
-              <Button
-                variant="outlined"
-                size="medium"
-                style={{ float: "right" }}
-                onClick={HandleEmailCode}
-              >
-                Clear
-              </Button>
+              <Stack rowGap={0.5}>
+                <Button
+                  variant="contained"
+                  style={{ float: "left", fontSize: "10px", height: "25px" }}
+                  onClick={() => resendOtpEmail(formValues.email, "")}
+                  size="small"
+                  disabled={resendotpEmail}
+                >
+                  <Typography sx={{ whiteSpace: "nowrap" }} variant="caption">
+                    {" "}
+                    Resend code {timerEmail !== 0 && `(${timerEmail})`}
+                  </Typography>
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  style={{ float: "left", fontSize: "10px", height: "25px" }}
+                  onClick={HandleEmailCode}
+                  disabled={watchOpt("otp1") == ""}
+                >
+                  Clear
+                </Button>
+              </Stack>
             </Stack>
             {(!!error2.otp1 ||
               !!error2.otp2 ||
@@ -761,94 +979,86 @@ export default function AuthRegisterForm(props: any) {
               {verifyLoad ? (
                 <ApiDataLoading />
               ) : (
-                <LoadingButton
-                  fullWidth
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting2}
-                  sx={{ mt: 3, mb: 8 }}
-                >
-                  Verify
-                </LoadingButton>
+                <Stack alignItems="center" justifyContent="center">
+                  <LoadingButton
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting2}
+                    sx={{ mt: 2, mb: 8, width: "100px" }}
+                    size="small"
+                  >
+                    Verify
+                  </LoadingButton>
+                </Stack>
               )}
             </Stack>
           </Stack>
         )}
       </FormProvider>
 
-      <Modal
-        open={open}
-        // onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            borderRadius: 2,
-            bgcolor: "#ffffff",
-            p: 4,
-            width: {
-              xs: "75%",
-              sm: "75%",
-            },
-          }}
-        >
-          <Scrollbar sx={{ maxHeight: 600, minWidth: 650 }}>
-            <AppBar position="static">
-              <Tabs
-                value={tabValue}
-                onChange={handleChange}
-                variant="fullWidth"
-                aria-label="full width tabs example"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <Tab
-                  label=" Term and Conditions"
-                  {...a11yProps(0)}
-                  style={{ color: "#C52031" }}
-                />
-                <Tab
-                  label="Refund Policy"
-                  {...a11yProps(1)}
-                  style={{ color: "#C52031" }}
-                />
-                <Tab
-                  label="Privacy Policy"
-                  {...a11yProps(2)}
-                  style={{ color: "#C52031" }}
-                />
-                <Tab
-                  label="Grievance Policy"
-                  {...a11yProps(3)}
-                  style={{ color: "#C52031" }}
-                />
-              </Tabs>
-            </AppBar>
+      <MotionModal open={open} width={{ xs: "75%" }}>
+        <Scrollbar sx={{ maxHeight: 600, minWidth: 650 }}>
+          <AppBar
+            position="fixed"
+            style={{
+              borderRadius: "20px",
+              border: `1px solid `,
+            }}
+          >
+            <Tabs
+              value={tabValue}
+              onChange={handleChange}
+              variant="fullWidth"
+              aria-label="full width tabs example"
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: "10px",
+                border: `1px solid `,
+              }}
+            >
+              <Tab
+                label=" Term and Conditions"
+                {...a11yProps(0)}
+                style={{ color: "#C52031" }}
+              />
+              <Tab
+                label="Refund Policy"
+                {...a11yProps(1)}
+                style={{ color: "#C52031" }}
+              />
+              <Tab
+                label="Privacy Policy"
+                {...a11yProps(2)}
+                style={{ color: "#C52031" }}
+              />
+              <Tab
+                label="Grievance Policy"
+                {...a11yProps(3)}
+                style={{ color: "#C52031" }}
+              />
+            </Tabs>
+          </AppBar>
 
-            <TabPanel value={tabValue} index={0} dir={theme.direction}>
-              <TermAndCondition />
-            </TabPanel>
-            <TabPanel value={tabValue} index={1} dir={theme.direction}>
-              <RefundPolicy />
-            </TabPanel>
-            <TabPanel value={tabValue} index={2} dir={theme.direction}>
-              <PrivacyPolicy />
-            </TabPanel>
-            <TabPanel value={tabValue} index={3} dir={theme.direction}>
-              <GrievancePolicy />
-            </TabPanel>
-            {/* </Box> */}
+          <TabPanel value={tabValue} index={0} dir={theme.direction}>
+            <TermAndCondition />
+          </TabPanel>
+          <TabPanel value={tabValue} index={1} dir={theme.direction}>
+            <RefundPolicy />
+          </TabPanel>
+          <TabPanel value={tabValue} index={2} dir={theme.direction}>
+            <PrivacyPolicy />
+          </TabPanel>
+          <TabPanel value={tabValue} index={3} dir={theme.direction}>
+            <GrievancePolicy />
+          </TabPanel>
+          {/* </Box> */}
 
-            <Button onClick={handleClose} variant="contained" size="medium">
-              Acept
-            </Button>
-          </Scrollbar>
-        </Box>
-      </Modal>
+          <Button onClick={handleClose} variant="contained" size="medium">
+            Accept
+          </Button>
+        </Scrollbar>
+      </MotionModal>
     </>
   );
 }
