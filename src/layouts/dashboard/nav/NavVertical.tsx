@@ -11,11 +11,8 @@ import Logo from "../../../components/logo";
 import Scrollbar from "../../../components/scrollbar";
 import { NavSectionVertical } from "../../../components/nav-section";
 //
-import navConfig from "./agentconfig";
-import NavDocs from "./NavDocs";
+import NavConfig from "./config";
 import NavAccount from "./NavAccount";
-import agentNavConfig from "./agentconfig";
-import distributorNavConfig from "./distributorconfig";
 import { useAuthContext } from "src/auth/useAuthContext";
 import Label from "src/components/label/Label";
 import { fCurrency } from "src/utils/formatNumber";
@@ -99,9 +96,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         </Stack>
       </Stack>
       <Divider />
-      <NavSectionVertical
-        data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
-      />
+      <NavSectionVertical data={NavConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <Button variant="contained" sx={{ m: 2 }} onClick={logout}>
         Logout
