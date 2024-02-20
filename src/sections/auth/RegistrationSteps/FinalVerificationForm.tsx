@@ -49,7 +49,7 @@ import { Icon } from "@iconify/react";
 // ----------------------------------------------------------------------
 import { Api, UploadFile } from "src/webservices";
 import { useAuthContext } from "src/auth/useAuthContext";
-import { STEP_DASHBOARD } from "src/routes/paths";
+import { PATH_AUTH, STEP_DASHBOARD } from "src/routes/paths";
 import Image from "src/components/image/Image";
 //image compressor
 import Compressor from "compressorjs";
@@ -72,7 +72,7 @@ const s3 = new AWS.S3();
 export default function FinalVerificationForm(props: any) {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<any>(0);
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   useEffect(() => {
     if (user?.finalStatus == "approved" && user?.isNPIN == false) {
@@ -289,7 +289,7 @@ function PersonalIdentification(props: any) {
     width: 1,
   });
 
-  const Item = styled(Paper)(({ theme }) => ({
+  const Item: any = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(2),
@@ -548,12 +548,16 @@ function PersonalIdentification(props: any) {
               if (Response.data.status == "success") {
                 enqueueSnackbar("successfully file uploaded");
                 console.log("===200=shop====", Response.data.filePath);
-                // shopImg.push(Response.data.filePath)
+
                 let path = Response.data.filePath;
                 if (shoppath?.length < 3) {
                   setShoppath((shoppath) => [...shoppath, path]);
                   setAadharFileShopBtnDis(true);
                   setbtnDisabledForGstDocsShop(false);
+                  console.log(
+                    "///////////////////////////////////////////////////////////////////////",
+                    "jjjjjjjjjjjjjjjjjj"
+                  );
                 } else {
                   enqueueSnackbar("Only 3 images you can select!");
                 }
@@ -574,7 +578,7 @@ function PersonalIdentification(props: any) {
   };
   const ShopImageCard = {
     Bucket: process.env.REACT_APP_AWS_BUCKET_NAME,
-    Key: shoppath?.map((item: any) => item?.split("/").splice(4, 4).join("/")),
+    Key: shoppath[0]?.split("/").splice(4, 4).join("/"),
     Expires: 600, // Expiration time in seconds
   };
 
@@ -595,6 +599,8 @@ function PersonalIdentification(props: any) {
       setAadharFileChequeBtnDis(false);
     } else if (docVal == "ShopImage") {
       setAadharFileShopBtnDis(false);
+    } else if (docVal == "Selfie") {
+      setAadharFileSelfieBtnDis(false);
     }
   };
   const onSubmit = (data: FormValuesProps) => {
@@ -779,7 +785,7 @@ function PersonalIdentification(props: any) {
                                             handleDocuments("AadharFront")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
 
                                         <Image
@@ -914,7 +920,7 @@ function PersonalIdentification(props: any) {
                                             handleDocuments("AadharBack")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={
@@ -1050,7 +1056,7 @@ function PersonalIdentification(props: any) {
                                             handleDocuments("PanNumber")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={PANCard && PANCard}
@@ -1183,7 +1189,7 @@ function PersonalIdentification(props: any) {
                                             handleDocuments("CancelledCheque")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={
@@ -1319,7 +1325,7 @@ function PersonalIdentification(props: any) {
                                             handleDocuments("Selfie")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
 
                                         <Image
@@ -1431,37 +1437,40 @@ function PersonalIdentification(props: any) {
                                     </Button>
                                   ) : (
                                     <>
-                                      <Button
-                                        component="label"
-                                        size="small"
-                                        sx={{
-                                          border: "1px solid",
-
-                                          color: "black",
-
-                                          fontFamily: "Public Sans",
-                                          fontSize: "14px",
-                                          textTransform: "none",
-                                        }}
-                                        onClick={() =>
-                                          handleDocuments("ShopImage")
-                                        }
+                                      <Stack
+                                        display={"flex"}
+                                        direction={"row"}
+                                        spacing={1}
                                       >
-                                        Reset
-                                      </Button>
-                                      <Image
-                                        src={ShopImage && ShopImage}
-                                        style={{
-                                          borderRadius: "3px",
-                                          border: "1px solid black",
-                                          width: 50,
-                                          height: 50,
-                                        }}
-                                        onClick={() =>
-                                          ShopImage && handleOpen(ShopImage)
-                                        }
-                                      />
-                                      {}
+                                        <Button
+                                          component="label"
+                                          size="small"
+                                          sx={{
+                                            border: "1px solid",
+                                            color: "black",
+                                            fontFamily: "Public Sans",
+                                            fontSize: "14px",
+                                            textTransform: "none",
+                                          }}
+                                          onClick={() =>
+                                            handleDocuments("ShopImage")
+                                          }
+                                        >
+                                          Clear
+                                        </Button>
+                                        <Image
+                                          src={ShopImage && ShopImage}
+                                          style={{
+                                            borderRadius: "3px",
+                                            border: "1px solid black",
+                                            width: 50,
+                                            height: 50,
+                                          }}
+                                          onClick={() =>
+                                            ShopImage && handleOpen(ShopImage)
+                                          }
+                                        />
+                                      </Stack>
                                     </>
                                   )}
                                 </>
@@ -1476,13 +1485,21 @@ function PersonalIdentification(props: any) {
               )}
             </>
             {/* </Grid> */}
+
+            <Stack flexDirection="row" gap={1} ml={5} mt={3}>
+              <Typography variant="h6">Note :</Typography>
+              <Typography variant="body1" mt={0.5}>
+                Please ensure all your Personal KYC documents are self attested
+                and the company documents must be stamped and duly signed.{" "}
+              </Typography>
+            </Stack>
             <Stack my={5}>
               <Button
                 variant="contained"
                 sx={{ width: "fit-content", margin: "auto" }}
                 type="submit"
               >
-                Confirm & Continue
+                Continue
               </Button>
             </Stack>
           </>
@@ -2426,7 +2443,7 @@ function ConstitutionIdentification() {
                                             handlePIDDocuments("MSME")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
 
                                         <Image
@@ -2523,9 +2540,7 @@ function ConstitutionIdentification() {
                                       size="small"
                                       sx={{
                                         border: "1px solid",
-
                                         color: "black",
-
                                         fontFamily: "Public Sans",
                                         fontSize: "14px",
                                         textTransform: "none",
@@ -2544,24 +2559,42 @@ function ConstitutionIdentification() {
                                     </Button>
                                   ) : (
                                     <>
-                                      <Button
-                                        component="label"
-                                        size="small"
-                                        sx={{
-                                          border: "1px solid",
-
-                                          color: "black",
-
-                                          fontFamily: "Public Sans",
-                                          fontSize: "14px",
-                                          textTransform: "none",
-                                        }}
-                                        onClick={() =>
-                                          handlePIDDocuments("MSME")
-                                        }
+                                      <Stack
+                                        display={"flex"}
+                                        direction={"row"}
+                                        spacing={1}
                                       >
-                                        Reset
-                                      </Button>
+                                        <Button
+                                          component="label"
+                                          size="small"
+                                          sx={{
+                                            border: "1px solid",
+
+                                            color: "black",
+
+                                            fontFamily: "Public Sans",
+                                            fontSize: "14px",
+                                            textTransform: "none",
+                                          }}
+                                          onClick={() =>
+                                            handlePIDDocuments("MSME")
+                                          }
+                                        >
+                                          Clear
+                                        </Button>
+                                        <Image
+                                          src={imageMSME && imageMSME}
+                                          style={{
+                                            borderRadius: "3px",
+                                            border: "1px solid black",
+                                            width: 50,
+                                            height: 50,
+                                          }}
+                                          onClick={() =>
+                                            imageMSME && handleOpen(imageMSME)
+                                          }
+                                        />
+                                      </Stack>
                                     </>
                                   )}
                                 </>
@@ -2685,7 +2718,7 @@ function ConstitutionIdentification() {
                                               handlePIDDocuments("BusPrf")
                                             }
                                           >
-                                            Reset
+                                            Clear
                                           </Button>
                                           <Image
                                             src={imagePAN && imagePAN}
@@ -2820,7 +2853,7 @@ function ConstitutionIdentification() {
                                             )
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
 
                                         <Image
@@ -2958,7 +2991,7 @@ function ConstitutionIdentification() {
                                             )
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={
@@ -3093,7 +3126,7 @@ function ConstitutionIdentification() {
                                             handlePIDDocuments("Incorporation")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={imageCOI && imageCOI}
@@ -3224,7 +3257,7 @@ function ConstitutionIdentification() {
                                             handlePIDDocuments("MOA")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={imageMOA && imageMOA}
@@ -3355,7 +3388,7 @@ function ConstitutionIdentification() {
                                             handlePIDDocuments("AOA")
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
 
                                         <Image
@@ -3491,7 +3524,7 @@ function ConstitutionIdentification() {
                                             )
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={
@@ -3626,7 +3659,7 @@ function ConstitutionIdentification() {
                                             )
                                           }
                                         >
-                                          Reset
+                                          Clear
                                         </Button>
                                         <Image
                                           src={
@@ -3663,14 +3696,32 @@ function ConstitutionIdentification() {
               No Need of any Business Documents
             </Typography>
           )}
-          <Stack mt={10}>
+          <Stack flexDirection="row" gap={1} ml={5} mt={3}>
+            <Typography variant="h6">Note :</Typography>
+            <Typography variant="body1" mt={0.5}>
+              Please ensure all your Personal KYC documents are self attested
+              and the company documents must be stamped and duly signed.{" "}
+            </Typography>
+          </Stack>
+          <Stack mt={5}>
             {user?.isAadhaarVerified &&
             user?.isGSTVerified &&
             user?.isPANVerified &&
             user?.is_PID_Docs ? (
-              <Button variant="contained" onClick={submitDocs}>
-                Final Submit
-              </Button>
+              <>
+                <Stack justifyContent="center">
+                  <Button
+                    variant="contained"
+                    onClick={submitDocs}
+                    sx={{
+                      width: "fit-content",
+                      mx: "auto",
+                    }}
+                  >
+                    Continue
+                  </Button>
+                </Stack>
+              </>
             ) : (
               <Typography variant="h4" color="green">
                 Your Application has been submitted successfully

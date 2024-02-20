@@ -38,6 +38,7 @@ import AddharImage from "src/assets/Onboarding/AddharImage.png";
 import PanImage from "src/assets/Onboarding/PanImage.png";
 import { LoadingButton } from "@mui/lab";
 import AWS from "aws-sdk";
+import { Watch } from "@mui/icons-material";
 
 // ----------------------------------------------------------------------
 
@@ -52,19 +53,13 @@ type FormValuesProps = {
   otp6: string;
 };
 
-AWS.config.update({
-  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-  region: "ap-south-1",
-});
-
-const s3 = new AWS.S3();
-
 export default function AadharForm(props: any) {
   const { enqueueSnackbar } = useSnackbar();
   const { user, UpdateUserDetail } = useAuthContext();
   const [activeStep, setActiveStep] = useState<any>(0);
   const [otpSendSuccess, setOtpSendSuccess] = useState(false);
+  const [resendotp, setResendOtp] = useState(false);
+  const [varifyaadhar, setVerifyAadhar] = useState(false);
   const [imageAadhar, setImageAadhar] = useState("");
   const [timer, setTimer] = useState(0);
   const [aadharTemp, setAadharTemp] = useState("");
@@ -108,20 +103,13 @@ export default function AadharForm(props: any) {
     defaultValues,
   });
 
-  const {
-    reset: otpReset,
-    register: otpRegister,
-    handleSubmit: handleOtpSubmit,
-    formState: { errors: error2, isSubmitting: isSubmitting2 },
-  } = method2;
+  AWS.config.update({
+    accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    region: "ap-south-1",
+  });
 
-  const {
-    reset,
-    setValue,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = methods;
-
+  const s3 = new AWS.S3();
   const params = {
     Bucket: process.env.REACT_APP_AWS_BUCKET_NAME,
     Key: user?.image_on_aadhaar?.split("/").splice(4, 4).join("/"),
@@ -131,6 +119,24 @@ export default function AadharForm(props: any) {
   s3.getSignedUrl("getObject", params, (err: any, url: any) => {
     setImageAadhar(url);
   });
+
+  const {
+    reset: otpReset,
+    watch: watchOpt,
+    setValue: otpSetValue,
+    register: otpRegister,
+    handleSubmit: handleOtpSubmit,
+    formState: { errors: error2, isSubmitting: isSubmitting2 },
+  } = method2;
+
+  const {
+    reset,
+    setValue,
+    watch,
+    getValues,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
@@ -145,7 +151,8 @@ export default function AadharForm(props: any) {
           console.log("send otp", Response);
           if (Response.status == 200) {
             if (Response.data.code == 200) {
-              setTimer(90);
+              setTimer(60);
+              setResendOtp(true);
               setOtpSendSuccess(true);
               enqueueSnackbar(Response.data.message);
               setInitTxn(Response.data.init_txn_id);
@@ -184,6 +191,7 @@ export default function AadharForm(props: any) {
                 image_on_aadhaar: Response.data.resData.image,
               });
               setOtpSendSuccess(false);
+              setVerifyAadhar(true);
             } else if (Response.data.code == 500) {
               otpReset(defaultValues2);
 
@@ -200,20 +208,56 @@ export default function AadharForm(props: any) {
     }
   };
 
+  const handleClar = () => {
+    setValue("aadhar", "");
+    setOtpSendSuccess(false);
+    clearTimeout(timer);
+    setResendOtp(false);
+  };
+
+  const resendOtp = () => {
+    let token = localStorage.getItem("token");
+    let body = {
+      aadhaar_number: getValues("aadhar"),
+    };
+    Api(`user/KYC/v2/adhaar_gen_OTP`, "POST", body, token).then(
+      (Response: any) => {
+        console.log("=============>" + JSON.stringify(Response));
+        if (Response.status == 200) {
+          if (Response.data.code == 200) {
+            enqueueSnackbar(Response.data.message);
+          } else {
+            enqueueSnackbar(Response.data.message);
+          }
+        }
+      }
+    );
+  };
+
   const HandleAadharVarified = () => {
     UpdateUserDetail({ isAadhaarVerified: true });
     setActiveStep(1);
   };
 
-  // useEffect(() => {
-  //   let time = setTimeout(() => {
-  //     setTimer(timer - 1);
-  //   }, 1000);
-  //   if (timer == 0) {
-  //     clearTimeout(time);
-  //     setOtpSend(false);
-  //   }
-  // }, [timer]);
+  const HandleMobileCode = () => {
+    otpSetValue("otp1", "");
+    otpSetValue("otp2", "");
+    otpSetValue("otp3", "");
+    otpSetValue("otp4", "");
+    otpSetValue("otp5", "");
+    otpSetValue("otp6", "");
+  };
+
+  useEffect(() => {
+    let time = setTimeout(() => {
+      setTimer(timer - 1);
+    }, 1000);
+    if (timer == 0) {
+      clearTimeout(time);
+      // setOtpSend(false);
+      setResendOtp(false);
+    }
+  }, [timer]);
 
   useEffect(() => {
     if (user?.isAadhaarVerified) {
@@ -321,168 +365,255 @@ export default function AadharForm(props: any) {
         </Stepper>
       </Stack>
       {activeStep == 0 ? (
-        <Stack spacing={2.5}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid
-              rowGap={2}
-              display={"grid"}
-              gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-              }}
-            >
-              <Stack flexDirection={"row"} gap={2}>
-                <RHFTextField
-                  name="aadhar"
-                  type="number"
-                  label="Aadhar Card Number"
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => setValue("aadhar", "")}
-                >
-                  Clear
-                </Button>
-              </Stack>
-              <LoadingButton
-                variant="contained"
-                type="submit"
-                loading={isSubmitting}
+        <Stack>
+          <Stack spacing={2.5}>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+              <Grid
+                rowGap={2}
+                display={"grid"}
+                gridTemplateColumns={{
+                  xs: "repeat(1, 1fr)",
+                }}
               >
-                Send OTP
-              </LoadingButton>
-            </Grid>
-          </FormProvider>
-          {otpSendSuccess && (
-            <FormProvider
-              methods={method2}
-              onSubmit={handleOtpSubmit(onSubmit1)}
-            >
-              <Stack flexDirection={"row"} justifyContent={"space-between"}>
-                <Typography variant="subtitle1">
-                  Aadhar Verification Code
-                </Typography>
+                <Stack width={{ xs: "100%", sm: "80%", md: "60%", lg: "40%" }}>
+                  <RHFTextField
+                    name="aadhar"
+                    type="number"
+                    label="Aadhar Card Number"
+                    disabled={
+                      user?.getAadhar ? user?.getAadhar : otpSendSuccess
+                    }
+                  />
 
-                <Stack>
-                  {/* <Typography variant="subtitle1">
+                  <Stack flexDirection="row" mt={2} gap={2}>
+                    <LoadingButton
+                      variant="contained"
+                      type="submit"
+                      loading={isSubmitting}
+                      fullWidth
+                      size="medium"
+                      disabled={
+                        watch("aadhar") == "" ||
+                        otpSendSuccess ||
+                        user?.getAadhar
+                      }
+                    >
+                      Send OTP
+                    </LoadingButton>
+
+                    <Button
+                      variant="outlined"
+                      onClick={handleClar}
+                      fullWidth
+                      disabled={
+                        user?.getAadhar
+                          ? user?.getAadhar
+                          : watch("aadhar") == ""
+                      }
+                    >
+                      Clear
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Grid>
+            </FormProvider>
+            {otpSendSuccess && (
+              <FormProvider
+                methods={method2}
+                onSubmit={handleOtpSubmit(onSubmit1)}
+              >
+                <Stack flexDirection={"row"} justifyContent={"space-between"}>
+                  <Typography variant="subtitle1">
+                    Aadhar Verification Code
+                  </Typography>
+
+                  <Stack>
+                    {/* <Typography variant="subtitle1">
                     Resend Code {timer !== 0 && `(${timer})`}{" "}
                   </Typography> */}
-                  <Button
-                    variant="outlined"
-                    onClick={() => otpReset(defaultValues2)}
-                  >
-                    Clear
-                  </Button>
+                  </Stack>
                 </Stack>
-              </Stack>
 
-              <Stack justifyContent={"start"} flexDirection={"row"} mb={2}>
-                <RHFCodes
-                  keyName="otp"
-                  inputs={["otp1", "otp2", "otp3", "otp4", "otp5", "otp6"]}
-                />
+                <Stack
+                  justifyContent={"start"}
+                  flexDirection={"row"}
+                  mb={2}
+                  gap={1}
+                >
+                  <RHFCodes
+                    keyName="otp"
+                    inputs={["otp1", "otp2", "otp3", "otp4", "otp5", "otp6"]}
+                  />
+                  <Stack>
+                    <Stack rowGap={0.5}>
+                      <Button
+                        variant="contained"
+                        style={{
+                          float: "right",
+                          fontSize: "10px",
+                          height: "25px",
+                        }}
+                        disabled={resendotp}
+                        onClick={resendOtp}
+                        size="small"
+                      >
+                        Resend code {timer !== 0 && `(${timer})`}
+                      </Button>
 
-                {(!!error2.otp1 ||
-                  !!error2.otp2 ||
-                  !!error2.otp3 ||
-                  !!error2.otp4 ||
-                  !!error2.otp5 ||
-                  !!error2.otp6) && (
-                  <FormHelperText error sx={{ px: 2 }}>
-                    Code is required
-                  </FormHelperText>
+                      <Button
+                        variant="outlined"
+                        onClick={() => otpReset(defaultValues2)}
+                        style={{
+                          float: "right",
+                          fontSize: "10px",
+                          height: "25px",
+                        }}
+                        size="small"
+                        disabled={watchOpt("otp1") == ""}
+                      >
+                        Clear
+                      </Button>
+                    </Stack>
+                  </Stack>
+
+                  {(!!error2.otp1 ||
+                    !!error2.otp2 ||
+                    !!error2.otp3 ||
+                    !!error2.otp4 ||
+                    !!error2.otp5 ||
+                    !!error2.otp6) && (
+                    <FormHelperText error sx={{ px: 2 }}>
+                      Code is required
+                    </FormHelperText>
+                  )}
+                </Stack>
+                <Stack
+                  flexDirection="row"
+                  gap={1}
+                  width={{ xs: "100%", sm: "80%", md: "60%", lg: "35%" }}
+                >
+                  <LoadingButton
+                    variant="contained"
+                    type="submit"
+                    loading={isSubmitting2}
+                    fullWidth
+                    disabled={watchOpt("otp6") == ""}
+                  >
+                    Verify OTP
+                  </LoadingButton>
+                </Stack>
+              </FormProvider>
+            )}
+            <Stack flexDirection="row" gap={2}>
+              <Stack>
+                {user?.getAadhar && (
+                  <Stack gap={3} justifyContent={"space-between"}>
+                    <Typography
+                      variant="h4"
+                      color="green"
+                      justifySelf={"center"}
+                    >
+                      Aadhaar Verified Successfully{" "}
+                      <Icon icon="el:ok" color="green" fontSize={25} />
+                    </Typography>
+
+                    <Stack flexDirection={"row"} gap={2}>
+                      <Image
+                        src={imageAadhar && imageAadhar}
+                        style={{
+                          borderRadius: "8px",
+                          border: "1px solid black",
+                          width: 150,
+                          height: 150,
+                        }}
+                      />
+                      <Typography>
+                        <Stack
+                          flexDirection={"row"}
+                          justifyContent={"space-between"}
+                          gap={5}
+                        >
+                          <Typography variant="subtitle1">
+                            Name :{user?.nameInAadhaar}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          flexDirection={"row"}
+                          justifyContent={"space-between"}
+                          gap={5}
+                        >
+                          <Typography variant="subtitle1">
+                            Date of Birth :{formattedDate}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          flexDirection={"row"}
+                          justifyContent={"space-between"}
+                          gap={5}
+                        >
+                          <Typography variant="subtitle1">
+                            Gender : {user?.gender}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          flexDirection={"row"}
+                          justifyContent={"space-between"}
+                          gap={5}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            width={{ lg: "60%", sm: "60%", md: "80%" }}
+                          >
+                            Address : {user?.addressInAadhar}
+                          </Typography>
+                        </Stack>
+                      </Typography>
+                    </Stack>
+                  </Stack>
                 )}
               </Stack>
-              <LoadingButton
-                variant="contained"
-                type="submit"
-                loading={isSubmitting2}
-              >
-                Verify OTP
-              </LoadingButton>
-            </FormProvider>
-          )}
-          {user?.getAadhar && (
-            <Stack gap={3} justifyContent={"space-between"}>
-              <Typography variant="h4" color="green" justifySelf={"center"}>
-                Aadhaar Verified Successfully{" "}
-                <Icon icon="el:ok" color="green" fontSize={25} />
-              </Typography>
-
-              <Stack flexDirection={"row"} gap={2}>
+              {user?.getAadhar && (
+                <Stack flexDirection={"row"} justifyContent={"right"}>
+                  <Image
+                    disabledEffect
+                    visibleByDefault
+                    alt="auth"
+                    src={AddharImage}
+                    sx={{
+                      width: { xs: 200, sm: 350 },
+                    }}
+                  />
+                </Stack>
+              )}
+            </Stack>
+          </Stack>
+          <Stack>
+            {!user?.getAadhar && (
+              <Stack flexDirection={"row"} justifyContent={"right"}>
                 <Image
-                  src={imageAadhar && imageAadhar}
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid black",
-                    width: 150,
-                    height: 150,
+                  disabledEffect
+                  visibleByDefault
+                  alt="auth"
+                  src={AddharImage}
+                  sx={{
+                    width: { xs: 200, sm: 350 },
                   }}
                 />
-                <Typography>
-                  <Stack
-                    flexDirection={"row"}
-                    justifyContent={"space-between"}
-                    gap={5}
-                  >
-                    <Typography variant="subtitle1">
-                      Name :{user?.nameInAadhaar}
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    flexDirection={"row"}
-                    justifyContent={"space-between"}
-                    gap={5}
-                  >
-                    <Typography variant="subtitle1">
-                      Date of Birth :{formattedDate}
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    flexDirection={"row"}
-                    justifyContent={"space-between"}
-                    gap={5}
-                  >
-                    <Typography variant="subtitle1">
-                      Gender : {user?.gender}
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    flexDirection={"row"}
-                    justifyContent={"space-between"}
-                    gap={5}
-                  >
-                    <Typography variant="subtitle1">
-                      Address : {user?.addressInAadhar}
-                    </Typography>
-                  </Stack>
-                </Typography>
               </Stack>
-            </Stack>
-          )}
-          {!user?.getAadhar && (
-            <Stack flexDirection={"row"} justifyContent={"center"}>
-              <Image
-                disabledEffect
-                visibleByDefault
-                alt="auth"
-                src={AddharImage}
-                sx={{
-                  width: { xs: 250, sm: 450 },
-                }}
-              />
-            </Stack>
-          )}
-          {user?.getAadhar && (
-            <Stack my={5}>
-              <Button
-                variant="contained"
-                sx={{ width: "fit-content", margin: "auto" }}
-                onClick={HandleAadharVarified}
-              >
-                Confirm & Continue
-              </Button>
-            </Stack>
-          )}
+            )}
+
+            {user?.getAadhar && (
+              <Stack my={5}>
+                <Button
+                  variant="contained"
+                  sx={{ width: "fit-content", margin: "auto" }}
+                  onClick={HandleAadharVarified}
+                >
+                  Continue
+                </Button>
+              </Stack>
+            )}
+          </Stack>
         </Stack>
       ) : (
         <PanCard callback={props.callBack} />
@@ -563,153 +694,118 @@ function PanCard(props: any) {
   };
 
   const HandlePanVarified = () => {
-    // dispatch(
-    //   user?InRedux({
-    //     ...user?,
-    //     isPANVerified: true,
-    //   })
-    // );
     props.callback(2);
   };
 
   return (
-    <Grid
-      display={"grid"}
-      gridTemplateColumns={{ xs: "repeat(1, 1fr)", sm: "repeat(1, 1fr)" }}
-      rowGap={2}
-    >
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Stack flexDirection={"row"} justifyContent={"space-between"} gap={2}>
-          <TextField
-            error={!!errors.pan}
-            sx={{ width: "100%" }}
-            label="Pan Number"
-            disabled={user?.PANnumber}
-            value={panNumber || user?.PANnumber}
-            {...register("pan", {
-              onChange: (e) => setPanNumber(e.target.value.toUpperCase()),
-              required: true,
-            })}
-          />
-          <Button
-            variant="outlined"
-            size="large"
-            style={{ marginTop: "5px" }}
-            onClick={HandleClearPAN}
-          >
-            Cancel
-          </Button>
-        </Stack>
-        {!!errors.pan && (
-          <FormHelperText error sx={{ pl: 2 }}>
-            Please enter valid Pan number
-          </FormHelperText>
-        )}
-        {/* <RHFTextField name="pan" label="Pan Card Number" /> */}
-        {!user?.getPan && (
-          <Stack width={"fit-content"} sx={{ mt: 2 }}>
-            {loading ? (
-              <ApiDataLoading />
-            ) : (
-              <>
-                <Stack flexDirection={"row"} alignItems={"center"} gap={2}>
-                  <Button variant="contained" type="submit">
-                    Check
-                  </Button>
-
-                  {panAttempt && (
-                    <Typography variant="caption">
-                      {" "}
-                      Attempt left: {panAttempt}
-                    </Typography>
-                  )}
-                </Stack>
-
-                <Stack justifyContent="end">
-                  <Image
-                    disabledEffect
-                    visibleByDefault
-                    alt="auth"
-                    src={PanImage}
-                    sx={{
-                      width: "60%",
-                      marginTop: "50px",
-                      // height: '200px',
-                      // backgroundSize: 'cover',
-                      // boxShadow: 10,
-                      // border: '20px  #F0F9FB',
-                      marginLeft: "250px",
-                    }}
-                  />
-                </Stack>
-              </>
-            )}
-          </Stack>
-        )}
-      </FormProvider>
-      {user?.getPan ? (
-        <>
-          <Stack
-            alignItems={"center"}
-            justifyContent={"center"}
-            flexDirection={"row"}
-            my={3}
-            gap={1}
-          >
-            <Typography variant="h4" color="green">
-              Pan Verified Successfully{" "}
-            </Typography>
-            <Icon icon="el:ok" color="green" fontSize={25} />
-          </Stack>
-          <Stack
-            flexDirection={"row"}
-            justifyContent={"space-between"}
-            width={300}
-          >
-            <Typography variant="subtitle1">FullName:</Typography>
-            <Typography variant="body1">
-              {user?.firstName + " " + user?.lastName}
-            </Typography>
-          </Stack>
-        </>
-      ) : (
-        <Typography variant="h4" sx={{ color: "#707070", textAlign: "center" }}>
-          {errorMsg}
-        </Typography>
-      )}
-
-      {user?.getPan && (
-        <>
-          <Stack my={5}>
-            <Button
-              variant="contained"
-              sx={{ width: "fit-content", margin: "auto" }}
-              // onClick={() => props.callback(2)}
-
-              onClick={HandlePanVarified}
-            >
-              Confirm & Continue
-            </Button>
-          </Stack>
-          <Stack>
-            <Image
-              disabledEffect
-              visibleByDefault
-              alt="auth"
-              src={PanImage}
-              sx={{
-                width: "50%",
-                marginTop: "50px",
-                // height: '200px',
-                // backgroundSize: 'cover',
-                // boxShadow: 10,
-                // border: '20px  #F0F9FB',
-                marginLeft: "250px",
-              }}
+    <Stack>
+      <Grid
+        display={"grid"}
+        gridTemplateColumns={{ xs: "repeat(1, 1fr)", sm: "repeat(1, 1fr)" }}
+        rowGap={1}
+        ml={3}
+        mt={4}
+      >
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Stack width={{ xs: "100%", sm: "80%", md: "60%", lg: "30%" }}>
+            <TextField
+              error={!!errors.pan}
+              size="small"
+              label="Pan Number"
+              disabled={user?.PANnumber}
+              value={panNumber || user?.PANnumber}
+              {...register("pan", {
+                onChange: (e) => setPanNumber(e.target.value.toUpperCase()),
+                required: true,
+              })}
             />
           </Stack>
-        </>
-      )}
-    </Grid>
+          {!!errors.pan && (
+            <FormHelperText error sx={{ pl: 2 }}>
+              Please enter valid Pan number
+            </FormHelperText>
+          )}
+          {/* <RHFTextField name="pan" label="Pan Card Number" /> */}
+          {!user?.getPan && (
+            <Stack width={"fit-content"} sx={{ mt: 2 }}>
+              {loading ? (
+                <ApiDataLoading />
+              ) : (
+                <>
+                  <Stack flexDirection={"row"} alignItems={"center"} gap={2}>
+                    <Button fullWidth variant="contained" type="submit">
+                      Check
+                    </Button>
+
+                    {panAttempt && (
+                      <Typography variant="caption">
+                        {" "}
+                        Attempt left: {panAttempt}
+                      </Typography>
+                    )}
+                  </Stack>
+                </>
+              )}
+            </Stack>
+          )}
+        </FormProvider>
+        {user?.getPan ? (
+          <>
+            <Stack
+              alignItems={"center"}
+              justifyContent={"left"}
+              flexDirection={"row"}
+              my={1}
+              gap={1}
+            >
+              <Typography variant="h5" color="green">
+                Pan Verified Successfully{" "}
+              </Typography>
+              <Icon icon="el:ok" color="green" fontSize={25} />
+            </Stack>
+            <Stack flexDirection={"row"} gap={2} width={300}>
+              <Typography variant="subtitle1">FullName:</Typography>
+              <Typography variant="body1">
+                {user?.firstName + " " + user?.lastName}
+              </Typography>
+            </Stack>
+          </>
+        ) : (
+          <Typography
+            variant="h4"
+            sx={{ color: "#707070", textAlign: "center" }}
+          >
+            {errorMsg}
+          </Typography>
+        )}
+
+        {user?.getPan && (
+          <>
+            <Stack flexDirection="row" justifyContent={"space-between"} mt={1}>
+              <Button variant="contained" onClick={HandlePanVarified}>
+                Continue
+              </Button>
+            </Stack>
+          </>
+        )}
+      </Grid>
+      <Stack>
+        <Image
+          disabledEffect
+          visibleByDefault
+          alt="auth"
+          src={PanImage}
+          sx={{
+            width: "40%",
+            marginTop: "50px",
+            // height: '200px',
+            // backgroundSize: 'cover',
+            // boxShadow: 10,
+            // border: '20px  #F0F9FB',
+            marginLeft: "350px",
+          }}
+        />
+      </Stack>
+    </Stack>
   );
 }

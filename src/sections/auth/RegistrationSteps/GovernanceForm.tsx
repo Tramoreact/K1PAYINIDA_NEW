@@ -42,7 +42,9 @@ type FormValuesProps = {
   address: string;
   stateJurisdiction: string;
   panNumber: string;
-  ShopName: string;
+  village: string;
+  district: string;
+  pinCode: string;
   taxpayerType: string;
   Status: string;
   gstNumber: string;
@@ -69,6 +71,7 @@ export default function GovernanceForm(props: any) {
     status: "",
     address: "",
   });
+  const [saveGst, setGSTSave] = React.useState(false);
   const [radioVal, setRadioVal] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [remainingAttempt, setRemainingAttempt] = React.useState(null);
@@ -120,7 +123,7 @@ export default function GovernanceForm(props: any) {
     // gst: Yup.number().required('GST Number required').test('len', 'Enter Valid 15-digits GST Number', (val:any) => val.toString().length == 15),
 
     gst:
-      valueTabs == 0 || radioVal !== "Individual"
+      valueTabs == 0
         ? Yup.string()
             .matches(
               /^([0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1})$/,
@@ -135,20 +138,10 @@ export default function GovernanceForm(props: any) {
     BusinessName: Yup.string().required("Business Name is required"),
     address: Yup.string().required("Address is required"),
     stateJurisdiction: Yup.string().required("State is required"),
-    ShopName:
-      radioVal == "Individual" && !user?.isGSTVerified
-        ? Yup.string().required("State is required")
-        : Yup.string(),
-    panNumber:
-      radioVal !== "Individual"
-        ? Yup.string()
-            .required("PAN Card Number required")
-            .uppercase()
-            .matches(/[0-9]/, "Enter valid PAN")
-            .matches(/[A-Z]/, "Enter valid PAN")
-            .max(10)
-            .length(10, "Enter Valid PAN Number")
-        : Yup.string(),
+    village: Yup.string().required("State is required"),
+
+    district: Yup.string().required("district is required"),
+    pinCode: Yup.string().required("Pin Code is required"),
   });
 
   const defaultValues = {
@@ -161,7 +154,7 @@ export default function GovernanceForm(props: any) {
     village: "",
     district: "",
     stateJurisdiction: "",
-    pin: "",
+    pinCode: "",
   };
 
   const method2 = useForm<FormValuesProps>({
@@ -179,6 +172,7 @@ export default function GovernanceForm(props: any) {
   const {
     reset: reset2,
     register,
+    trigger,
     handleSubmit: handleFormSubmit,
     formState: { errors: error2, isSubmitting: isSubmitting2 },
   } = method2;
@@ -264,10 +258,11 @@ export default function GovernanceForm(props: any) {
         business_name: data.BusinessName,
         state_jurisdiction: data.stateJurisdiction,
         taxpayer_type: data.taxpayerType,
-
-        // pan_number: data.panNumber,
-        // gst_number: data.gstNumber,
-        company_name: data.ShopName,
+        district: data.district,
+        business_pincode: data.pinCode,
+        vtc: data.village,
+        gst_number: data.gstNumber,
+        // company_name: data.village,
         status: data.Status,
         userId: user?._id,
         constitution_type: radioVal,
@@ -285,6 +280,9 @@ export default function GovernanceForm(props: any) {
             localStorage.setItem("PANnumber", data.pan);
             localStorage.setItem("gst", data.gstNumber);
             localStorage.setItem("address", data.address);
+            localStorage.setItem("district", data?.district);
+            localStorage.setItem("village", data.village);
+            localStorage.setItem("pinCode", data.pinCode);
             localStorage.setItem("status", data.Status);
             localStorage.setItem("constition", radioVal);
             UpdateUserDetail({
@@ -314,7 +312,6 @@ export default function GovernanceForm(props: any) {
         // taxpayer_type: gstDeatil.constitution_type,
         // address: gstDeatil.address,
         // pan_number: gstDeatil.pan_number,
-
         company_name: gstDeatil.company_name,
         gst_number: gstDeatil.gst_number,
         status: gstDeatil.status,
@@ -362,13 +359,40 @@ export default function GovernanceForm(props: any) {
     reset(gstDeatil);
   };
 
-  const SaveGstData = () => {
-    setGstData(true);
+  // const SaveGstData = () => {
+  //   trigger([
+  //     "BusinessName",
+  //     "address",
+  //     "district",
+  //     "village",
+  //     "stateJurisdiction",
+  //     "pinCode",
+  //   ]);
+  //   setGstData(true);
+  // };
+
+  const SaveGstData = async () => {
+    if (
+      await trigger([
+        "BusinessName",
+        "address",
+        "district",
+        "village",
+        "stateJurisdiction",
+        "pinCode",
+      ])
+    ) {
+      setGSTSave(true);
+      setGstData(true);
+    }
   };
+
   const ClearGstData = () => {
     reset2(defaultValues2);
     setGstData(false);
     setRadioVal("");
+
+    setGSTSave(false);
   };
 
   return (
@@ -393,12 +417,14 @@ export default function GovernanceForm(props: any) {
                 onClick={(e) => handleChangePanel2(e, 1)}
                 control={<Radio />}
                 label="Yes"
+                disabled={saveGst}
               />
               <FormControlLabel
                 value={0}
                 onClick={(e) => handleChangePanel2(e, 0)}
                 control={<Radio />}
                 label="No"
+                disabled={saveGst}
               />
             </RadioGroup>
           </FormControl>
@@ -493,7 +519,7 @@ export default function GovernanceForm(props: any) {
           </FormProvider>
         ) : (
           <>
-            {gstData ? (
+            {saveGst ? (
               <Stack
                 alignItems={"center"}
                 justifyContent={"center"}
@@ -502,7 +528,7 @@ export default function GovernanceForm(props: any) {
                 gap={1}
               >
                 <Typography variant="h4" color="green">
-                  Business Details Fetched Successfully
+                  Business Details Save Successfully
                 </Typography>
                 <Icon icon="el:ok" color="green" fontSize={25} />
               </Stack>
@@ -529,21 +555,25 @@ export default function GovernanceForm(props: any) {
                       value="Individual"
                       control={<Radio />}
                       label="Individual"
+                      disabled={saveGst}
                     />
                     <FormControlLabel
                       value="Proprietorship"
                       control={<Radio />}
                       label="Proprietorship"
+                      disabled={saveGst}
                     />
                     <FormControlLabel
                       value="Private Limited Company"
                       control={<Radio />}
                       label="Private Limited Company"
+                      disabled={saveGst}
                     />
                     <FormControlLabel
                       value="Partnership"
                       control={<Radio />}
                       label="Partnership"
+                      disabled={saveGst}
                     />
                   </Stack>
                   <Stack flexDirection="row" gap={1}>
@@ -551,16 +581,19 @@ export default function GovernanceForm(props: any) {
                       value="Limited Liability Partnership"
                       control={<Radio />}
                       label="Limited Liability Partnership"
+                      disabled={saveGst}
                     />
                     <FormControlLabel
                       value="One Person Company"
                       control={<Radio />}
                       label="One Person Company"
+                      disabled={saveGst}
                     />
                     <FormControlLabel
                       value="Limited Company"
                       control={<Radio />}
                       label="Limited Company"
+                      disabled={saveGst}
                     />
                   </Stack>
                 </RadioGroup>
@@ -616,7 +649,7 @@ export default function GovernanceForm(props: any) {
                     </RHFSelect>
 
                     <RHFTextField
-                      name="pin"
+                      name="pinCode"
                       label="PIN Code"
                       disabled={gstData}
                     />
@@ -628,7 +661,7 @@ export default function GovernanceForm(props: any) {
                       variant="contained"
                       onClick={SaveGstData}
                       sx={{ margin: "auto" }}
-                      disabled={gstData || radioVal == ""}
+                      disabled={gstData || saveGst}
                     >
                       Save
                     </Button>
