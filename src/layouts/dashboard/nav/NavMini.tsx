@@ -8,10 +8,9 @@ import { hideScrollbarX } from "../../../utils/cssStyles";
 import Logo from "../../../components/logo";
 import { NavSectionMini } from "../../../components/nav-section";
 //
-import navConfig from "./agentconfig";
-import agentNavConfig from "./agentconfig";
-import distributorNavConfig from "./distributorconfig";
+import navConfig from "./config";
 import { useAuthContext } from "src/auth/useAuthContext";
+import NavConfig from "./config";
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +35,7 @@ export default function NavMini() {
         }}
       >
         <Logo sx={{ mx: "auto", my: 2 }} />
-        <NavSectionMini
-          data={user?.role == "agent" ? agentNavConfig : distributorNavConfig}
-        />
+        <NavSectionMini data={NavConfig} />
       </Stack>
     </Box>
   );

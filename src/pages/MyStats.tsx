@@ -41,11 +41,14 @@ import AEPS from "../assets/services/AEPS.svg";
 import MATM from "../assets/services/MATM.svg";
 import AadharPay from "../assets/services/AadharPay.svg";
 import IndoNepal from "../assets/services/IndoNepal.svg";
+import RoleBasedGuard from "src/auth/RoleBasedGuard";
+import { useAuthContext } from "src/auth/useAuthContext";
 // ----------------------------------------------------------------------
 
 export default function MyStats(props: any) {
-  const theme = useTheme();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const logo = [Group321, Group320, Frame10, Frame9, isolationMode, intersect];
   const [categoryList, setCategoryList] = useState([]);
@@ -224,75 +227,83 @@ export default function MyStats(props: any) {
         <title> My Stats | {process.env.REACT_APP_COMPANY_NAME} </title>
       </Helmet>
       <Grid width={"100%"}>
-        <Card
-          variant="outlined"
-          sx={{
-            width: "100%",
-          }}
-        >
-          <Box sx={{ p: 1.5, background: "#CCD5E3" }}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography gutterBottom variant="h5" ml="3" component="div">
-                Services
-              </Typography>
-            </Stack>
-          </Box>
-          <Divider />
-          <Box
+        {user?.role == "agent" && (
+          <Card
+            variant="outlined"
             sx={{
-              p: 4,
-              display: "flex",
               width: "100%",
-              justifyContent: "center",
-              // cursor: "pointer",
             }}
-            gap={6}
           >
-            <Stack sx={{ cursor: "pointer" }}>
-              <img
-                src={Recharge}
-                onClick={() => navigate("/auth/service/recharge")}
-              />
-            </Stack>
-            <Stack sx={{ cursor: "pointer" }}>
-              <img
-                src={MoneyTransfer}
-                onClick={() => navigate("/auth/service/dmt")}
-              />
-            </Stack>
-            <Stack>
-              <img src={DMT1} />
-            </Stack>
-            <Stack sx={{ cursor: "pointer" }}>
-              <img src={DMT2} onClick={() => navigate("/auth/service/dmt2")} />
-            </Stack>
-            <Stack sx={{ cursor: "pointer" }}>
-              <img
-                src={BillPayment}
-                onClick={() => navigate("/auth/service/billpayment")}
-              />
-            </Stack>
-            <Stack sx={{ cursor: "pointer" }}>
-              <img src={AEPS} onClick={() => navigate("/auth/service/aeps")} />
-            </Stack>
-            <Stack>
-              <img src={MATM} />
-            </Stack>
-            <Stack sx={{ cursor: "pointer" }}>
-              <img
-                src={AadharPay}
-                onClick={() => navigate("/auth/service/aadhaarpay")}
-              />
-            </Stack>
-            <Stack>
-              <img src={IndoNepal} />
-            </Stack>
-          </Box>
-        </Card>
+            <Box sx={{ p: 1.5, background: "#CCD5E3" }}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography gutterBottom variant="h5" ml="3" component="div">
+                  Services
+                </Typography>
+              </Stack>
+            </Box>
+            <Divider />
+            <Box
+              sx={{
+                p: 4,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                // cursor: "pointer",
+              }}
+              gap={6}
+            >
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={Recharge}
+                  onClick={() => navigate("/auth/service/recharge")}
+                />
+              </Stack>
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={MoneyTransfer}
+                  onClick={() => navigate("/auth/service/dmt")}
+                />
+              </Stack>
+              <Stack>
+                <img src={DMT1} />
+              </Stack>
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={DMT2}
+                  onClick={() => navigate("/auth/service/dmt2")}
+                />
+              </Stack>
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={BillPayment}
+                  onClick={() => navigate("/auth/service/billpayment")}
+                />
+              </Stack>
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={AEPS}
+                  onClick={() => navigate("/auth/service/aeps")}
+                />
+              </Stack>
+              <Stack>
+                <img src={MATM} />
+              </Stack>
+              <Stack sx={{ cursor: "pointer" }}>
+                <img
+                  src={AadharPay}
+                  onClick={() => navigate("/auth/service/aadhaarpay")}
+                />
+              </Stack>
+              <Stack>
+                <img src={IndoNepal} />
+              </Stack>
+            </Box>
+          </Card>
+        )}
         <Stack sx={{ flexDirection: "row", gap: 1, marginTop: "10px" }}>
           <Card
             sx={{

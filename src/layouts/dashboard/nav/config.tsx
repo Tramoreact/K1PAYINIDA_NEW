@@ -19,60 +19,66 @@ const ICONS = {
   dashboard: icon("ic_dashboard"),
 };
 
-const agentNavConfig = [
+const NavConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: "GENERAL",
+    subheader: "My Stats",
     items: [
       {
-        title: "Dashboard",
+        title: "My Stats",
         path: PATH_DASHBOARD.mystats,
         icon: ICONS.dashboard,
       },
     ],
   },
   {
-    subheader: "",
+    subheader: "Dashboard",
     items: [
-      // {
-      //   title: "services",
-      //   path: PATH_DASHBOARD.services,
-      //   icon: ICONS.ecommerce,
-      // },
-
       {
         title: "Services",
         path: PATH_DASHBOARD.service.root,
         icon: ICONS.user,
+        roles: ["agent"],
         children: [
           {
             title: "Recharge",
             path: PATH_DASHBOARD.service.recharge,
+            roles: ["agent"],
           },
           {
             title: "Money Transfer",
             path: PATH_DASHBOARD.service.dmt,
+            roles: ["agent"],
           },
           {
             title: "DMT2",
             path: PATH_DASHBOARD.service.dmt2,
+            roles: ["agent"],
           },
           {
             title: "AEPS",
             path: PATH_DASHBOARD.service.aeps,
+            roles: ["agent"],
           },
           {
             title: "Bill Payment",
             path: PATH_DASHBOARD.service.billpayment,
+            roles: ["agent"],
           },
           {
             title: "Aadhaary Pay",
             path: PATH_DASHBOARD.service.aadhaarpay,
+            roles: ["agent"],
           },
         ],
       },
-
+      {
+        title: "Network",
+        path: PATH_DASHBOARD.network,
+        roles: ["distributor", "m_distributor"],
+        icon: ICONS.ecommerce,
+      },
       {
         title: "Transactions",
         path: PATH_DASHBOARD.transaction.root,
@@ -118,11 +124,18 @@ const agentNavConfig = [
           },
           {
             title: "AEPS settlement",
+            roles: ["agent"],
             path: PATH_DASHBOARD.fundmanagement.aepssettlement,
           },
           {
             title: "Bank Accounts",
             path: PATH_DASHBOARD.fundmanagement.mybankaccount,
+          },
+          {
+            title: "Manage Fund Flow",
+            roles: ["distributor", "m_distributor"],
+
+            path: PATH_DASHBOARD.fundmanagement.managefundflow,
           },
           {
             title: "My Fund Requests",
@@ -144,4 +157,4 @@ const agentNavConfig = [
   },
 ];
 
-export default agentNavConfig;
+export default NavConfig;
