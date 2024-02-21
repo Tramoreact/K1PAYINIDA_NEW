@@ -33,6 +33,7 @@ import AttendenceAeps from "../AEPS/AttendenceAeps";
 import { useAuthContext } from "src/auth/useAuthContext";
 import { useNavigate } from "react-router";
 import RoleBasedGuard from "src/auth/RoleBasedGuard";
+import ServiceUnderUpdate from "src/pages/ServiceUnderUpdate";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -452,7 +453,8 @@ export default function AadharPay(props: any) {
       <Helmet>
         <title>Aadhar Pay | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
-      <RoleBasedGuard hasContent roles={["agent"]}>
+      <ServiceUnderUpdate />
+      {/* <RoleBasedGuard hasContent roles={["agent"]}>
         <Stack flexDirection="row" gap={1}>
           <ArrowBackIosNewOutlinedIcon
             onClick={() => navigate(-1)}
@@ -603,7 +605,6 @@ export default function AadharPay(props: any) {
                         color="green"
                         fontSize={70}
                       />
-                      {/* <Icon icon="icon-park-outline:success" /> */}
                     </Stack>
                     <Stack
                       flexDirection={"row"}
@@ -761,7 +762,7 @@ export default function AadharPay(props: any) {
             </Modal>
           </FormProvider>
         )}
-      </RoleBasedGuard>
+      </RoleBasedGuard> */}
     </>
   );
 }
