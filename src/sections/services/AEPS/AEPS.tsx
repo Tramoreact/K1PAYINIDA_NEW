@@ -48,6 +48,7 @@ import MenuPopover from "src/components/menu-popover/MenuPopover";
 import Iconify from "src/components/iconify/Iconify";
 import DownloadIcon from "src/assets/icons/DownloadIcon";
 import RoleBasedGuard from "src/auth/RoleBasedGuard";
+import { fDateTime } from "src/utils/formatTime";
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +73,7 @@ var localTime: any;
 
 export default function AEPS(props: any) {
   const { enqueueSnackbar } = useSnackbar();
-  const { user, UpdateUserDetail } = useAuthContext();
+  const { user, initialize } = useAuthContext();
   const theme = useTheme();
   const [CurrentTab, setCurrentTab] = useState("");
   const [paymentType, setPymentType] = useState([]);
@@ -86,16 +87,11 @@ export default function AEPS(props: any) {
   const [trobleshootActive, setTrobleshootActive] = useState("Device Drivers");
   const [response, setResponse] = useState({
     amount: "",
-    transaction_Id: "",
-    createAt: "",
-    client_ref_Id: "",
+    transactionId: "",
+    createdAt: "",
+    clientRefId: "",
   });
-  const [postData, setPostData] = useState<any>({
-    nationalBankIdentificationNumber: "",
-    adhaarNumber: "",
-    amount: "",
-    bankName: "",
-  });
+
   const [autoClose, setAutoClose] = useState(0);
   const [failedMessage, setFailedMessage] = useState("");
 
@@ -127,13 +123,17 @@ export default function AEPS(props: any) {
   const [openT, setOpenT] = React.useState(false);
   const handleOpenT = () => setOpenT(true);
   const handleCloseT = () => setOpenT(false);
-  const [categoryList, setCategoryList] = useState<any>([]);
+  const [categoryId, setCategoryId] = useState("");
+
   // modal for withdrawal attendence
   const [attend, setAttend] = React.useState(true);
   const [localAttendance, setLocalAttendance] = React.useState(0);
   const [openAttendance, setOpenAttendance] = React.useState(false);
   const handleOpenAttendance = () => setOpenAttendance(true);
-  const handleCloseAttendance = () => setOpenAttendance(false);
+  const handleCloseAttendance = () => {
+    setOpenAttendance(false);
+    initialize();
+  };
   const navigate = useNavigate();
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
@@ -204,24 +204,7 @@ export default function AEPS(props: any) {
   useEffect(() => {
     getBankList();
     getAepsProduct();
-  }, []);
-
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
-      console.log("======getcategory_list====>", Response);
-      if (Response.status == 200) {
-        if (Response.data.code == 200) {
-          setCategoryList(Response?.data?.data[1]);
-
-          setCurrentTab(
-            Response?.data?.data[7]?.sub_category[0].sub_category_name
-          );
-          // setSubcategoryId(Response?.data?.data[7]?.sub_category[0]._id);
-        } else {
-        }
-      }
-    });
+    getCategory();
   }, []);
 
   useEffect(() => {
@@ -267,6 +250,22 @@ export default function AEPS(props: any) {
     { _id: 2, name: "Aeps FAQs" },
   ];
 
+  const getCategory = () => {
+    let token = localStorage.getItem("token");
+    Api(`category/get_CategoryList`, "GET", "", token).then((Response: any) => {
+      console.log("======getcategory_list====>", Response);
+      if (Response.status == 200) {
+        if (Response.data.code == 200) {
+          Response?.data?.data.map((item: any) => {
+            if (item?.category_name == "AEPS") {
+              setCategoryId(item?._id);
+            }
+          });
+        }
+      }
+    });
+  };
+
   const getBankList = () => {
     let token = localStorage.getItem("token");
     Api("indoNepal/getAEPSbankData", "GET", "", token).then((Response: any) => {
@@ -309,7 +308,7 @@ export default function AEPS(props: any) {
       bankName: getValues("bank.bankName"),
       adhaarNumber: getValues("aadharNumber"),
       productId: productId,
-      categoryId: categoryList?.supCategory?._id,
+      categoryId: categoryId,
       captureResponse: {
         errCode: arrofObj[0].errcode || "",
         errInfo: arrofObj[0].errinfo || "",
@@ -349,7 +348,6 @@ export default function AEPS(props: any) {
       } else {
         handleCloseLoading();
         handleOpenError();
-        setFailedMessage("Internal Server Error");
       }
     });
   };
@@ -370,7 +368,7 @@ export default function AEPS(props: any) {
       adhaarNumber: getValues("aadharNumber"),
       amount: Number(getValues("amount")),
       productId: productId,
-      categoryId: categoryList?.supCategory?._id,
+      categoryId: categoryId,
       captureResponse: {
         errCode: arrofObj[0].errcode,
         errInfo: arrofObj[0].errinfo,
@@ -401,20 +399,18 @@ export default function AEPS(props: any) {
         console.log("==============>>>fatch beneficiary Response", Response);
         if (Response.status == 200) {
           if (Response.data.code == 200) {
-            enqueueSnackbar(Response.data.data.message);
-            setResponse(Response.data.data.data);
-            setResAmount(
-              Response.data.data.data.transactionAmount +
-                " Successfully Transfered"
+            enqueueSnackbar(
+              Response.data.txnId.amount + " Successfully Transfered"
             );
-            UpdateUserDetail({
-              main_wallet_amount:
-                Response?.data?.data?.agentDetails?.newMainWalletBalance,
-            });
+
+            handleOpenResponse();
+            setResponse(Response.data.txnId);
           } else {
             setFailedMessage(Response.data.message);
             handleOpenError();
           }
+          setLocalAttendance(0);
+          initialize();
           handleCloseLoading();
         } else {
           handleCloseLoading();
@@ -437,7 +433,7 @@ export default function AEPS(props: any) {
       bankName: getValues("bank.bankName"),
       adhaarNumber: getValues("aadharNumber"),
       productId: productId,
-      categoryId: categoryList?.supCategory?._id,
+      categoryId: categoryId,
       captureResponse: {
         errCode: arrofObj[0].errcode,
         errInfo: arrofObj[0].errinfo,
@@ -1061,14 +1057,14 @@ export default function AEPS(props: any) {
               style={{ borderRadius: "20px" }}
               width={{ sm: "100%", md: "60%" }}
             >
-              {statement.length ? (
-                <TableContainer sx={{ overflow: "unset" }}>
-                  {resAmount && (
-                    <Typography variant="h2" textAlign={"center"}>
-                      Balance: {resAmount}
-                    </Typography>
-                  )}
-                  <Scrollbar sx={{ maxHeight: 500 }}>
+              <Scrollbar sx={{ maxHeight: 500 }}>
+                {statement.length ? (
+                  <TableContainer sx={{ overflow: "unset" }}>
+                    {resAmount && (
+                      <Typography variant="h2" textAlign={"center"}>
+                        Balance: {resAmount}
+                      </Typography>
+                    )}
                     <Table>
                       <TableHeadCustom headLabel={tableHead} />
                       <TableBody>
@@ -1094,20 +1090,20 @@ export default function AEPS(props: any) {
                         )}
                       </TableBody>
                     </Table>
-                  </Scrollbar>
-                </TableContainer>
-              ) : (
-                <Typography variant="h3" noWrap>
-                  Statement Not Available
-                </Typography>
-              )}
-              <Button
-                variant="contained"
-                onClick={handleCloseResponse}
-                sx={{ my: 3 }}
-              >
-                Close
-              </Button>
+                  </TableContainer>
+                ) : (
+                  <Typography variant="h3" noWrap>
+                    Statement Not Available
+                  </Typography>
+                )}
+                <Button
+                  variant="contained"
+                  onClick={handleCloseResponse}
+                  sx={{ my: 3 }}
+                >
+                  Close
+                </Button>
+              </Scrollbar>
             </Box>
           ) : (
             <Box
@@ -1138,7 +1134,7 @@ export default function AEPS(props: any) {
               >
                 <Typography variant="subtitle1">Transaction Id</Typography>
                 <Typography variant="body1">
-                  {response.transaction_Id}
+                  {response.transactionId}
                 </Typography>
               </Stack>
               <Stack
@@ -1147,7 +1143,9 @@ export default function AEPS(props: any) {
                 mt={2}
               >
                 <Typography variant="subtitle1">Date</Typography>
-                <Typography variant="body1">{response.createAt}</Typography>
+                <Typography variant="body1">
+                  {fDateTime(response.createdAt)}
+                </Typography>
               </Stack>
               <Stack
                 flexDirection={"row"}
@@ -1155,9 +1153,7 @@ export default function AEPS(props: any) {
                 mt={2}
               >
                 <Typography variant="subtitle1">Client Ref Id</Typography>
-                <Typography variant="body1">
-                  {response.client_ref_Id}
-                </Typography>
+                <Typography variant="body1">{response.clientRefId}</Typography>
               </Stack>{" "}
               <Button
                 variant="contained"
@@ -1169,6 +1165,7 @@ export default function AEPS(props: any) {
             </Box>
           )}
         </Modal>
+
         {/* Error Modal */}
         <Modal
           open={openError}
@@ -1196,6 +1193,7 @@ export default function AEPS(props: any) {
             </Stack>
           </Box>
         </Modal>
+
         <Modal
           open={openT}
           onClose={handleCloseT}
