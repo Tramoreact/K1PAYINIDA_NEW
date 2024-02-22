@@ -244,30 +244,27 @@ export default function DMT() {
             spacing={2}
             sx={{ maxHeight: window.innerHeight - 250 }}
           >
-            <Grid item sm={4}>
+            <Grid item sm={3}>
               <Box
                 rowGap={2}
                 columnGap={2}
-                ml={3}
+                ml={1}
                 display="grid"
                 sx={{ position: "relative" }}
                 gridTemplateColumns={{
                   xs: "repeat(1, 1fr)",
                 }}
               >
-                <Stack flexDirection="row" gap={1}>
+                <Stack flexDirection="row" alignItems={"center"} gap={1}>
                   <ArrowBackIosNewOutlinedIcon
                     onClick={() => navigate(-1)}
                     sx={{
-                      height: "30px",
-                      width: "30px",
-                      marginTop: "10px",
+                      height: "25px",
+                      width: "25px",
                       cursor: "pointer",
                     }}
                   />
-                  <Typography variant="h3" component="h1" paragraph>
-                    Money Transfer
-                  </Typography>
+                  <Typography variant="h4">Money Transfer</Typography>
                 </Stack>
 
                 <RHFTextField
@@ -290,7 +287,7 @@ export default function DMT() {
                   }}
                 />
               </Box>
-              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+              <Typography variant="body2" sx={{ ml: 1 }}>
                 To comply with RBI guidelines, a valid sender mobile number is
                 mandatory for money transfers. Please ensure you provide a valid
                 sender mobile number to proceed with the transaction.
@@ -298,7 +295,7 @@ export default function DMT() {
 
               {remitter.remitterfetch && <DMTRemitterDetail />}
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={9}>
               {remitter.remitterfetch && <DMTbeneficiary />}
             </Grid>
           </Grid>

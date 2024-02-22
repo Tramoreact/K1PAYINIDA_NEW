@@ -341,8 +341,8 @@ export default function DMTbeneficiary() {
               <Scrollbar
                 sx={
                   isMobile
-                    ? { maxHeight: window.innerHeight - 250 }
-                    : { maxHeight: window.innerHeight - 440 }
+                    ? { maxHeight: window.innerHeight - 110 }
+                    : { maxHeight: window.innerHeight - 240 }
                 }
               >
                 <Table

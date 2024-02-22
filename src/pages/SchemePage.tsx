@@ -29,9 +29,11 @@ import { useSnackbar } from "notistack";
 import ApiDataLoading from "../components/customFunctions/ApiDataLoading";
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
+import useResponsive from "src/hooks/useResponsive";
 // -------------------------------------------------------
 
 export default function ViewAllScheme() {
+  const isMobile = useResponsive("up", "sm");
   const { user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [com, setCom] = useState([]);
@@ -185,7 +187,13 @@ export default function ViewAllScheme() {
         </Stack>
       )}
       {user?.role == "m_distributor" && !mdSchemeId ? null : (
-        <Scrollbar sx={{ maxHeight: window.innerHeight - 220 }}>
+        <Scrollbar
+          sx={
+            isMobile
+              ? { maxHeight: window.innerHeight - 130 }
+              : { maxHeight: window.innerHeight - 250 }
+          }
+        >
           <Stack>
             {loading ? (
               <ApiDataLoading />

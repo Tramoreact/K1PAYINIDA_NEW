@@ -511,7 +511,7 @@ export default function MyTransactions() {
               <Scrollbar
                 sx={
                   isMobile
-                    ? { maxHeight: window.innerHeight - 190 }
+                    ? { maxHeight: window.innerHeight - 130 }
                     : { maxHeight: window.innerHeight - 250 }
                 }
               >
@@ -856,7 +856,7 @@ function TransactionRow({ row }: childProps) {
           </Label>
         </StyledTableCell>
 
-        <StyledTableCell sx={{ width: "fit-content" }}>
+        <StyledTableCell sx={{ width: 150 }}>
           <Stack flexDirection={"row"} flexWrap={"nowrap"}>
             <IconButton>
               <img src={Group} alt="Receipt Icon" />

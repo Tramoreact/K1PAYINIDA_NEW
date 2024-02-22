@@ -57,19 +57,16 @@ export default function Recharges() {
   return (
     <>
       <RoleBasedGuard hasContent roles={["agent"]}>
-        <Stack flexDirection="row" gap={1}>
+        <Stack flexDirection="row" alignItems={"center"} gap={1}>
           <ArrowBackIosNewOutlinedIcon
             onClick={() => navigate(-1)}
             sx={{
-              height: "30px",
-              width: "30px",
-              marginTop: "10px",
+              height: "25px",
+              width: "25px",
               cursor: "pointer",
             }}
           />
-          <Typography variant="h3" component="h1" paragraph>
-            RECHARGE
-          </Typography>
+          <Typography variant="h4">Recharge</Typography>
         </Stack>
         <Grid
           display={"grid"}

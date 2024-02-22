@@ -52,9 +52,7 @@ export default function Main({ children, sx, ...other }: BoxProps) {
         overflow: "hidden",
         pt: `${HEADER.H_MOBILE + SPACING}px`,
         ...(isDesktop && {
-          height: `${
-            window.innerHeight - HEADER.H_DASHBOARD_DESKTOP + SPACING
-          }px`,
+          height: `${window.innerHeight - 10 + SPACING}px`,
           overflow: "hidden",
           px: 1,
           pt: `${HEADER.H_DASHBOARD_DESKTOP + SPACING}px`,

@@ -300,8 +300,8 @@ export default function BBPSSchemePage() {
                 <Scrollbar
                   sx={
                     isMobile
-                      ? { maxHeight: window.innerHeight - 200 }
-                      : { maxHeight: window.innerHeight - 130 }
+                      ? { maxHeight: window.innerHeight - 130 }
+                      : { maxHeight: window.innerHeight - 250 }
                   }
                 >
                   <Table

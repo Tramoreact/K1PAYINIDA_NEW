@@ -682,19 +682,16 @@ export default function AEPS(props: any) {
         <title>AEPS | {process.env.REACT_APP_COMPANY_NAME}</title>
       </Helmet>
       <RoleBasedGuard hasContent roles={["agent"]}>
-        <Stack flexDirection="row" gap={1}>
+        <Stack flexDirection="row" alignItems={"center"} gap={1}>
           <ArrowBackIosNewOutlinedIcon
             onClick={() => navigate(-1)}
             sx={{
-              height: "30px",
-              width: "30px",
-              marginTop: "10px",
+              height: "25px",
+              width: "25px",
               cursor: "pointer",
             }}
           />
-          <Typography variant="h3" component="h1" paragraph>
-            AEPS
-          </Typography>
+          <Typography variant="h4">AEPS</Typography>
         </Stack>
 
         {!user?.fingPayAPESRegistrationStatus || !user?.fingPayAEPSKycStatus ? (

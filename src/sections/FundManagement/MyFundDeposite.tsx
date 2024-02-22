@@ -11,10 +11,12 @@ import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { m } from "framer-motion";
 import { MotionContainer, varFade } from "src/components/animate";
 import { fundRequestProps } from "./fundDeposits/types";
+import useResponsive from "src/hooks/useResponsive";
 
 export const BankAccountContext = createContext([]);
 
 export default function MyFundDeposite() {
+  const isMobile = useResponsive("up", "sm");
   const [bankList, setBankList] = useState([]);
   const [tableData, setTableData] = useState([]);
 
@@ -67,7 +69,13 @@ export default function MyFundDeposite() {
   return (
     <MotionContainer>
       <BankAccountContext.Provider value={bankList}>
-        <Scrollbar sx={{ maxHeight: window.innerHeight - 120, p: 2 }}>
+        <Scrollbar
+          sx={
+            isMobile
+              ? { maxHeight: window.innerHeight - 70 }
+              : { maxHeight: window.innerHeight - 250 }
+          }
+        >
           <Grid container spacing={2} p={1}>
             <Grid item sm={12} md={4}>
               <m.div variants={varFade().inLeft} style={{ height: "100%" }}>

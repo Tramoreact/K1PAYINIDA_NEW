@@ -52,6 +52,7 @@ import FormProvider, {
   RHFTextField,
 } from "src/components/hook-form";
 import useCopyToClipboard from "src/hooks/useCopyToClipboard";
+import useResponsive from "src/hooks/useResponsive";
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +86,7 @@ interface Props extends CardProps {
   tableLabels: any;
 }
 export default function WalletLadger() {
+  const isMobile = useResponsive("up", "sm");
   const { user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [ladgerData, setLadgerData] = useState([]);
@@ -277,7 +279,13 @@ export default function WalletLadger() {
         ) : (
           <Grid item xs={12} md={6} lg={8}>
             <TableContainer>
-              <Scrollbar sx={{ maxHeight: window.innerHeight - 200 }}>
+              <Scrollbar
+                sx={
+                  isMobile
+                    ? { maxHeight: window.innerHeight - 130 }
+                    : { maxHeight: window.innerHeight - 250 }
+                }
+              >
                 <Table
                   sx={{ minWidth: 720 }}
                   aria-label="customized table"

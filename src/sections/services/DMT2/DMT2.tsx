@@ -249,19 +249,16 @@ export default function DMT2() {
                   xs: "repeat(1, 1fr)",
                 }}
               >
-                <Stack flexDirection="row" gap={1}>
+                <Stack flexDirection="row" alignItems={"center"} gap={1}>
                   <ArrowBackIosNewOutlinedIcon
                     onClick={() => navigate(-1)}
                     sx={{
-                      height: "30px",
-                      width: "30px",
-                      marginTop: "10px",
+                      height: "25px",
+                      width: "25px",
                       cursor: "pointer",
                     }}
                   />
-                  <Typography variant="h3" component="h1" paragraph>
-                    DMT2
-                  </Typography>
+                  <Typography variant="h4">DMT2</Typography>
                 </Stack>
                 <RHFTextField
                   name="mobileNumber"
