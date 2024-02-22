@@ -13,6 +13,7 @@ import {
   MenuItem,
   Tooltip,
   IconButton,
+  TextField,
 } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import { useSnackbar } from "notistack";
@@ -27,7 +28,7 @@ import FileFilterButton from "./FileFilterButton";
 import Iconify from "src/components/iconify/Iconify";
 import ApiDataLoading from "../../components/customFunctions/ApiDataLoading";
 import { useAuthContext } from "src/auth/useAuthContext";
-import { fDate, fDateTime } from "src/utils/formatTime";
+import { fDate, fDateFormatForApi, fDateTime } from "src/utils/formatTime";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -41,12 +42,14 @@ import { sentenceCase } from "change-case";
 import Label from "src/components/label/Label";
 import useCopyToClipboard from "src/hooks/useCopyToClipboard";
 import { CustomAvatar } from "src/components/custom-avatar";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // ----------------------------------------------------------------------
 type FormValuesProps = {
   status: string;
   clientRefId: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null;
+  endDate: Date | null;
 };
 
 export default function FundFlow() {
@@ -67,8 +70,8 @@ export default function FundFlow() {
     category: "",
     status: "",
     clientRefId: "",
-    startDate: "",
-    endDate: "",
+    startDate: null,
+    endDate: null,
   };
   console.log("defaultValues===============>", defaultValues);
 
@@ -80,6 +83,8 @@ export default function FundFlow() {
   const {
     reset,
     getValues,
+    setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -114,8 +119,8 @@ export default function FundFlow() {
       clientRefId: getValues("clientRefId"),
       status: getValues("status"),
       transactionType: "",
-      startDate: getValues("startDate"),
-      endDate: getValues("endDate"),
+      startDate: fDateFormatForApi(getValues("startDate")),
+      endDate: fDateFormatForApi(getValues("endDate")),
     };
     Api(`transaction/fund_flow_transaction`, "POST", body, token).then(
       (Response: any) => {
@@ -139,17 +144,17 @@ export default function FundFlow() {
 
   const formattedStart = startDate
     ? new Intl.DateTimeFormat("en-GB", {
-        year: "numeric",
-        day: "2-digit",
-        month: "2-digit",
-      }).format(startDate)
+      year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+    }).format(startDate)
     : "";
   const formattedSEndDate = endDate
     ? new Intl.DateTimeFormat("en-GB", {
-        year: "numeric",
-        day: "2-digit",
-        month: "2-digit",
-      }).format(endDate)
+      year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+    }).format(endDate)
     : "";
 
   const filterTransaction = (data: FormValuesProps) => {
@@ -164,8 +169,8 @@ export default function FundFlow() {
       clientRefId: data.clientRefId,
       status: data.status,
       transactionType: "",
-      startDate: formattedStart,
-      endDate: formattedSEndDate,
+      startDate: fDateFormatForApi(getValues("startDate")),
+      endDate: fDateFormatForApi(getValues("endDate")),
     };
     Api(`transaction/fund_flow_transaction`, "POST", body, token).then(
       (Response: any) => {
@@ -230,27 +235,40 @@ export default function FundFlow() {
                 <MenuItem value="initiated">Initiated</MenuItem>
               </RHFSelect>
               <RHFTextField name="clientRefId" label="Client Ref Id" />
-              <Stack>
-                <FileFilterButton
-                  isSelected={!!isSelectedValuePicker}
-                  startIcon={<Iconify icon="eva:calendar-fill" />}
-                  onClick={onOpenPicker}
-                >
-                  {isSelectedValuePicker ? shortLabel : "Select Date"}
-                </FileFilterButton>
-                <DateRangePicker
-                  variant="input"
-                  title="Select Date Range to Search"
-                  startDate={startDate}
-                  endDate={endDate}
-                  onChangeStartDate={onChangeStartDate}
-                  onChangeEndDate={onChangeEndDate}
-                  open={openPicker}
-                  onClose={onClosePicker}
-                  isSelected={isSelectedValuePicker}
-                  isError={isError}
-                  // additionalFunction={ExportData}
-                />
+              <Stack flexDirection={"row"} gap={1}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Start date"
+                    inputFormat="DD/MM/YYYY"
+                    value={watch("startDate")}
+                    maxDate={new Date()}
+                    onChange={(newValue: any) =>
+                      setValue("startDate", newValue)
+                    }
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        size={"small"}
+                        sx={{ width: 150 }}
+                      />
+                    )}
+                  />
+                  <DatePicker
+                    label="End date"
+                    inputFormat="DD/MM/YYYY"
+                    value={watch("endDate")}
+                    minDate={watch("startDate")}
+                    maxDate={new Date()}
+                    onChange={(newValue: any) => setValue("endDate", newValue)}
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        size={"small"}
+                        sx={{ width: 150 }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
               </Stack>
               <LoadingButton
                 variant="contained"
@@ -353,7 +371,7 @@ const TransactionRow = React.memo(({ row }: childProps) => {
         {/* From */}
         <TableCell>
           {newRow?.walletLedgerData?.from?.id ==
-          newRow?.adminDetails.id?._id ? (
+            newRow?.adminDetails.id?._id ? (
             <Stack flexDirection={"row"} gap={1}>
               <CustomAvatar
                 name={newRow?.adminDetails?.id?.email}
@@ -522,7 +540,7 @@ const TransactionRow = React.memo(({ row }: childProps) => {
             </Stack>
           ) : (
             newRow?.walletLedgerData?.to?.id ==
-              newRow.masterDistributorDetails.id?._id && (
+            newRow.masterDistributorDetails.id?._id && (
               <Stack flexDirection={"row"} gap={1}>
                 <CustomAvatar
                   name={newRow?.masterDistributorDetails?.id?.firstName}
