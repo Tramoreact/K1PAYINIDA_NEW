@@ -37,3 +37,12 @@ function result(format: string, key = ".00") {
 
   return isInteger ? format.replace(key, "") : format;
 }
+
+export function fIndianCurrency(number: InputValue) {
+  const format = number ? number : "";
+  return format.toLocaleString("en-IN", {
+    maximumFractionDigits: 2,
+    style: "currency",
+    currency: "INR",
+  });
+}

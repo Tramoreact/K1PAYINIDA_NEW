@@ -29,7 +29,7 @@ import Frameorange from "../assets/icons/Frame orange.svg";
 import Graphgreen from "../assets/icons/Graph green.svg";
 import Graphorange from "../assets/icons/Graph orange.svg";
 import { useEffect, useState } from "react";
-import { fCurrency } from "src/utils/formatNumber";
+import { fIndianCurrency } from "src/utils/formatNumber";
 import SvgColor from "src/components/svg-color";
 import { useNavigate } from "react-router-dom";
 import Recharge from "../assets/services/Recharge.svg";
@@ -341,7 +341,7 @@ export default function MyStats(props: any) {
                 <Typography>{"Transaction Value"}</Typography>
                 <Typography variant="h6" sx={{ ml: 2 }}>
                   {" "}
-                  ₹ {fCurrency(Success?.volume || "0")}
+                  ₹ {fIndianCurrency(Success?.volume || "0")}
                 </Typography>
               </Typography>
             </CardContent>
@@ -382,7 +382,7 @@ export default function MyStats(props: any) {
                 <Typography>{"Transaction Value"}</Typography>
                 <Typography variant="h6" sx={{ ml: 2 }}>
                   {" "}
-                  ₹ {fCurrency(Pending?.volume || "0")}
+                  ₹ {fIndianCurrency(Pending?.volume || "0")}
                 </Typography>
               </Typography>
             </CardContent>
@@ -423,7 +423,7 @@ export default function MyStats(props: any) {
                 <Typography>{"Transaction Value"}</Typography>
                 <Typography variant="h6" sx={{ ml: 2 }}>
                   {" "}
-                  ₹ {fCurrency(Failed?.volume || "0")}
+                  ₹ {fIndianCurrency(Failed?.volume || "0")}
                 </Typography>
               </Typography>
             </CardContent>
@@ -464,7 +464,7 @@ export default function MyStats(props: any) {
                 <Typography>{"Transaction Value"}</Typography>
                 <Typography variant="h6" sx={{ ml: 2 }}>
                   {" "}
-                  ₹ {fCurrency(Total?.volume || "0")}
+                  ₹ {fIndianCurrency(Total?.volume || "0")}
                 </Typography>
               </Typography>
             </CardContent>

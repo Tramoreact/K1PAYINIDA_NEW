@@ -41,7 +41,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { sentenceCase } from "change-case";
 import { green, red } from "@mui/material/colors";
-import { fCurrency } from "src/utils/formatNumber";
+import { fIndianCurrency } from "src/utils/formatNumber";
 import { LoadingButton } from "@mui/lab";
 // form
 import * as Yup from "yup";
@@ -456,18 +456,18 @@ const LadgerRow = ({ row }: any) => {
         <StyledTableCell>
           <Stack direction="row" gap={0.5}>
             <Typography variant="subtitle2">
-              {fCurrency(row?.transaction?.amount) || "0"}
+              {fIndianCurrency(row?.transaction?.amount) || "0"}
             </Typography>
           </Stack>
         </StyledTableCell>
         <StyledTableCell>
           {user?._id === row?.to?.id?._id ? (
             <Typography sx={{ color: "success.dark" }}>
-              {fCurrency(row?.to?.amount) || "0"}
+              {fIndianCurrency(row?.to?.amount) || "0"}
             </Typography>
           ) : (
             <Typography color={"error"}>
-              {fCurrency(row?.from?.amount) || "0"}{" "}
+              {fIndianCurrency(row?.from?.amount) || "0"}{" "}
             </Typography>
           )}
         </StyledTableCell>
@@ -489,9 +489,9 @@ const LadgerRow = ({ row }: any) => {
                   </Label>
                   :
                   {row?.to?.walletType === "MAIN" ? (
-                    <>{fCurrency(row?.to?.newMainWalletBalance || "0")}</>
+                    <>{fIndianCurrency(row?.to?.newMainWalletBalance || "0")}</>
                   ) : (
-                    <>{fCurrency(row?.to?.newAepsWalletBalance || "0")}</>
+                    <>{fIndianCurrency(row?.to?.newAepsWalletBalance || "0")}</>
                   )}
                 </Typography>
               </>
@@ -510,9 +510,9 @@ const LadgerRow = ({ row }: any) => {
                 </Label>
                 :
                 {row?.from?.walletType === "MAIN" ? (
-                  <>{fCurrency(row?.from?.newMainWalletBalance || "0")}</>
+                  <>{fIndianCurrency(row?.from?.newMainWalletBalance || "0")}</>
                 ) : (
-                  <>{fCurrency(row?.from?.newAepsWalletBalance || "0")}</>
+                  <>{fIndianCurrency(row?.from?.newAepsWalletBalance || "0")}</>
                 )}
               </>
             )}
@@ -636,7 +636,7 @@ const LadgerRow = ({ row }: any) => {
                               Opening:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction?.agentDetails
                                   ?.oldMainWalletBalance || "-"
                               )}
@@ -648,7 +648,7 @@ const LadgerRow = ({ row }: any) => {
                               Closing:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction?.agentDetails
                                   ?.newMainWalletBalance
                               )}
@@ -678,7 +678,7 @@ const LadgerRow = ({ row }: any) => {
                           <Stack gap={0.5} direction="row">
                             <Typography variant="subtitle2">TDS:</Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction?.agentDetails?.TDSAmount
                               )}
                             </Typography>
@@ -693,7 +693,7 @@ const LadgerRow = ({ row }: any) => {
                               Opening:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction?.distributorDetails
                                   ?.oldMainWalletBalance || "-"
                               )}
@@ -705,7 +705,7 @@ const LadgerRow = ({ row }: any) => {
                               Closing:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction?.distributorDetails
                                   ?.newMainWalletBalance
                               )}
@@ -751,7 +751,7 @@ const LadgerRow = ({ row }: any) => {
                               Opening:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction
                                   ?.masterDistributorDetails
                                   ?.oldMainWalletBalance || "-"
@@ -764,7 +764,7 @@ const LadgerRow = ({ row }: any) => {
                               Closing:
                             </Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction
                                   ?.masterDistributorDetails
                                   ?.newMainWalletBalance
@@ -777,7 +777,7 @@ const LadgerRow = ({ row }: any) => {
                           <Stack gap={0.5} direction="row">
                             <Typography variant="subtitle2">Comm:</Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction
                                   ?.masterDistributorDetails
                                   ?.commissionAmount || "-"
@@ -788,7 +788,7 @@ const LadgerRow = ({ row }: any) => {
                           <Stack gap={0.5} direction="row">
                             <Typography variant="subtitle2">Credit:</Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction
                                   ?.masterDistributorDetails?.creditedAmount
                               )}
@@ -798,7 +798,7 @@ const LadgerRow = ({ row }: any) => {
                           <Stack gap={0.5} direction="row">
                             <Typography variant="subtitle2">TDS:</Typography>
                             <Typography variant="body2">
-                              {fCurrency(
+                              {fIndianCurrency(
                                 ToFromData?.transaction
                                   ?.masterDistributorDetails?.TDSAmount
                               )}
@@ -812,14 +812,14 @@ const LadgerRow = ({ row }: any) => {
                       <Stack gap={0.5} direction="row">
                         <Typography variant="subtitle2">Credit:</Typography>
                         <Typography variant="body2">
-                          {fCurrency(ToFromData?.transaction?.credit)}
+                          {fIndianCurrency(ToFromData?.transaction?.credit)}
                         </Typography>
                       </Stack>
 
                       <Stack gap={0.5} direction="row">
                         <Typography variant="subtitle2">Debit:</Typography>
                         <Typography variant="body2">
-                          {fCurrency(ToFromData?.transaction?.debit)}
+                          {fIndianCurrency(ToFromData?.transaction?.debit)}
                         </Typography>
                       </Stack>
                     </TableCell>
@@ -828,13 +828,13 @@ const LadgerRow = ({ row }: any) => {
                       <Stack gap={0.5} direction="row">
                         <Typography variant="subtitle2">TDS:</Typography>
                         <Typography variant="body2">
-                          {fCurrency(ToFromData?.transaction?.TDS)}
+                          {fIndianCurrency(ToFromData?.transaction?.TDS)}
                         </Typography>
                       </Stack>
                       <Stack gap={0.5} direction="row">
                         <Typography variant="subtitle2">GST:</Typography>
                         <Typography variant="body2">
-                          {fCurrency(ToFromData?.transaction?.GST)}
+                          {fIndianCurrency(ToFromData?.transaction?.GST)}
                         </Typography>
                       </Stack>
                     </TableCell>
