@@ -37,9 +37,9 @@ export const PATH_STEP_PAGE = STEP_DASHBOARD.steps;
 // ----------------------------------------------------------------------
 
 export const HEADER = {
-  H_MOBILE: 34,
-  H_MAIN_DESKTOP: 20,
-  H_DASHBOARD_DESKTOP: 52,
+  H_MOBILE: 44,
+  H_MAIN_DESKTOP: 40,
+  H_DASHBOARD_DESKTOP: 82,
   H_DASHBOARD_DESKTOP_OFFSET: 92 - 32,
 };
 

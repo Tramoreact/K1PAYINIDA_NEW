@@ -100,6 +100,7 @@ export default function Header({ onOpenNav }: Props) {
         boxShadow: "none",
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
+        borderBottom: (theme) => `solid 2px ${theme.palette.divider}`,
         ...bgBlur({
           color: theme.palette.background.default,
         }),
@@ -109,8 +110,10 @@ export default function Header({ onOpenNav }: Props) {
         ...(isDesktop && {
           width: `calc(100% - ${NAV.W_DASHBOARD + 1}px)`,
           height: HEADER.H_DASHBOARD_DESKTOP,
+          borderBottom: (theme) => `solid 2px ${theme.palette.divider}`,
           ...(isOffset && {
             height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+            borderBottom: (theme) => `solid 2px ${theme.palette.divider}`,
           }),
           ...(isNavHorizontal && {
             width: 1,
@@ -120,6 +123,7 @@ export default function Header({ onOpenNav }: Props) {
           }),
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_DASHBOARD_MINI + 1}px)`,
+            borderBottom: (theme) => `solid 2px  ${theme.palette.divider}`,
           }),
         }),
       }}
