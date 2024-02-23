@@ -476,12 +476,6 @@ export default function AuthRegisterForm(props: any) {
   // useEffect(() => requestPermission(), []);
 
   const createUser = () => {
-    let rfcode;
-    if (value2 == "distributor") {
-      rfcode = "MD_" + formValues.refCode;
-    } else if (value2 == "agent") {
-      rfcode = "D_" + formValues.refCode;
-    }
 
     const body = {
       contactNo: formValues.mobileNumber,
@@ -489,7 +483,7 @@ export default function AuthRegisterForm(props: any) {
       password: formValues.password,
       role: value2 == "m_distributor" ? value2 : radioVal,
       application_no: Math.floor(Math.random() * 10000000),
-      referralCode: rfcode,
+      referralCode: formValues.refCode,
       FCM_token: sessionStorage.getItem("fcm"),
     };
     Api(`auth/create_account`, "POST", body, "").then((Response: any) => {
