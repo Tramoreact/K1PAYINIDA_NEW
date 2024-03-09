@@ -44,6 +44,7 @@ import useCopyToClipboard from "src/hooks/useCopyToClipboard";
 import { CustomAvatar } from "src/components/custom-avatar";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import useResponsive from "src/hooks/useResponsive";
 // ----------------------------------------------------------------------
 type FormValuesProps = {
   status: string;
@@ -54,12 +55,13 @@ type FormValuesProps = {
 
 export default function FundFlow() {
   const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useResponsive("up", "sm");
   const [Loading, setLoading] = useState(false);
   const [superCurrentTab, setSuperCurrentTab] = useState(1);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [pageCount, setPageCount] = useState<any>(0);
   const [sdata, setSdata] = useState([]);
-  const [pageSize, setPageSize] = useState<any>(10);
+  const [pageSize, setPageSize] = useState<any>(25);
 
   const txnSchema = Yup.object().shape({
     status: Yup.string(),
@@ -129,6 +131,8 @@ export default function FundFlow() {
           if (Response.data.code == 200) {
             setSdata(Response.data.data.data);
             setPageCount(Response.data.data.totalNumberOfRecords);
+            
+            
             enqueueSnackbar(Response.data.message);
           } else {
             enqueueSnackbar(Response.data.message);
@@ -297,7 +301,13 @@ export default function FundFlow() {
           <ApiDataLoading />
         ) : (
           <>
-            <Scrollbar>
+             <Scrollbar
+                sx={
+                  isMobile
+                    ? { maxHeight: window.innerHeight - 130 }
+                    : { maxHeight: window.innerHeight - 250 }
+                }
+              >
               <Table
                 sx={{ minWidth: 720 }}
                 stickyHeader
