@@ -419,13 +419,7 @@ export default function MyTransactions() {
             gap={1}
           >
             <Stack
-              rowGap={1}
-              columnGap={1}
-              display="grid"
-              gridTemplateColumns={{
-                xs: "repeat(2, 1fr)",
-                sm: "repeat(5, 1fr)",
-              }}
+             direction={"row"} gap={1}
             >
               <RHFSelect
                 name="category"
@@ -453,7 +447,7 @@ export default function MyTransactions() {
                 label="Product"
                 SelectProps={{
                   native: false,
-                  sx: { textTransform: "capitalize" },
+                  sx: { textTransform: "capitalize"},
                 }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -468,7 +462,7 @@ export default function MyTransactions() {
                 label="Status"
                 SelectProps={{
                   native: false,
-                  sx: { textTransform: "capitalize" },
+                  sx: { textTransform: "capitalize"},
                 }}
               >
                 <MenuItem value="">None</MenuItem>
@@ -479,9 +473,9 @@ export default function MyTransactions() {
                 <MenuItem value="hold">Hold</MenuItem>
                 <MenuItem value="initiated">Initiated</MenuItem>
               </RHFSelect>
-              <RHFTextField name="clientRefId" label="Client Ref Id" />
-              <RHFTextField name="accountNumber" label="AccountNumber" />
-              <RHFTextField name="mobileNumber" label="MobileNumber" />
+              <RHFTextField name="clientRefId" label="Client Ref Id"  />
+              <RHFTextField name="accountNumber" label="AccountNumber"/>
+              <RHFTextField name="mobileNumber" label="MobileNumber"/>
               <Stack direction={"row"} gap={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -530,8 +524,7 @@ export default function MyTransactions() {
               </Stack>
             </Stack>
             </Stack>
-          </Stack>
-          <Stack direction={"row"} gap={1}>
+            <Stack direction={"row"} gap={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Start date"
@@ -564,6 +557,7 @@ export default function MyTransactions() {
                 Export
               </Button>
               </Stack>
+          </Stack>
               </Stack>
         </FormProvider>
         <Grid item xs={12} md={6} lg={8}>
