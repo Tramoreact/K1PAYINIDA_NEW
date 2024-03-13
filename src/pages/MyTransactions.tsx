@@ -70,8 +70,8 @@ type FormValuesProps = {
   status: string;
   clientRefId: string;
   category: string;
-  accountNumber:string;
-  mobileNumber:string;
+  accountNumber: string;
+  mobileNumber: string;
   product: string;
   startDate: Date | null;
   endDate: Date | null;
@@ -102,13 +102,13 @@ export default function MyTransactions() {
     category: "",
     status: "",
     clientRefId: "",
-    accountNumber:"",
-    mobileNumber:"",
+    accountNumber: "",
+    mobileNumber: "",
     product: "",
     startDate: null,
     endDate: null,
-    sDate:null,
-    eDate:null,
+    sDate: null,
+    eDate: null,
   };
 
   const methods = useForm<FormValuesProps>({
@@ -178,11 +178,11 @@ export default function MyTransactions() {
       clientRefId: getValues("clientRefId"),
       status: getValues("status"),
       accountNumber: getValues("accountNumber"),
-      mobileNumber:getValues("mobileNumber"),
+      mobileNumber: getValues("mobileNumber"),
       transactionType: "",
       categoryId: getValues("category"),
       productId: getValues("product") || "",
-      startDate: fDateFormatForApi (getValues("startDate")),
+      startDate: fDateFormatForApi(getValues("startDate")),
       endDate: fDateFormatForApi(getValues("endDate")),
     };
 
@@ -193,8 +193,11 @@ export default function MyTransactions() {
           if (Response.data.code == 200) {
             setSdata(Response.data.data.data);
             setPageCount(Response.data.data.totalNumberOfRecords);
-            console.log('....................................asdsdsds.......',Response.data.data.totalNumberOfRecords);
-            
+            console.log(
+              "....................................asdsdsds.......",
+              Response.data.data.totalNumberOfRecords
+            );
+
             setCurrentTab("");
             enqueueSnackbar(Response.data.message);
           } else {
@@ -223,11 +226,11 @@ export default function MyTransactions() {
         status: data.status,
         transactionType: "",
         categoryId: data.category,
-        mobileNumber:data.mobileNumber,
-        accountNumber:data.accountNumber,
+        mobileNumber: data.mobileNumber,
+        accountNumber: data.accountNumber,
         productId: data.product,
-        startDate: fDateFormatForApi (getValues("startDate")),
-      endDate: fDateFormatForApi(getValues("endDate")),
+        startDate: fDateFormatForApi(getValues("startDate")),
+        endDate: fDateFormatForApi(getValues("endDate")),
       };
       await Api(`transaction/transactionByUser`, "POST", body, token).then(
         (Response: any) => {
@@ -408,7 +411,7 @@ export default function MyTransactions() {
         <title> Transactions | {process.env.REACT_APP_COMPANY_NAME} </title>
       </Helmet>
       <Stack>
-      <FormProvider
+        <FormProvider
           methods={methods}
           onSubmit={handleSubmit(filterTransaction)}
         >
@@ -418,9 +421,7 @@ export default function MyTransactions() {
             m={1}
             gap={1}
           >
-            <Stack
-             direction={"row"} gap={1}
-            >
+            <Stack direction={"row"} gap={1}>
               <RHFSelect
                 name="category"
                 label="Category"
@@ -447,7 +448,7 @@ export default function MyTransactions() {
                 label="Product"
                 SelectProps={{
                   native: false,
-                  sx: { textTransform: "capitalize"},
+                  sx: { textTransform: "capitalize" },
                 }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -462,7 +463,7 @@ export default function MyTransactions() {
                 label="Status"
                 SelectProps={{
                   native: false,
-                  sx: { textTransform: "capitalize"},
+                  sx: { textTransform: "capitalize" },
                 }}
               >
                 <MenuItem value="">None</MenuItem>
@@ -473,56 +474,66 @@ export default function MyTransactions() {
                 <MenuItem value="hold">Hold</MenuItem>
                 <MenuItem value="initiated">Initiated</MenuItem>
               </RHFSelect>
-              <RHFTextField name="clientRefId" label="Client Ref Id"  />
-              <RHFTextField name="accountNumber" label="AccountNumber"/>
-              <RHFTextField name="mobileNumber" label="MobileNumber"/>
+              <RHFTextField name="clientRefId" label="Client Ref Id" />
+              <RHFTextField name="accountNumber" label="AccountNumber" />
+              <RHFTextField name="mobileNumber" label="MobileNumber" />
               <Stack direction={"row"} gap={1}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Start date"
-                  inputFormat="DD/MM/YYYY"
-                  value={watch("startDate")}
-                  maxDate={new Date()}
-                  onChange={(newValue: any) => setValue("startDate", newValue)}
-                  renderInput={(params: any) => (
-                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
-                  )}
-                />
-                <DatePicker
-                  label="End date"
-                  inputFormat="DD/MM/YYYY"
-                  value={watch("endDate")}
-                  minDate={watch("startDate")}
-                  maxDate={new Date()}
-                  onChange={(newValue: any) => setValue("endDate", newValue)}
-                  renderInput={(params: any) => (
-                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
-                  )}
-                />
-              </LocalizationProvider>
-              <Stack
-                flexDirection={"row"}
-                flexBasis={{ xs: "100%", sm: "50%" }}
-                gap={1}
-              >
-                <LoadingButton
-                  variant="contained"
-                  type="submit"
-                  loading={isSubmitting}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Start date"
+                    inputFormat="DD/MM/YYYY"
+                    value={watch("startDate")}
+                    maxDate={new Date()}
+                    onChange={(newValue: any) =>
+                      setValue("startDate", newValue)
+                    }
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        size={"small"}
+                        sx={{ width: 150 }}
+                      />
+                    )}
+                  />
+                  <DatePicker
+                    label="End date"
+                    inputFormat="DD/MM/YYYY"
+                    value={watch("endDate")}
+                    minDate={watch("startDate")}
+                    maxDate={new Date()}
+                    onChange={(newValue: any) => setValue("endDate", newValue)}
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        size={"small"}
+                        sx={{ width: 150 }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+                <Stack
+                  flexDirection={"row"}
+                  flexBasis={{ xs: "100%", sm: "50%" }}
+                  gap={1}
                 >
-                  Search
-                </LoadingButton>
-                <LoadingButton
-                  variant="contained"
-                  onClick={() => {
-                    reset(defaultValues);
-                    getTransaction();
-                  }}
-                >
-                  Clear
-                </LoadingButton>
+                  <LoadingButton
+                    variant="contained"
+                    type="submit"
+                    loading={isSubmitting}
+                  >
+                    Search
+                  </LoadingButton>
+                  <LoadingButton
+                    variant="contained"
+                    onClick={() => {
+                      reset(defaultValues);
+                      getTransaction();
+                    }}
+                  >
+                    Clear
+                  </LoadingButton>
+                </Stack>
               </Stack>
-            </Stack>
             </Stack>
             <Stack direction={"row"} gap={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -553,12 +564,12 @@ export default function MyTransactions() {
                 flexBasis={{ xs: "100%", sm: "50%" }}
                 gap={1}
               >
-                 <Button variant="contained" onClick={ExportData}>
-                Export
-              </Button>
+                <Button variant="contained" onClick={ExportData}>
+                  Export
+                </Button>
               </Stack>
+            </Stack>
           </Stack>
-              </Stack>
         </FormProvider>
         <Grid item xs={12} md={6} lg={8}>
           <>
@@ -1159,10 +1170,10 @@ function TransactionRow({ row }: childProps) {
                     <Grid item xs={12} md={9}>
                       <Typography variant="caption">
                         The convienience fee charged is the sole responsibility
-                        of the Agent. Tramo assumes no libiility for the
-                        imposition of this fee and any associated consequences
-                        or issues arising from its application rest entirely
-                        with the Agent{" "}
+                        of the Agent. K1 assumes no libiility for the imposition
+                        of this fee and any associated consequences or issues
+                        arising from its application rest entirely with the
+                        Agent{" "}
                       </Typography>
                     </Grid>
                     <Typography
@@ -1180,7 +1191,7 @@ function TransactionRow({ row }: childProps) {
                         This transaction receipt is generated automatically and
                         dose not require a physical signature. It is not a tax
                         invoice but serves as a record of your transaction with
-                        K1. Please retain it for your refrence, and if you
+                        Tramo. Please retain it for your refrence, and if you
                         have any queries, fell free to contact our Customer
                         Support team.
                       </Typography>
@@ -1204,7 +1215,7 @@ function TransactionRow({ row }: childProps) {
                             Timings : 08:00AM to 10:00 PM (Mon-Sun)
                           </Typography>
                           <Typography variant="caption">
-                            Email : {process.env.REACT_APP_COMPANY_EMAIL}
+                            {process.env.REACT_APP_COMPANY_EMAIL}
                           </Typography>
                         </Stack>
                       </Typography>
