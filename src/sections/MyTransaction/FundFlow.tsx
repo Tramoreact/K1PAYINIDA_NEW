@@ -131,8 +131,7 @@ export default function FundFlow() {
           if (Response.data.code == 200) {
             setSdata(Response.data.data.data);
             setPageCount(Response.data.data.totalNumberOfRecords);
-            
-            
+
             enqueueSnackbar(Response.data.message);
           } else {
             enqueueSnackbar(Response.data.message);
@@ -148,17 +147,17 @@ export default function FundFlow() {
 
   const formattedStart = startDate
     ? new Intl.DateTimeFormat("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    }).format(startDate)
+        year: "numeric",
+        day: "2-digit",
+        month: "2-digit",
+      }).format(startDate)
     : "";
   const formattedSEndDate = endDate
     ? new Intl.DateTimeFormat("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    }).format(endDate)
+        year: "numeric",
+        day: "2-digit",
+        month: "2-digit",
+      }).format(endDate)
     : "";
 
   const filterTransaction = (data: FormValuesProps) => {
@@ -301,13 +300,13 @@ export default function FundFlow() {
           <ApiDataLoading />
         ) : (
           <>
-             <Scrollbar
-                sx={
-                  isMobile
-                    ? { maxHeight: window.innerHeight - 130 }
-                    : { maxHeight: window.innerHeight - 250 }
-                }
-              >
+            <Scrollbar
+              sx={
+                isMobile
+                  ? { maxHeight: window.innerHeight - 130 }
+                  : { maxHeight: window.innerHeight - 250 }
+              }
+            >
               <Table
                 sx={{ minWidth: 720 }}
                 stickyHeader
@@ -381,7 +380,7 @@ const TransactionRow = React.memo(({ row }: childProps) => {
         {/* From */}
         <TableCell>
           {newRow?.walletLedgerData?.from?.id ==
-            newRow?.adminDetails.id?._id ? (
+          newRow?.adminDetails.id?._id ? (
             <Stack flexDirection={"row"} gap={1}>
               <CustomAvatar
                 name={newRow?.adminDetails?.id?.email}
@@ -550,7 +549,7 @@ const TransactionRow = React.memo(({ row }: childProps) => {
             </Stack>
           ) : (
             newRow?.walletLedgerData?.to?.id ==
-            newRow.masterDistributorDetails.id?._id && (
+              newRow.masterDistributorDetails.id?._id && (
               <Stack flexDirection={"row"} gap={1}>
                 <CustomAvatar
                   name={newRow?.masterDistributorDetails?.id?.firstName}

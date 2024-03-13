@@ -818,7 +818,11 @@ function TransactionRow({ row }: childProps) {
         {/* Operator */}
         <StyledTableCell sx={{ whiteSpace: "nowrap" }}>
           <Typography variant="body2">{newRow?.operator?.key1}</Typography>
-          <Typography variant="body2">{newRow?.operator?.key2}</Typography>
+          <Typography variant="body2">
+            {newRow?.productName == "Money Transfer"
+              ? newRow?.moneyTransferBeneficiaryDetails?.beneName
+              : newRow?.operator?.key2}
+          </Typography>
           <Typography variant="body2">{newRow?.operator?.key3}</Typography>
         </StyledTableCell>
 
