@@ -24,6 +24,7 @@ import {
   Card,
   Divider,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import * as Yup from "yup";
@@ -82,6 +83,7 @@ type FormValuesProps = {
 export default function MyTransactions() {
   let token = localStorage.getItem("token");
   const isMobile = useResponsive("up", "sm");
+  const isDesktop = useResponsive("up", "sm");
   const { user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [Loading, setLoading] = useState(false);
@@ -92,6 +94,11 @@ export default function MyTransactions() {
   const [pageSize, setPageSize] = useState<any>(20);
   const [currentTab, setCurrentTab] = useState("all");
   const [ProductList, setProductList] = useState([]);
+  const [filterdValue, setFilterdValue] = useState<any>([]);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
 
   const txnSchema = Yup.object().shape({
     status: Yup.string(),
@@ -118,12 +125,12 @@ export default function MyTransactions() {
 
   const {
     reset,
-    setError,
-    getValues,
-    setValue,
     watch,
+    setValue,
+    getValues,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    resetField,
+    formState: { errors, isSubmitting },
   } = methods;
 
   useEffect(() => {
@@ -191,7 +198,7 @@ export default function MyTransactions() {
         console.log("======Transaction==response=====>" + Response);
         if (Response.status == 200) {
           if (Response.data.code == 200) {
-            setSdata(Response.data.data.data);
+            setFilterdValue(Response.data.data.data);
             setPageCount(Response.data.data.totalNumberOfRecords);
             console.log(
               "....................................asdsdsds.......",
@@ -215,7 +222,7 @@ export default function MyTransactions() {
   const filterTransaction = async (data: FormValuesProps) => {
     setCurrentPage(1);
     try {
-      setSdata([]);
+      setFilterdValue([]);
       setLoading(true);
       let body = {
         pageInitData: {
@@ -237,8 +244,9 @@ export default function MyTransactions() {
           console.log("======Transaction==response=====>" + Response);
           if (Response.status == 200) {
             if (Response.data.code == 200) {
-              setSdata(Response.data.data.data);
+              setFilterdValue(Response.data.data.data);
               setPageCount(Response.data.data.totalNumberOfRecords);
+              handleClose();
               enqueueSnackbar(Response.data.message);
             } else {
               enqueueSnackbar(Response.data.message, { variant: "error" });
@@ -254,6 +262,27 @@ export default function MyTransactions() {
       console.log(err);
     }
   };
+
+  const handleDelete = (val: string) => {
+    setFilterdValue(
+      filterdValue.filter((item: any) => {
+        return val != item.key;
+      })
+    );
+    if (val == "clientRefId") resetField("clientRefId");
+    if (val == "status") resetField("status");
+    if (val == "categoryName") {
+      setValue("category", "");
+      resetField("category");
+    }
+
+    if (val == "startDate") setValue("startDate", null);
+    if (val == "endDate") setValue("endDate", null);
+    if (val == "productName") {
+      resetField("product");
+      setValue("product", "");
+    }
+  }
 
   const tableLabels = [
     { id: "Date&Time", label: "Txn Details" },
@@ -313,11 +342,15 @@ export default function MyTransactions() {
         pageSize: "",
         currentPage: "",
       },
-      clientRefId: "",
-      status: "",
+      clientRefId: getValues("clientRefId"),
+      accountNumber: getValues("accountNumber"),
+      mobileNumber: getValues("mobileNumber"),
+      status: getValues("status"),
       transactionType: "",
-      startDate: fDateFormatForApi(getValues("sDate")),
-      endDate: fDateFormatForApi(getValues("eDate")),
+      categoryId: getValues("category"),
+      productId: getValues("product") || "",
+      startDate: fDateFormatForApi(getValues("startDate")),
+      endDate: fDateFormatForApi(getValues("endDate")),
     };
 
     Api(`transaction/transactionByUser`, "POST", body, token).then(
@@ -396,6 +429,7 @@ export default function MyTransactions() {
 
               const currentDate = fDateTime(new Date());
               XLSX.writeFile(wb, `Transaction${currentDate}.xlsx`);
+              handleClose();
             } else {
               enqueueSnackbar("Data Not Found ");
             }
@@ -405,172 +439,193 @@ export default function MyTransactions() {
     );
   };
 
+  const handleReset = () => {
+    reset(defaultValues);
+    setFilterdValue([]);
+    getTransaction();
+  };
+
   return (
     <>
       <Helmet>
         <title> Transactions | {process.env.REACT_APP_COMPANY_NAME} </title>
       </Helmet>
+      <Stack
+        flexDirection={"row"}
+        justifyContent={isDesktop ? "space-between" : "end"}
+        gap={1}
+        mb={1}
+      >
+        <Stack flexDirection={"row"} m={1} gap={1}>
+          {filterdValue.length > 0 &&
+            filterdValue.map((item: any) => {
+              return (
+                item.value && (
+                  <Chip
+                    key={item.key}
+                    label={item.value}
+                    onDelete={() => handleDelete(item.key)}
+                  />
+                )
+              );
+            })}
+        </Stack>
+
+        <Stack flexDirection={"row"} gap={1}>
+          <Button variant="contained" onClick={handleReset}>
+            <Iconify icon="bx:reset" color={"common.white"} mr={1} />
+            Reset
+          </Button>
+          <Button variant="contained" onClick={handleOpen}>
+            <Iconify
+              icon="icon-park-outline:filter"
+              color={"common.white"}
+              mr={1}
+            />{" "}
+            Filter
+          </Button>
+        </Stack>
+      </Stack>
       <Stack>
-        <FormProvider
-          methods={methods}
-          onSubmit={handleSubmit(filterTransaction)}
+      <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
         >
-          <Stack
-            flexDirection={{ xs: "column", sm: "row" }}
-            justifyContent={"space-between"}
-            m={1}
-            gap={1}
+          {/* <Box> */}
+          <FormProvider
+            methods={methods}
+            onSubmit={handleSubmit(filterTransaction)}
           >
-            <Stack direction={"row"} gap={1}>
-              <RHFSelect
-                name="category"
-                label="Category"
-                SelectProps={{
-                  native: false,
-                  sx: { textTransform: "capitalize" },
+            <Stack
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: { xs: "100%", md: "50%" },
+                bgcolor: "#ffffff",
+                borderRadius: 2,
+                p: 4,
+              }}
+            >
+              <Stack
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: "repeat(1, 1fr)",
+                  sm: "repeat(2, 1fr)",
                 }}
               >
-                <MenuItem value="">All</MenuItem>
-                {categoryList.map((item: any) => {
-                  return (
-                    <MenuItem
-                      key={item._id}
-                      value={item._id}
-                      onClick={() => getProductlist(item._id)}
-                    >
-                      {item?.category_name}
-                    </MenuItem>
-                  );
-                })}
-              </RHFSelect>
-              <RHFSelect
-                name="product"
-                label="Product"
-                SelectProps={{
-                  native: false,
-                  sx: { textTransform: "capitalize" },
-                }}
-              >
-                <MenuItem value="">All</MenuItem>
-                {ProductList.map((item: any) => {
-                  return (
-                    <MenuItem value={item._id}>{item?.productName}</MenuItem>
-                  );
-                })}
-              </RHFSelect>
-              <RHFSelect
-                name="status"
-                label="Status"
-                SelectProps={{
-                  native: false,
-                  sx: { textTransform: "capitalize" },
-                }}
-              >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value="success">Success</MenuItem>
-                <MenuItem value="failed">Failed</MenuItem>
-                <MenuItem value="pending">Pending</MenuItem>
-                <MenuItem value="in_process">In process</MenuItem>
-                <MenuItem value="hold">Hold</MenuItem>
-                <MenuItem value="initiated">Initiated</MenuItem>
-              </RHFSelect>
-              <RHFTextField name="clientRefId" label="Client Ref Id" />
-              <RHFTextField name="accountNumber" label="AccountNumber" />
-              <RHFTextField name="mobileNumber" label="MobileNumber" />
-              <Stack direction={"row"} gap={1}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Start date"
-                    inputFormat="DD/MM/YYYY"
-                    value={watch("startDate")}
-                    maxDate={new Date()}
-                    onChange={(newValue: any) =>
-                      setValue("startDate", newValue)
-                    }
-                    renderInput={(params: any) => (
-                      <TextField
-                        {...params}
-                        size={"small"}
-                        sx={{ width: 150 }}
-                      />
-                    )}
-                  />
-                  <DatePicker
-                    label="End date"
-                    inputFormat="DD/MM/YYYY"
-                    value={watch("endDate")}
-                    minDate={watch("startDate")}
-                    maxDate={new Date()}
-                    onChange={(newValue: any) => setValue("endDate", newValue)}
-                    renderInput={(params: any) => (
-                      <TextField
-                        {...params}
-                        size={"small"}
-                        sx={{ width: 150 }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-                <Stack
-                  flexDirection={"row"}
-                  flexBasis={{ xs: "100%", sm: "50%" }}
-                  gap={1}
+                <RHFSelect
+                  name="category"
+                  label="Category"
+                  SelectProps={{
+                    native: false,
+                    sx: { textTransform: "capitalize" },
+                  }}
                 >
-                  <LoadingButton
-                    variant="contained"
-                    type="submit"
-                    loading={isSubmitting}
+                  <MenuItem value="">All</MenuItem>
+                  {categoryList.map((item: any) => {
+                    return (
+                      <MenuItem
+                        key={item._id}
+                        value={item._id}
+                        onClick={() => getProductlist(item._id)}
+                      >
+                        {item?.category_name}
+                      </MenuItem>
+                    );
+                  })}
+                </RHFSelect>
+                <RHFSelect
+                  name="product"
+                  label="Product"
+                  SelectProps={{
+                    native: false,
+                    sx: { textTransform: "capitalize" },
+                  }}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {ProductList.map((item: any) => {
+                    return (
+                      <MenuItem value={item._id}>{item?.productName}</MenuItem>
+                    );
+                  })}
+                </RHFSelect>
+                <RHFSelect
+                  name="status"
+                  label="Status"
+                  SelectProps={{
+                    native: false,
+                    sx: { textTransform: "capitalize" },
+                  }}
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="success">Success</MenuItem>
+                  <MenuItem value="failed">Failed</MenuItem>
+                  <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="in_process">In process</MenuItem>
+                  <MenuItem value="hold">Hold</MenuItem>
+                  <MenuItem value="initiated">Initiated</MenuItem>
+                </RHFSelect>
+                <RHFTextField name="clientRefId" label="Transaction Id" />
+                <RHFTextField name="accountNumber" label="AccountNumber" />
+                <RHFTextField name="mobileNumber" label="MobileNumber" />
+                <Stack direction={"row"} gap={1}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Start date"
+                      inputFormat="DD/MM/YYYY"
+                      value={watch("startDate")}
+                      maxDate={new Date()}
+                      onChange={(newValue: any) => setValue("startDate", newValue)}
+                      renderInput={(params: any) => (
+                        <TextField {...params} size={"small"} sx={{ width: 150 }} />
+                      )}
+                    />
+                    <DatePicker
+                      label="End date"
+                      inputFormat="DD/MM/YYYY"
+                      value={watch("endDate")}
+                      minDate={watch("startDate")}
+                      maxDate={new Date()}
+                      onChange={(newValue: any) => setValue("endDate", newValue)}
+                      renderInput={(params: any) => (
+                        <TextField {...params} size={"small"} sx={{ width: 150 }} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  <Stack
+                    flexDirection={"row"}
+                    flexBasis={{ xs: "100%", sm: "50%" }}
+                    gap={1}
                   >
-                    Search
-                  </LoadingButton>
-                  <LoadingButton
-                    variant="contained"
-                    onClick={() => {
-                      reset(defaultValues);
-                      getTransaction();
-                    }}
-                  >
-                    Clear
-                  </LoadingButton>
+                    <LoadingButton variant="contained" onClick={handleClose}>
+                      Cancel
+                    </LoadingButton>
+                    <LoadingButton variant="contained" onClick={handleReset}>
+                      <Iconify icon="bx:reset" color={"common.white"} mr={1} /> Reset
+                    </LoadingButton>
+                    <LoadingButton
+                      variant="contained"
+                      type="submit"
+                      loading={isSubmitting}
+                    >
+                      Apply
+                    </LoadingButton>
+                    <Button variant="contained" onClick={ExportData}>
+                      Export
+                    </Button>
+                  </Stack>
                 </Stack>
               </Stack>
             </Stack>
-            <Stack direction={"row"} gap={1}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Start date"
-                  inputFormat="DD/MM/YYYY"
-                  value={watch("sDate")}
-                  maxDate={new Date()}
-                  onChange={(newValue: any) => setValue("sDate", newValue)}
-                  renderInput={(params: any) => (
-                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
-                  )}
-                />
-                <DatePicker
-                  label="End date"
-                  inputFormat="DD/MM/YYYY"
-                  value={watch("eDate")}
-                  minDate={watch("sDate")}
-                  maxDate={new Date()}
-                  onChange={(newValue: any) => setValue("eDate", newValue)}
-                  renderInput={(params: any) => (
-                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
-                  )}
-                />
-              </LocalizationProvider>
-              <Stack
-                flexDirection={"row"}
-                flexBasis={{ xs: "100%", sm: "50%" }}
-                gap={1}
-              >
-                <Button variant="contained" onClick={ExportData}>
-                  Export
-                </Button>
-              </Stack>
-            </Stack>
-          </Stack>
-        </FormProvider>
+          </FormProvider>
+          {/* </Box> */}
+        </Modal>
         <Grid item xs={12} md={6} lg={8}>
           <>
             {Loading ? (
@@ -595,7 +650,7 @@ export default function MyTransactions() {
                   />
 
                   <TableBody>
-                    {sdata.map((row: any) => (
+                    {filterdValue.map((row: any) => (
                       <TransactionRow key={row._id} row={row} />
                     ))}
                   </TableBody>
