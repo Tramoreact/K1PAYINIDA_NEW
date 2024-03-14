@@ -155,7 +155,7 @@ export default function DMT() {
             if (Response.data.data == null) {
               openEditModal1();
             } else {
-              reSendOTP(data.mobileNumber);
+              SendOTP(data.mobileNumber);
               openEditModal2();
             }
             enqueueSnackbar(Response.data.message);
@@ -172,9 +172,9 @@ export default function DMT() {
     }
   };
 
-  const reSendOTP = (val: any) => {
+  const SendOTP = (val: any) => {
     let token = localStorage.getItem("token");
-    Api("moneyTransfer/remitter/resendOtp/" + val, "GET", "", token).then(
+    Api("moneyTransfer/remitter/sendOtp/" + val, "GET", "", token).then(
       (Response: any) => {
         if (Response.data.code == 200) {
           enqueueSnackbar(Response.data.message);
@@ -208,7 +208,7 @@ export default function DMT() {
             if (Response.data.data == null) {
               openEditModal1();
             } else {
-              reSendOTP(val);
+              SendOTP(val);
               openEditModal2();
             }
             enqueueSnackbar(Response.data.message);
@@ -224,7 +224,7 @@ export default function DMT() {
 
   const handleNewRegistaion = (val: string) => {
     if (val === "SUCCESS") {
-      reSendOTP(getValues("mobileNumber"));
+      SendOTP(getValues("mobileNumber"));
       handleClose1();
       openEditModal2();
     } else {
