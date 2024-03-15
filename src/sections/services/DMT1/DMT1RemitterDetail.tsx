@@ -1,8 +1,7 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import Scrollbar from "../../../components/scrollbar";
 // @mui
 import {
-  Grid,
   Table,
   TableBody,
   TableContainer,
@@ -12,12 +11,15 @@ import {
   Typography,
 } from "@mui/material";
 import _ from "lodash";
+import { RemitterContext } from "./DMT1";
 
 // ----------------------------------------------------------------------
 
-export default function DMT1RemitterDetail({ remitterData }: any) {
+export default function DMTRemitterDetail() {
+  const remitterContext: any = useContext(RemitterContext);
+
   return (
-    <Fragment>
+    <React.Fragment>
       <Typography variant="h5">Remitter details fetch succesfully.</Typography>
       <TableContainer component={Paper}>
         <Scrollbar sx={{ scrollbarWidth: "thin" }}>
@@ -32,8 +34,9 @@ export default function DMT1RemitterDetail({ remitterData }: any) {
                   Full Name
                 </TableCell>
                 <TableCell>
-                  {remitterData.remitterFN + " " + remitterData.remitterLN ||
-                    ""}
+                  {remitterContext?.remitterFN +
+                    " " +
+                    remitterContext?.remitterLN || ""}
                 </TableCell>
               </TableRow>
               <TableRow sx={{ borderBottom: "1px Solid #00000026" }}>
@@ -44,7 +47,7 @@ export default function DMT1RemitterDetail({ remitterData }: any) {
                 >
                   Mobile
                 </TableCell>
-                <TableCell>{remitterData.remitterMobile || ""}</TableCell>
+                <TableCell>{remitterContext?.remitterMobile || ""}</TableCell>
               </TableRow>
               <TableRow sx={{ borderBottom: "1px Solid #00000026" }}>
                 <TableCell
@@ -54,7 +57,9 @@ export default function DMT1RemitterDetail({ remitterData }: any) {
                 >
                   Occupation
                 </TableCell>
-                <TableCell>{remitterData.remitterOccupation || ""}</TableCell>
+                <TableCell>
+                  {remitterContext?.remitterOccupation || ""}
+                </TableCell>
               </TableRow>
               <TableRow sx={{ borderBottom: "1px Solid #00000026" }}>
                 <TableCell
@@ -65,14 +70,14 @@ export default function DMT1RemitterDetail({ remitterData }: any) {
                   Monthly Limit
                 </TableCell>
                 <TableCell>
-                  {remitterData.airtelRemitterAvailableLimit}
+                  {remitterContext?.dmt1RemitterAvailableLimit}
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </Scrollbar>
       </TableContainer>
-    </Fragment>
+    </React.Fragment>
   );
 }
 

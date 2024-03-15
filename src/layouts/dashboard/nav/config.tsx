@@ -52,6 +52,11 @@ const NavConfig = [
             roles: ["agent"],
           },
           {
+            title: "DMT1",
+            path: PATH_DASHBOARD.service.dmt1,
+            roles: ["agent"],
+          },
+          {
             title: "DMT2",
             path: PATH_DASHBOARD.service.dmt2,
             roles: ["agent"],

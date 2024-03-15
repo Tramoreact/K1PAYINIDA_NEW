@@ -269,7 +269,10 @@ export default function MyStats(props: any) {
                 />
               </Stack>
               <Stack>
-                <img src={DMT1} />
+                <img
+                  src={DMT1}
+                  onClick={() => navigate("/auth/service/dmt1")}
+                />
               </Stack>
               <Stack sx={{ cursor: "pointer" }}>
                 <img
