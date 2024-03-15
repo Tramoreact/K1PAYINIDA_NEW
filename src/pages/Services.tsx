@@ -44,7 +44,8 @@ export default function Services(props: any) {
               item?.category_name.toLowerCase() === "aadhaar pay" ||
               item?.category_name.toLowerCase() === "recharges" ||
               item?.category_name.toLowerCase() === "bill payment" ||
-              item?.category_name.toLowerCase() === "dmt2"
+              item?.category_name.toLowerCase() === "dmt2" ||
+              item?.category_name.toLowerCase() === "dmt1"
             ) {
               return item;
             }
@@ -103,9 +104,9 @@ export default function Services(props: any) {
                   ) : superCurrentTab.toLowerCase() == "matm" ? (
                     <MATM supCategory={tab} />
                   ) : superCurrentTab.toLowerCase() == "dmt1" ? (
-                    // <DMT1 supCategory={tab} />
-                    <ServiceUnderUpdate />
-                  ) : superCurrentTab.toLowerCase() == "dmt2" ? (
+                    <DMT1 />
+                  ) : // <ServiceUnderUpdate />
+                  superCurrentTab.toLowerCase() == "dmt2" ? (
                     <DMT2 />
                   ) : null}
                 </Box>

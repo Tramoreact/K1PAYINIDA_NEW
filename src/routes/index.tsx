@@ -43,6 +43,7 @@ import {
   BillPayment,
   AadhaarPay,
   DMT2,
+  DMT1,
 } from "./elements";
 
 // ----------------------------------------------------------------------
@@ -131,6 +132,7 @@ export default function Router() {
 
             { path: "recharge", element: <Recharge /> },
             { path: "dmt", element: <DMT /> },
+            { path: "dmt1", element: <DMT1 /> },
             { path: "dmt2", element: <DMT2 /> },
             { path: "aeps", element: <AEPS /> },
             { path: "billpayment", element: <BillPayment /> },
