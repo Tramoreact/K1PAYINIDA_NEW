@@ -51,8 +51,16 @@ export default function MyStats(props: any) {
   const theme = useTheme();
 
   const logo = [Group321, Group320, Frame10, Frame9, isolationMode, intersect];
-  const [categoryList, setCategoryList] = useState([]);
-  const [superCurrentTab, setSuperCurrentTab] = useState("");
+
+  const [isHoveredRech, setIsHoveredRech] = useState(false);
+  const [isHoveredMt, setIsHoveredmt] = useState(false);
+  const [isHoveredDMT1, setIsHoveredDMT1] = useState(false);
+  const [isHoveredDMT2, setIsHoveredDMT2] = useState(false);
+  const [isHoveredBillp, setIsHoveredBillp] = useState(false);
+  const [isHoveredAEPS, setIsHoveredAEPS] = useState(false);
+  const [isHoveredAadharp, setIsHoveredAadharp] = useState(false);
+  const [isHoveredmatm, setIsHoveredmatm] = useState(false);
+  const [isHoveredIndoN, setIsHoveredIndoN] = useState(false);
 
   const [Success, setSuccess] = useState<any>({
     status: "Success",
@@ -253,40 +261,100 @@ export default function MyStats(props: any) {
                 width: "100%",
                 justifyContent: "center",
                 // cursor: "pointer",
+                transform: "scale(1)",
               }}
               gap={6}
             >
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={Recharge}
                   onClick={() => navigate("/auth/service/recharge")}
                 />
               </Stack>
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease transform",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease transform",
+                  },
+                }}
+              >
                 <img
                   src={MoneyTransfer}
                   onClick={() => navigate("/auth/service/dmt")}
                 />
               </Stack>
-              <Stack>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={DMT1}
                   onClick={() => navigate("/auth/service/dmt1")}
                 />
               </Stack>
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={DMT2}
                   onClick={() => navigate("/auth/service/dmt2")}
                 />
               </Stack>
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={BillPayment}
                   onClick={() => navigate("/auth/service/billpayment")}
                 />
               </Stack>
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={AEPS}
                   onClick={() => navigate("/auth/service/aeps")}
@@ -295,7 +363,17 @@ export default function MyStats(props: any) {
               <Stack>
                 <img src={MATM} />
               </Stack>
-              <Stack sx={{ cursor: "pointer" }}>
+              <Stack
+                sx={{
+                  cursor: "pointer",
+                  transition: "300ms ease ",
+                  transform: "scale(1)",
+                  "& : hover": {
+                    transform: "scale(1.2)",
+                    transition: "300ms ease ",
+                  },
+                }}
+              >
                 <img
                   src={AadharPay}
                   onClick={() => navigate("/auth/service/aadhaarpay")}
