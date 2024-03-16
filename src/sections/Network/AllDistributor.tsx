@@ -23,6 +23,7 @@ import { fDateTime } from "src/utils/formatTime";
 import useResponsive from "src/hooks/useResponsive";
 import { CustomAvatar } from "src/components/custom-avatar";
 import { fIndianCurrency } from "src/utils/formatNumber";
+import CustomPagination from "src/components/customFunctions/CustomPagination";
 
 // ----------------------------------------------------------------------
 
@@ -165,16 +166,25 @@ export default function AllDistributor() {
             </Table>
           </Scrollbar>
         </TableContainer>
-        <Pagination
-          sx={{ display: "flex", justifyContent: "center" }}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-          variant="outlined"
-          shape="rounded"
-          showFirstButton
-          showLastButton
-        />
+        {/* <CustomPagination
+                page={currentPage - 1}
+                count={TotalCount}
+                onPageChange={(
+                  event: React.MouseEvent<HTMLButtonElement> | null,
+                  newPage: number
+                ) => {
+                  setCurrentPage(newPage + 1);
+                }}
+                rowsPerPage={pageSize}
+                onRowsPerPageChange={(
+                  event: React.ChangeEvent<
+                    HTMLInputElement | HTMLTextAreaElement
+                  >
+                ) => {
+                  setPageSize(parseInt(event.target.value));
+                  setCurrentPage(1);
+                }}
+              /> */}
       </Card>
 
       <Modal open={open} onClose={handleClose}>

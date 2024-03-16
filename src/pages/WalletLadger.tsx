@@ -85,7 +85,7 @@ export default function WalletLadger() {
   const { user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [ladgerData, setLadgerData] = useState([]);
-  const [pageSize, setPageSize] = useState<any>(20);
+  const [pageSize, setPageSize] = useState<any>(25);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [sendLoding, setSendLoading] = useState(false);
   const [WalletCount, setWalletCount] = useState(0);
@@ -122,8 +122,6 @@ export default function WalletLadger() {
   ];
 
   const {
-    startDate,
-    endDate,
     onChangeStartDate,
     onChangeEndDate,
     open: openPicker,
@@ -158,7 +156,6 @@ export default function WalletLadger() {
   useEffect(() => {
     getTransactional();
   }, [currentPage]);
-
 
   const getTransactional = () => {
     let token = localStorage.getItem("token");
@@ -213,15 +210,9 @@ export default function WalletLadger() {
                   inputFormat="DD/MM/YYYY"
                   value={watch("startDate")}
                   maxDate={new Date()}
-                  onChange={(newValue: any) =>
-                    setValue("startDate", newValue)
-                  }
+                  onChange={(newValue: any) => setValue("startDate", newValue)}
                   renderInput={(params: any) => (
-                    <TextField
-                      {...params}
-                      size={"small"}
-                      sx={{ width: 150 }}
-                    />
+                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
                   )}
                 />
                 <DatePicker
@@ -232,11 +223,7 @@ export default function WalletLadger() {
                   maxDate={new Date()}
                   onChange={(newValue: any) => setValue("endDate", newValue)}
                   renderInput={(params: any) => (
-                    <TextField
-                      {...params}
-                      size={"small"}
-                      sx={{ width: 150 }}
-                    />
+                    <TextField {...params} size={"small"} sx={{ width: 150 }} />
                   )}
                 />
               </LocalizationProvider>
@@ -266,50 +253,61 @@ export default function WalletLadger() {
           <ApiDataLoading />
         ) : (
           <Grid item xs={12} md={6} lg={8}>
-            <TableContainer>
-              <Scrollbar
-                sx={
-                  isMobile
-                    ? { maxHeight: window.innerHeight - 130 }
-                    : { maxHeight: window.innerHeight - 250 }
-                }
-              >
-                <Table
-                  sx={{ minWidth: 720 }}
-                  aria-label="customized table"
-                  stickyHeader
-                  size="small"
+            <Card>
+              <TableContainer>
+                <Scrollbar
+                  sx={
+                    isMobile
+                      ? { maxHeight: window.innerHeight - 130 }
+                      : { maxHeight: window.innerHeight - 250 }
+                  }
                 >
-                  <TableHeadCustom
-                    headLabel={
-                      user?.role == "m_distributor"
-                        ? MDtableLabels
-                        : user?.role == "distributor"
+                  <Table
+                    sx={{ minWidth: 720 }}
+                    aria-label="customized table"
+                    stickyHeader
+                    size="small"
+                  >
+                    <TableHeadCustom
+                      headLabel={
+                        user?.role == "m_distributor"
+                          ? MDtableLabels
+                          : user?.role == "distributor"
                           ? distributortableLabels
                           : agenttableLabels
-                    }
-                  />
+                      }
+                    />
 
-                  <TableBody>
-                    {Array.isArray(ladgerData) &&
-                      ladgerData.map((row: any) => (
-                        <LadgerRow key={row._id} row={row} />
-                      ))}
-                  </TableBody>
-                </Table>
-              </Scrollbar>
-            </TableContainer>
+                    <TableBody>
+                      {Array.isArray(ladgerData) &&
+                        ladgerData.map((row: any) => (
+                          <LadgerRow key={row._id} row={row} />
+                        ))}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
+            </Card>
           </Grid>
         )}
       </Stack>
 
       <CustomPagination
-        pageSize={pageSize}
-        onChange={(event: React.ChangeEvent<unknown>, value: number) => {
-          setCurrentPage(value);
+        page={currentPage - 1}
+        count={WalletCount}
+        onPageChange={(
+          event: React.MouseEvent<HTMLButtonElement> | null,
+          newPage: number
+        ) => {
+          setCurrentPage(newPage + 1);
         }}
-        page={currentPage}
-        Count={WalletCount}
+        rowsPerPage={pageSize}
+        onRowsPerPageChange={(
+          event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        ) => {
+          setPageSize(parseInt(event.target.value));
+          setCurrentPage(1);
+        }}
       />
     </>
   );

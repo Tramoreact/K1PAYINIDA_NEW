@@ -11,7 +11,7 @@ export default function Network() {
   const { user } = useAuthContext();
 
   return (
-    <RoleBasedGuard hasContent roles={["distributor", "m_distriutor"]}>
+    <RoleBasedGuard hasContent roles={["distributor", "m_distributor"]}>
       <>{user?.role === "m_distributor" ? <AllDistributors /> : <Agents />}</>
     </RoleBasedGuard>
   );
