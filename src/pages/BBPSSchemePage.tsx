@@ -223,7 +223,7 @@ export default function BBPSSchemePage() {
     <>
       {user?.role === "m_distributor" && (
         <>
-          <FormControl sx={{ mt: 1, minWidth: 200 }}>
+          <FormControl sx={{ mt: 1, ml: 1, minWidth: 200 }}>
             <TextField
               id="outlined-select-currency-native"
               select
@@ -252,7 +252,7 @@ export default function BBPSSchemePage() {
       ) : (
         <>
           {tableData.length > 0 && (
-            <Stack mx={1}>
+            <Stack mx={1} mt={2}>
               <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Stack
                   flexDirection={"row"}

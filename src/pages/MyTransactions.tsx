@@ -88,17 +88,15 @@ export default function MyTransactions() {
   const { enqueueSnackbar } = useSnackbar();
   const [Loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
-  const [pageCount, setPageCount] = useState<any>(0);
+  const [TotalCount, setTotalCount] = useState<any>(0);
   const [categoryList, setCategoryList] = useState([]);
-  const [sdata, setSdata] = useState([]);
-  const [pageSize, setPageSize] = useState<any>(20);
+  const [pageSize, setPageSize] = useState<any>(25);
   const [currentTab, setCurrentTab] = useState("all");
   const [ProductList, setProductList] = useState([]);
   const [filterdValue, setFilterdValue] = useState<any>([]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
 
   const txnSchema = Yup.object().shape({
     status: Yup.string(),
@@ -199,7 +197,7 @@ export default function MyTransactions() {
         if (Response.status == 200) {
           if (Response.data.code == 200) {
             setFilterdValue(Response.data.data.data);
-            setPageCount(Response.data.data.totalNumberOfRecords);
+            setTotalCount(Response.data.data.totalNumberOfRecords);
             console.log(
               "....................................asdsdsds.......",
               Response.data.data.totalNumberOfRecords
@@ -245,7 +243,7 @@ export default function MyTransactions() {
           if (Response.status == 200) {
             if (Response.data.code == 200) {
               setFilterdValue(Response.data.data.data);
-              setPageCount(Response.data.data.totalNumberOfRecords);
+              setTotalCount(Response.data.data.totalNumberOfRecords);
               handleClose();
               enqueueSnackbar(Response.data.message);
             } else {
@@ -282,7 +280,7 @@ export default function MyTransactions() {
       resetField("product");
       setValue("product", "");
     }
-  }
+  };
 
   const tableLabels = [
     { id: "Date&Time", label: "Txn Details" },
@@ -487,7 +485,7 @@ export default function MyTransactions() {
         </Stack>
       </Stack>
       <Stack>
-      <Modal
+        <Modal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -503,7 +501,7 @@ export default function MyTransactions() {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-60%, -60%)",
                 width: { xs: "100%", md: "50%" },
                 bgcolor: "#ffffff",
                 borderRadius: 2,
@@ -516,7 +514,8 @@ export default function MyTransactions() {
                 display="grid"
                 gridTemplateColumns={{
                   xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
+                  md: "repeat(1, 1fr)",
+                  sm: "repeat(1, 1fr)",
                 }}
               >
                 <RHFSelect
@@ -581,9 +580,15 @@ export default function MyTransactions() {
                       inputFormat="DD/MM/YYYY"
                       value={watch("startDate")}
                       maxDate={new Date()}
-                      onChange={(newValue: any) => setValue("startDate", newValue)}
+                      onChange={(newValue: any) =>
+                        setValue("startDate", newValue)
+                      }
                       renderInput={(params: any) => (
-                        <TextField {...params} size={"small"} sx={{ width: 150 }} />
+                        <TextField
+                          {...params}
+                          size={"small"}
+                          sx={{ width: 150 }}
+                        />
                       )}
                     />
                     <DatePicker
@@ -592,9 +597,15 @@ export default function MyTransactions() {
                       value={watch("endDate")}
                       minDate={watch("startDate")}
                       maxDate={new Date()}
-                      onChange={(newValue: any) => setValue("endDate", newValue)}
+                      onChange={(newValue: any) =>
+                        setValue("endDate", newValue)
+                      }
                       renderInput={(params: any) => (
-                        <TextField {...params} size={"small"} sx={{ width: 150 }} />
+                        <TextField
+                          {...params}
+                          size={"small"}
+                          sx={{ width: 150 }}
+                        />
                       )}
                     />
                   </LocalizationProvider>
@@ -607,7 +618,8 @@ export default function MyTransactions() {
                       Cancel
                     </LoadingButton>
                     <LoadingButton variant="contained" onClick={handleReset}>
-                      <Iconify icon="bx:reset" color={"common.white"} mr={1} /> Reset
+                      <Iconify icon="bx:reset" color={"common.white"} mr={1} />{" "}
+                      Reset
                     </LoadingButton>
                     <LoadingButton
                       variant="contained"
@@ -631,43 +643,57 @@ export default function MyTransactions() {
             {Loading ? (
               <ApiDataLoading />
             ) : (
-              <Scrollbar
-                sx={
-                  isMobile
-                    ? { maxHeight: window.innerHeight - 130 }
-                    : { maxHeight: window.innerHeight - 250 }
-                }
-              >
-                <Table size="small" aria-label="customized table" stickyHeader>
-                  <TableHeadCustom
-                    headLabel={
-                      user?.role == "m_distributor"
-                        ? tableLabels
-                        : user?.role == "distributor"
-                        ? tableLabels1
-                        : tableLabels2
-                    }
-                  />
+              <Card>
+                <Scrollbar
+                  sx={
+                    isMobile
+                      ? { maxHeight: window.innerHeight - 130 }
+                      : { maxHeight: window.innerHeight - 250 }
+                  }
+                >
+                  <Table
+                    size="small"
+                    aria-label="customized table"
+                    stickyHeader
+                  >
+                    <TableHeadCustom
+                      headLabel={
+                        user?.role == "m_distributor"
+                          ? tableLabels
+                          : user?.role == "distributor"
+                          ? tableLabels1
+                          : tableLabels2
+                      }
+                    />
 
-                  <TableBody>
-                    {filterdValue.map((row: any) => (
-                      <TransactionRow key={row._id} row={row} />
-                    ))}
-                  </TableBody>
-                </Table>
-              </Scrollbar>
+                    <TableBody>
+                      {filterdValue.map((row: any) => (
+                        <TransactionRow key={row._id} row={row} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </Card>
             )}
             {!Loading && (
               <CustomPagination
-                pageSize={pageSize}
-                onChange={(
-                  event: React.ChangeEvent<unknown>,
-                  value: number
+                page={currentPage - 1}
+                count={TotalCount}
+                onPageChange={(
+                  event: React.MouseEvent<HTMLButtonElement> | null,
+                  newPage: number
                 ) => {
-                  setCurrentPage(value);
+                  setCurrentPage(newPage + 1);
                 }}
-                page={currentPage}
-                Count={pageCount}
+                rowsPerPage={pageSize}
+                onRowsPerPageChange={(
+                  event: React.ChangeEvent<
+                    HTMLInputElement | HTMLTextAreaElement
+                  >
+                ) => {
+                  setPageSize(parseInt(event.target.value));
+                  setCurrentPage(1);
+                }}
               />
             )}
           </>
