@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // @mui
-import { Box, Typography, Stack, Drawer, Button, Divider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Stack,
+  Drawer,
+  Button,
+  Card,
+  Divider,
+} from "@mui/material";
 // hooks
 import useResponsive from "../../../hooks/useResponsive";
 // config
@@ -17,6 +25,8 @@ import { useAuthContext } from "src/auth/useAuthContext";
 import Label from "src/components/label/Label";
 import { fIndianCurrency } from "src/utils/formatNumber";
 import { CustomAvatar } from "src/components/custom-avatar";
+import { sentenceCase } from "change-case";
+import { ProfileCover } from "src/sections/profile";
 
 // ----------------------------------------------------------------------
 
@@ -86,19 +96,32 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
           </>
         )}
       </Stack>
-      <Stack flexDirection="row" gap={1} margin={4}>
-        <CustomAvatar
-          name={user?.firstName ? user?.lastName : ""}
-          alt={user?.firstName}
-          src={user?.firstName && user?.selfie[0]}
-        />
-        <Stack>
-          <Typography>{user?.role}</Typography>
-          <Typography>
-            {user?.firstName} {user?.lastName}
-          </Typography>
+
+      <Card
+        sx={{
+          borderRadius: "5px",
+          boxShadow: "3",
+          m: 0.5,
+          bgcolor: "primary",
+        }}
+      >
+        <Stack flexDirection="row" gap={1} p={2}>
+          <CustomAvatar
+            name={user?.firstName ? user?.lastName : ""}
+            alt={user?.firstName}
+            src={user?.firstName && user?.selfie[0]}
+          />
+          <Stack>
+            <Typography style={{ fontWeight: "bold" }}>
+              {user?.firstName} {user?.lastName}
+            </Typography>
+            <Typography noWrap variant="body2">
+              {sentenceCase(user?.role)}, {user?.userCode}
+            </Typography>
+          </Stack>
         </Stack>
-      </Stack>
+      </Card>
+
       <Divider />
       <NavSectionVertical data={NavConfig} />
       <Box sx={{ flexGrow: 1 }} />
