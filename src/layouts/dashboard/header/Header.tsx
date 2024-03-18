@@ -86,7 +86,7 @@ export default function Header({ onOpenNav }: Props) {
               </Label>
             )}
 
-            <NotificationsPopover />
+            {/* <NotificationsPopover /> */}
 
             <AccountPopover />
           </>
