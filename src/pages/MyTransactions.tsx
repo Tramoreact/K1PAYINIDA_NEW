@@ -134,7 +134,7 @@ export default function MyTransactions() {
   useEffect(() => {
     getCategoryList();
     getTransaction();
-  }, [currentPage]);
+  }, [currentPage, pageSize]);
 
   useEffect(() => setCurrentPage(1), [currentTab]);
 
@@ -655,6 +655,7 @@ export default function MyTransactions() {
                     size="small"
                     aria-label="customized table"
                     stickyHeader
+                    sx={{ mb: 8 }}
                   >
                     <TableHeadCustom
                       headLabel={

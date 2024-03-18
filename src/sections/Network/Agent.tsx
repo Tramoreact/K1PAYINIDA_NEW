@@ -21,6 +21,7 @@ import { fDateTime } from "src/utils/formatTime";
 import useResponsive from "src/hooks/useResponsive";
 import { CustomAvatar } from "src/components/custom-avatar";
 import { fIndianCurrency } from "src/utils/formatNumber";
+import CustomPagination from "src/components/customFunctions/CustomPagination";
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +54,9 @@ export default function Agent() {
   const [appdata, setAppdata] = useState([]);
   const isMobile = useResponsive("up", "sm");
 
+  const [pageSize, setPageSize] = useState<any>(25);
   const [currentPage, setCurrentPage] = useState<any>(1);
+  const [TotalCount, setTotalCount] = useState<any>(0);
 
   const tableLabels: any = [
     { id: "product", label: "Name" },
@@ -67,16 +70,24 @@ export default function Agent() {
 
   useEffect(() => {
     ApprovedList();
-  }, []);
+  }, [currentPage, pageSize]);
 
   const ApprovedList = () => {
     let token = localStorage.getItem("token");
-    Api(`agent/get_All_Agents`, "GET", "", token).then((Response: any) => {
+    Api(
+      `agent/get_All_Agents?limit=${pageSize}&page=${currentPage}`,
+      "GET",
+      "",
+      token
+    ).then((Response: any) => {
       console.log("======ApprovedList==User==response=====>" + Response);
 
       if (Response.status == 200) {
         if (Response.data.code == 200) {
           let arr: any = [];
+
+          setTotalCount(Response?.data?.count);
+
           arr = Response.data.data.filter((item: any) => {
             return (
               (item.role == "agent" && item.referralCode != "") ||
@@ -126,19 +137,24 @@ export default function Agent() {
           transform: "translate(-50%)",
           bgcolor: "white",
         }}
-      >
-        <Pagination
-          sx={{ display: "flex", justifyContent: "center" }}
-          // count={pageSize}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-          variant="outlined"
-          shape="rounded"
-          showFirstButton
-          showLastButton
-        />
-      </Stack>
+      ></Stack>
+      <CustomPagination
+        page={currentPage - 1}
+        count={TotalCount}
+        onPageChange={(
+          event: React.MouseEvent<HTMLButtonElement> | null,
+          newPage: number
+        ) => {
+          setCurrentPage(newPage + 1);
+        }}
+        rowsPerPage={pageSize}
+        onRowsPerPageChange={(
+          event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        ) => {
+          setPageSize(parseInt(event.target.value));
+          setCurrentPage(1);
+        }}
+      />
     </>
   );
 }
