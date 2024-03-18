@@ -155,7 +155,7 @@ export default function WalletLadger() {
 
   useEffect(() => {
     getTransactional();
-  }, [currentPage]);
+  }, [currentPage, pageSize]);
 
   const getTransactional = () => {
     let token = localStorage.getItem("token");
@@ -263,10 +263,10 @@ export default function WalletLadger() {
                   }
                 >
                   <Table
-                    sx={{ minWidth: 720 }}
                     aria-label="customized table"
                     stickyHeader
                     size="small"
+                    sx={{ mb: 8 }}
                   >
                     <TableHeadCustom
                       headLabel={
@@ -426,7 +426,9 @@ const LadgerRow = ({ row }: any) => {
           )}
 
           <Stack direction="row" gap={0.5}>
-            <Typography variant="subtitle2">Transaction Type : </Typography>
+            <Typography variant="subtitle2" noWrap>
+              Transaction Type :{" "}
+            </Typography>
             <Typography variant="body2">
               {row?.transaction?.transactionType}
             </Typography>
