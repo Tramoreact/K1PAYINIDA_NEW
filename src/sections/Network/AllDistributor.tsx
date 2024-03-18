@@ -57,7 +57,12 @@ export default function AllDistributor() {
   const [appdata, setAppdata] = useState([]);
   const isMobile = useResponsive("up", "sm");
   const [open, setModalEdit] = React.useState(false);
+  const [pageSize, setPageSize] = useState<any>(25);
   const [currentPage, setCurrentPage] = useState<any>(1);
+  const [TotalCount, setTotalCount] = useState<any>(0);
+  const [pageSizeAgent, setPageSizeAgent] = useState<any>(25);
+  const [currentPageAgent, setCurrentPageAgent] = useState<any>(1);
+  const [TotalCountAgnet, setTotalCountAgnet] = useState<any>(0);
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
 
   const [SelectAgent, setSelectAgent] = useState([]);
@@ -68,19 +73,23 @@ export default function AllDistributor() {
     setModalEdit(true);
 
     let token = localStorage.getItem("token");
-    Api(`agent/get_All_Agents/${val._id}`, "GET", "", token).then(
-      (Response: any) => {
-        console.log("==============Agent Details=====>", Response.data.data);
-        if (Response.status == 200) {
-          if (Response.data.code == 200) {
-            setSelectAgent(Response.data.data);
-            console.log("=========Agent====>", Response.data.data);
-          } else {
-            console.log("======Agent List=======>" + Response);
-          }
+    Api(
+      `agent/get_Distributors_All_Agents?distId=${val._id}&page=${currentPageAgent}&limit=${pageSizeAgent}`,
+      "GET",
+      "",
+      token
+    ).then((Response: any) => {
+      console.log("==============Agent Details=====>", Response.data.data);
+      if (Response.status == 200) {
+        if (Response.data.code == 200) {
+          setTotalCountAgnet(Response?.data?.count);
+          setSelectAgent(Response.data.data);
+          console.log("=========Agent====>", Response.data.data);
+        } else {
+          console.log("======Agent List=======>" + Response);
         }
       }
-    );
+    });
   };
 
   const handleClose = () => setModalEdit(false);
@@ -108,16 +117,22 @@ export default function AllDistributor() {
 
   useEffect(() => {
     allDistributor();
-  }, []);
+  }, [pageSize, currentPage]);
 
   const allDistributor = () => {
     let token = localStorage.getItem("token");
-    Api(`agent/get_All_Distributor`, "GET", "", token).then((Response: any) => {
+    Api(
+      `agent/get_All_Distributor?page=${currentPage}&limit=${pageSize}`,
+      "GET",
+      "",
+      token
+    ).then((Response: any) => {
       console.log("======ApprovedList==User==response=====>" + Response);
 
       if (Response.status == 200) {
         if (Response.data.code == 200) {
           let arr: any = [];
+          setTotalCount(Response?.data?.count);
           arr = Response.data.data.filter((item: any) => {
             return (
               (item.role == "agent" && item.referralCode != "") ||
@@ -151,7 +166,7 @@ export default function AllDistributor() {
           <Scrollbar
             sx={{ maxHeight: window.innerHeight - (isMobile ? 140 : 50) }}
           >
-            <Table sx={{ minWidth: 720 }}>
+            <Table sx={{ minWidth: 720, mb: 8 }}>
               <TableHeadCustom headLabel={tableLabels} />
 
               <TableBody>
@@ -166,25 +181,23 @@ export default function AllDistributor() {
             </Table>
           </Scrollbar>
         </TableContainer>
-        {/* <CustomPagination
-                page={currentPage - 1}
-                count={TotalCount}
-                onPageChange={(
-                  event: React.MouseEvent<HTMLButtonElement> | null,
-                  newPage: number
-                ) => {
-                  setCurrentPage(newPage + 1);
-                }}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={(
-                  event: React.ChangeEvent<
-                    HTMLInputElement | HTMLTextAreaElement
-                  >
-                ) => {
-                  setPageSize(parseInt(event.target.value));
-                  setCurrentPage(1);
-                }}
-              /> */}
+        <CustomPagination
+          page={currentPage - 1}
+          count={TotalCount}
+          onPageChange={(
+            event: React.MouseEvent<HTMLButtonElement> | null,
+            newPage: number
+          ) => {
+            setCurrentPage(newPage + 1);
+          }}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={(
+            event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => {
+            setPageSize(parseInt(event.target.value));
+            setCurrentPage(1);
+          }}
+        />
       </Card>
 
       <Modal open={open} onClose={handleClose}>
@@ -193,7 +206,7 @@ export default function AllDistributor() {
             <Card sx={{ width: "90vw" }}>
               <TableContainer>
                 <Scrollbar sx={{ height: "70vh", overflowY: "scroll" }}>
-                  <Table sx={{ minWidth: 720 }}>
+                  <Table sx={{ minWidth: 720, mb: 8 }}>
                     <TableHeadCustom headLabel={tableLabels} />
 
                     <TableBody>
@@ -208,15 +221,24 @@ export default function AllDistributor() {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-              <Pagination
-                sx={{ display: "flex", justifyContent: "center" }}
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-                variant="outlined"
-                shape="rounded"
-                showFirstButton
-                showLastButton
+              <CustomPagination
+                page={currentPageAgent - 1}
+                count={TotalCountAgnet}
+                onPageChange={(
+                  event: React.MouseEvent<HTMLButtonElement> | null,
+                  newPage: number
+                ) => {
+                  setCurrentPageAgent(newPage + 1);
+                }}
+                rowsPerPage={pageSizeAgent}
+                onRowsPerPageChange={(
+                  event: React.ChangeEvent<
+                    HTMLInputElement | HTMLTextAreaElement
+                  >
+                ) => {
+                  setPageSizeAgent(parseInt(event.target.value));
+                  setCurrentPageAgent(1);
+                }}
               />
             </Card>
           )}

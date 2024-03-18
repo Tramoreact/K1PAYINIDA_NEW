@@ -43,6 +43,7 @@ import AadharPay from "../assets/services/AadharPay.svg";
 import IndoNepal from "../assets/services/IndoNepal.svg";
 import RoleBasedGuard from "src/auth/RoleBasedGuard";
 import { useAuthContext } from "src/auth/useAuthContext";
+import Label from "src/components/label/Label";
 // ----------------------------------------------------------------------
 
 export default function MyStats(props: any) {
@@ -258,9 +259,9 @@ export default function MyStats(props: any) {
               sx={{
                 p: 4,
                 display: "flex",
-                width: "100%",
+
                 justifyContent: "center",
-                // cursor: "pointer",
+
                 transform: "scale(1)",
               }}
               gap={6}
@@ -361,7 +362,10 @@ export default function MyStats(props: any) {
                 />
               </Stack>
               <Stack>
-                <img src={MATM} />
+                <img src={MATM} style={{ width: "60px", height: "60px" }} />
+                <Typography style={{ fontSize: "8px" }} color="error">
+                  Comming soon
+                </Typography>
               </Stack>
               <Stack
                 sx={{
@@ -379,8 +383,15 @@ export default function MyStats(props: any) {
                   onClick={() => navigate("/auth/service/aadhaarpay")}
                 />
               </Stack>
+
               <Stack>
-                <img src={IndoNepal} />
+                <img
+                  src={IndoNepal}
+                  style={{ width: "60px", height: "60px" }}
+                />
+                <Typography style={{ fontSize: "8px" }} color="error">
+                  Comming soon
+                </Typography>
               </Stack>
             </Box>
           </Card>
