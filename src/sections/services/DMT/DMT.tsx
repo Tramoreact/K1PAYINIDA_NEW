@@ -171,7 +171,7 @@ export default function DMT() {
 
   const SendOTP = (val: any) => {
     let token = localStorage.getItem("token");
-    Api("moneyTransfer/remitter/resendOtp/" + val, "GET", "", token).then(
+    Api("moneyTransfer/remitter/sendOtp/" + val, "GET", "", token).then(
       (Response: any) => {
         if (Response.data.code == 200) {
           enqueueSnackbar(Response.data.message);
