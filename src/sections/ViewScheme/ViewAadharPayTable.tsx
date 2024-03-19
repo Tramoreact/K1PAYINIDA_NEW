@@ -13,22 +13,12 @@ import {
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
+import { AadhaarPayeRowProps } from "./types";
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  minSlab: string;
-  maxSlab: string;
-  chargeType: string;
-  agentCharge: string;
-  masterDistributorCommission: string;
-  distributorCommission: string;
-  commissionType: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: AadhaarPayeRowProps[];
 }
 export default function ViewAadharPayTable({ comData, ...other }: Props) {
   const { user } = useAuthContext();
@@ -73,8 +63,8 @@ export default function ViewAadharPayTable({ comData, ...other }: Props) {
                 }
               />
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: AadhaarPayeRowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -88,7 +78,7 @@ export default function ViewAadharPayTable({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: AadhaarPayeRowProps;
   agentRole: string | null;
 };
 // sd

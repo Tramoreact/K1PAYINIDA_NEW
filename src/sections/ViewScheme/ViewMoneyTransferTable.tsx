@@ -12,23 +12,12 @@ import {
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
+import { MoneyTransferRowProps } from "./types";
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  minSlab: string;
-  maxSlab: string;
-  commissionType: string;
-  chargeType: string;
-  agentCharge: string;
-  masterDistributorCommission: string;
-  distributorCommission: string;
-  agentCommission: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: MoneyTransferRowProps[];
 }
 
 export default function ViewMoneyTransferTable({ comData, ...other }: Props) {
@@ -75,8 +64,8 @@ export default function ViewMoneyTransferTable({ comData, ...other }: Props) {
                 }
               />
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: MoneyTransferRowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -90,7 +79,7 @@ export default function ViewMoneyTransferTable({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: MoneyTransferRowProps;
   agentRole: string | null;
 };
 // sd

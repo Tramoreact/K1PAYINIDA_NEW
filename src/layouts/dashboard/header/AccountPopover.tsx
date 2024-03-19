@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // @mui
 import { alpha } from "@mui/material/styles";
@@ -84,7 +84,7 @@ export default function AccountPopover() {
         }}
       >
         <CustomAvatar
-          src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+          src={user?.selfie[0]}
           alt={user?.firstName}
           name={user?.firstName}
         />
