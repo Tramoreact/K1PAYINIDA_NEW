@@ -13,26 +13,12 @@ import { useEffect } from "react";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { Dmt2RowProps } from "./types";
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  minSlab: string;
-  maxSlab: string;
-  ccfType: string;
-  ccf: string;
-  commissionType: string;
-  masterDistributorCommissionType: string;
-  masterDistributorCommission: string;
-  distributorCommissionType: string;
-  distributorCommission: string;
-  agentCommissionType: string;
-  agentCommission: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: Dmt2RowProps[];
 }
 
 export default function ViewDmt2able({ comData, ...other }: Props) {
@@ -86,8 +72,8 @@ export default function ViewDmt2able({ comData, ...other }: Props) {
                 }
               />
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: Dmt2RowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -101,7 +87,7 @@ export default function ViewDmt2able({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: Dmt2RowProps;
   agentRole: string | null;
 };
 // sd

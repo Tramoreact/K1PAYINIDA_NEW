@@ -13,24 +13,12 @@ import { useEffect } from "react";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
 import { useAuthContext } from "src/auth/useAuthContext";
+import { Dmt1RowProps } from "./types";
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  minSlab: string;
-  maxSlab: string;
-  commissionType: string;
-  masterDistributorCommissionType: string;
-  masterDistributorCommission: string;
-  distributorCommissionType: string;
-  distributorCommission: string;
-  agentCommissionType: string;
-  agentCommission: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: Dmt1RowProps[];
 }
 
 export default function ViewDmt1able({ comData, ...other }: Props) {
@@ -39,6 +27,8 @@ export default function ViewDmt1able({ comData, ...other }: Props) {
   const tableLabels1 = [
     { id: "min", label: "Min. Slab" },
     { id: "max", label: "Max. Slab" },
+    { id: "max", label: "CCF Type" },
+    { id: "max", label: "CCF" },
     { id: "AgentCommissionType", label: "Agent Commission Type" },
     { id: "AgentCommission", label: "Agent Commission" },
     { id: "DistributorComType", label: "Distributor Commission type" },
@@ -49,6 +39,8 @@ export default function ViewDmt1able({ comData, ...other }: Props) {
   const tableLabels2 = [
     { id: "min", label: "Min. Slab" },
     { id: "max", label: "Max. Slab" },
+    { id: "max", label: "CCF Type" },
+    { id: "max", label: "CCF" },
     { id: "AgentCommissionType", label: "Agent Commission Type" },
     { id: "AgentCommission", label: "Agent Commission" },
     { id: "DistributorComType", label: "Distributor Commission type" },
@@ -57,6 +49,8 @@ export default function ViewDmt1able({ comData, ...other }: Props) {
   const tableLabels3 = [
     { id: "min", label: "Min. Slab" },
     { id: "max", label: "Max. Slab" },
+    { id: "max", label: "CCF Type" },
+    { id: "max", label: "CCF" },
     { id: "AgentCommissionType", label: "Agent Commission Type" },
     { id: "AgentCommission", label: "Agent Commission" },
   ];
@@ -78,8 +72,8 @@ export default function ViewDmt1able({ comData, ...other }: Props) {
                 }
               />
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: Dmt1RowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -93,7 +87,7 @@ export default function ViewDmt1able({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: Dmt1RowProps;
   agentRole: string | null;
 };
 // sd
@@ -103,6 +97,14 @@ function VendorRow({ row, agentRole }: vendorRowProps) {
       <TableRow>
         <TableCell>{row.minSlab}</TableCell>
         <TableCell>{row.maxSlab}</TableCell>
+        <TableCell>
+          {row.ccfType == "flat"
+            ? "Rs."
+            : row.ccfType == "percentage"
+            ? "%"
+            : "-"}
+        </TableCell>
+        <TableCell>{row.ccf}</TableCell>
         <TableCell>
           {row.agentCommissionType == "flat"
             ? "Rs."

@@ -12,19 +12,11 @@ import {
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
+import { RechargeRowProps } from "./types";
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  productName: string;
-  chargeType: string;
-  masterDistributorCommission: string;
-  distributorCommission: string;
-  agentCommission: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: RechargeRowProps[];
 }
 
 export default function ViewRechargeTable({ comData, ...other }: Props) {
@@ -64,8 +56,8 @@ export default function ViewRechargeTable({ comData, ...other }: Props) {
               />
 
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: RechargeRowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -79,7 +71,7 @@ export default function ViewRechargeTable({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: RechargeRowProps;
   agentRole: string | null;
 };
 // sd

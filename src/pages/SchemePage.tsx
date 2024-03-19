@@ -22,7 +22,6 @@ import ViewRechargeTable from "../sections/ViewScheme/ViewRechargeTable";
 import ViewAadharPayTable from "../sections/ViewScheme/ViewAadharPayTable";
 import ViewDmt1Table from "../sections/ViewScheme/ViewDmt1Table";
 import ViewDmt2Table from "../sections/ViewScheme/ViewDmt2Table";
-import ViewBBPSTable from "../sections/ViewScheme/ViewBBPSTable";
 import LoadingScreen from "src/components/loading-screen/LoadingScreen";
 import ViewMatmTable from "../sections/ViewScheme/ViewMatmTable";
 import { useSnackbar } from "notistack";

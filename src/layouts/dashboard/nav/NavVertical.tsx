@@ -1,17 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // @mui
-import {
-  Box,
-  Typography,
-  Stack,
-  Drawer,
-  Button,
-  Card,
-  Divider,
-  Modal,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Stack, Drawer, Button, Divider } from "@mui/material";
 // hooks
 import useResponsive from "../../../hooks/useResponsive";
 // config
@@ -27,10 +17,6 @@ import { useAuthContext } from "src/auth/useAuthContext";
 import Label from "src/components/label/Label";
 import { fIndianCurrency } from "src/utils/formatNumber";
 import { CustomAvatar } from "src/components/custom-avatar";
-import { sentenceCase } from "change-case";
-import { ProfileCover } from "src/sections/profile";
-import React from "react";
-import { AwsDocSign } from "src/components/customFunctions/AwsDocSign";
 
 // ----------------------------------------------------------------------
 
@@ -42,10 +28,6 @@ type Props = {
 export default function NavVertical({ openNav, onCloseNav }: Props) {
   const { pathname } = useLocation();
   const { user, logout } = useAuthContext();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const openModal = () => {
-    setModalOpen(true);
-  };
   const navigate = useNavigate();
 
   const isDesktop = useResponsive("up", "lg");
@@ -87,10 +69,10 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         }}
       >
         <Logo />
+        <NavAccount />
 
         {!isTablet && (
           <>
-            <NavAccount />
             <Label variant="soft" color={"primary"} sx={walletStyle}>
               {`main wallet = ${
                 fIndianCurrency(user?.main_wallet_amount) || 0
@@ -105,80 +87,12 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         )}
       </Stack>
 
-      <Card
-        sx={{
-          borderRadius: "5px",
-          boxShadow: "3",
-          m: 0.5,
-          bgcolor: "primary",
-        }}
-      >
-        <Stack flexDirection="row" gap={1} p={2}>
-          <CustomAvatar
-            name={user?.firstName ? user?.lastName : ""}
-            alt={user?.firstName}
-            src={user?.firstName && user?.selfie[0]}
-            onClick={openModal}
-          />
-          <Stack>
-            <Typography style={{ fontWeight: "bold" }}>
-              {user?.firstName} {user?.lastName}
-            </Typography>
-            <Typography noWrap variant="body2">
-              {sentenceCase(user?.role)}, {user?.userCode}
-            </Typography>
-          </Stack>
-        </Stack>
-      </Card>
-
       <Divider />
       <NavSectionVertical data={NavConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <Button variant="contained" sx={{ m: 2 }} onClick={logout}>
         Logout
       </Button>
-      <Modal
-        open={modalOpen}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Grid
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "50%",
-            height: "60%",
-            bgcolor: "#ffffff",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: "20px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <img
-            src={user?.selfie[0] && AwsDocSign(user?.selfie[0])}
-            alt=""
-            style={{ width: "100%", height: "90%" }}
-          />
-
-          <Stack>
-            <Button
-              onClick={() => setModalOpen(false)}
-              variant="contained"
-              sx={{
-                alignSelf: "flex-end",
-                mt: 2,
-              }}
-            >
-              Close
-            </Button>
-          </Stack>
-        </Grid>
-      </Modal>
     </Scrollbar>
   );
 

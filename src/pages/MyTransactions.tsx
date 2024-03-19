@@ -64,6 +64,8 @@ import useResponsive from "src/hooks/useResponsive";
 import { CustomAvatar } from "src/components/custom-avatar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TransactionProps } from "src/sections/MyTransaction/types";
+import { CategoryProps, ProductProps } from "src/sections/types";
 
 // ----------------------------------------------------------------------
 
@@ -93,7 +95,7 @@ export default function MyTransactions() {
   const [pageSize, setPageSize] = useState<any>(25);
   const [currentTab, setCurrentTab] = useState("all");
   const [ProductList, setProductList] = useState([]);
-  const [filterdValue, setFilterdValue] = useState<any>([]);
+  const [filterdValue, setFilterdValue] = useState<TransactionProps | any>([]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -137,19 +139,6 @@ export default function MyTransactions() {
   }, [currentPage, pageSize]);
 
   useEffect(() => setCurrentPage(1), [currentTab]);
-
-  const {
-    startDate,
-    endDate,
-    onChangeStartDate,
-    onChangeEndDate,
-    open: openPicker,
-    onOpen: onOpenPicker,
-    onClose: onClosePicker,
-    isSelected: isSelectedValuePicker,
-    isError,
-    shortLabel,
-  } = useDateRangePicker(new Date(), new Date());
 
   const getProductlist = (val: string) => {
     Api(`product/get_ProductList/${val}`, "GET", "", token).then(
@@ -527,7 +516,7 @@ export default function MyTransactions() {
                   }}
                 >
                   <MenuItem value="">All</MenuItem>
-                  {categoryList.map((item: any) => {
+                  {categoryList.map((item: CategoryProps) => {
                     return (
                       <MenuItem
                         key={item._id}
@@ -548,7 +537,7 @@ export default function MyTransactions() {
                   }}
                 >
                   <MenuItem value="">All</MenuItem>
-                  {ProductList.map((item: any) => {
+                  {ProductList.map((item: ProductProps) => {
                     return (
                       <MenuItem value={item._id}>{item?.productName}</MenuItem>
                     );
@@ -668,7 +657,7 @@ export default function MyTransactions() {
                     />
 
                     <TableBody>
-                      {filterdValue.map((row: any) => (
+                      {filterdValue.map((row: TransactionProps) => (
                         <TransactionRow key={row._id} row={row} />
                       ))}
                     </TableBody>
@@ -705,7 +694,7 @@ export default function MyTransactions() {
 }
 
 type childProps = {
-  row: any;
+  row: TransactionProps;
 };
 
 function TransactionRow({ row }: childProps) {
@@ -724,7 +713,7 @@ function TransactionRow({ row }: childProps) {
     setTextFieldValue(event.target.value);
   };
 
-  const CheckTransactionStatus = (row: any) => {
+  const CheckTransactionStatus = (row: TransactionProps) => {
     setLoading(true);
     let token = localStorage.getItem("token");
     let rowFor = row;
@@ -898,7 +887,7 @@ function TransactionRow({ row }: childProps) {
         </StyledTableCell>
 
         {/* Operator */}
-        <StyledTableCell sx={{ whiteSpace: "nowrap" }}>
+        <StyledTableCell sx={{ width: 200 }}>
           <Typography variant="body2">{newRow?.operator?.key1}</Typography>
           <Typography variant="body2">
             {newRow?.productName == "Money Transfer"

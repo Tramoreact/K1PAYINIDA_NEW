@@ -73,7 +73,7 @@ const CustomAvatar = forwardRef<HTMLDivElement, CustomAvatarProps>(
   }
 );
 
-export default CustomAvatar;
+export default React.memo(CustomAvatar);
 
 // ----------------------------------------------------------------------
 
@@ -91,6 +91,6 @@ function getColorByName(name: string) {
 
   return {
     name: character(name),
-    color: colorByName(name),
+    color: "primary",
   } as const;
 }

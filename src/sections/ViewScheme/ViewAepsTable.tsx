@@ -13,22 +13,12 @@ import {
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import { TableHeadCustom } from "src/components/table";
+import { AepsRowProps } from "./types";
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-  id: string;
-  minSlab: string;
-  maxSlab: string;
-  TransactionType: string;
-  chargetype: string;
-  masterDistributorCommission: string;
-  distributorCommission: string;
-  agentCommission: string;
-};
-
 interface Props extends CardProps {
-  comData: any;
+  comData: AepsRowProps[];
 }
 export default function ViewAepsTable({ comData, ...other }: Props) {
   const { user } = useAuthContext();
@@ -69,8 +59,8 @@ export default function ViewAepsTable({ comData, ...other }: Props) {
                 }
               />
               <TableBody>
-                {comData.map((row: any, index: any) => (
-                  <VendorRow key={row.id} row={row} agentRole={role} />
+                {comData.map((row: AepsRowProps, index: any) => (
+                  <VendorRow key={row._id} row={row} agentRole={role} />
                 ))}
               </TableBody>
             </Table>
@@ -84,7 +74,7 @@ export default function ViewAepsTable({ comData, ...other }: Props) {
 }
 
 type vendorRowProps = {
-  row: RowProps;
+  row: AepsRowProps;
   agentRole: string | null;
 };
 // sd
