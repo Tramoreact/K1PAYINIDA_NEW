@@ -44,6 +44,7 @@ import {
   AadhaarPay,
   DMT2,
   DMT1,
+  LoanScheme,
 } from "./elements";
 
 // ----------------------------------------------------------------------
@@ -163,6 +164,7 @@ export default function Router() {
             },
             { path: "allscheme", element: <Scheme /> },
             { path: "bbpsscheme", element: <BBPSScheme /> },
+            { path: "loanscheme", element: <LoanScheme /> },
           ],
         },
         {
