@@ -37,6 +37,7 @@ import {
   varSlide,
 } from "../../components/animate";
 import MotionModal from "src/components/animate/MotionModal";
+import { TableNoData } from "src/components/table";
 
 // ----------------------------------------------------------------------
 type FormValuesProps = {
@@ -317,7 +318,7 @@ export default function MyBankAccount() {
                       sm: "0.2fr 0.8fr",
                     }}
                   >
-                    {userBankList?.length > 0 && (
+                    {userBankList?.length > 0 ? (
                       <>
                         <Grid
                           rowGap={3}
@@ -404,6 +405,10 @@ export default function MyBankAccount() {
                           </TableRow>
                         </Grid>
                       </>
+                    ) : (
+                      <Stack flexDirection="row" justifyContent="">
+                        {/* <TableNoData isNotFound={!userBankList.length} /> */}
+                      </Stack>
                     )}
                   </Box>
                 ) : (
