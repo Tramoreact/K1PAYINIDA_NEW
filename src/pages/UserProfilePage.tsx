@@ -15,6 +15,7 @@ import {
   Stack,
   Modal,
   Hidden,
+  Avatar,
 } from "@mui/material";
 // routes
 import { PATH_DASHBOARD } from "../routes/paths";
@@ -39,7 +40,7 @@ import {
   ProfileFollowers,
 } from "../sections/profile";
 import { Api } from "src/webservices";
-import TramoCertificate from "../assets/icons/Tramo-Certificate-3.png";
+import TramoCertificate from "../assets/icons/photo-1526925539332-aa3b66e35444.avif.png";
 import { AwsDocSign } from "../components/customFunctions/AwsDocSign";
 import jsPDF from "jspdf";
 import { useAuthContext } from "src/auth/useAuthContext";
@@ -267,53 +268,77 @@ export default function UserProfilePage() {
         <Grid>
           <Grid style={{ display: "flex", flexWrap: "wrap" }}>
             <Grid style={{ width: "20%", margin: "10px" }}>
+              <Avatar
+                alt="Agent Image"
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
               <Image
                 src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
-                alt=""
+                alt="Agent Image" 
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">Agent Image</Typography>
             </Grid>
 
             <Grid style={{ width: "20%", margin: "10px" }}>
-              <img
+            <Avatar
+                alt="PAN Image"
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
+             <Image
                 src={user?.PANFile && AwsDocSign(user?.PANFile)}
-                alt=""
+                alt="PAN Image"
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">PAN Image</Typography>
             </Grid>
 
             <Grid style={{ width: "20%", margin: "10px" }}>
-              <img
+            <Avatar
+                alt="Agent Image"
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
+              <Image
                 src={user?.img && AwsDocSign(user?.img)}
-                alt=""
+                alt="Agent Image"
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">Agent Image</Typography>
             </Grid>
 
             <Grid style={{ width: "20%", margin: "10px" }}>
-              <img
+            <Avatar
+                alt="PAN Image"
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
+              <Image
                 src={user?.PANFile && AwsDocSign(user?.PANFile)}
-                alt=""
+                alt="PAN Image"
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">PAN Image</Typography>
             </Grid>
             <Grid style={{ width: "20%", margin: "15px" }}>
-              <img
+            <Avatar
+                alt="Aadhar Front"
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
+              <Image
                 src={user?.aadharFileUrl && AwsDocSign(user?.aadharFileUrl)}
-                alt="aadharFileUrl"
+                alt="Aadhar Front"
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">Aadhar Front</Typography>
             </Grid>
 
             <Grid style={{ width: "20%", margin: "15px" }}>
-              <img
+            <Avatar
+                alt="Aadhar Back "
+                src={user?.selfie[0].length && AwsDocSign(user?.selfie[0])}
+              />{" "}
+              <Image
                 src={user?.aadharBackUrl && AwsDocSign(user?.aadharBackUrl)}
-                alt="aadharBackUrl"
+                alt="Aadhar Back "
                 style={{ width: "100%", height: "100%" }}
               />
               <Typography align="center">Aadhar Back </Typography>

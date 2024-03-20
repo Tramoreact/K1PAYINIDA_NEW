@@ -8,21 +8,8 @@ import { useAuthContext } from "../../auth/useAuthContext";
 // components
 import Image from "../../components/image";
 import { CustomAvatar } from "../../components/custom-avatar";
+import { AwsDocSign } from "src/components/customFunctions/AwsDocSign";
 // ----------------------------------------------------------------------
-
-const StyledRoot = styled("div")(({ theme }) => ({
-  "&:before": {
-    ...bgBlur({
-      color: theme.palette.primary.darker,
-    }),
-    top: 0,
-    zIndex: 9,
-    content: "''",
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-}));
 
 const StyledInfo = styled("div")(({ theme }) => ({
   left: 0,
@@ -43,6 +30,21 @@ const StyledInfo = styled("div")(({ theme }) => ({
 
 export default function ProfileCover({ cover }: any) {
   const { user } = useAuthContext();
+  const StyledRoot = styled("div")(({ theme }) => ({
+    "&:before": {
+      backgroundImage: `url(${
+        user?.shopImage[0]?.length && AwsDocSign(user?.shopImage[0])
+      })`,
+      top: 0,
+      zIndex: 9,
+      content: "''",
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      backgroundSize: "cover",
+    },
+  }));
+
   return (
     <StyledRoot>
       <StyledInfo>
@@ -66,7 +68,7 @@ export default function ProfileCover({ cover }: any) {
           sx={{
             ml: { md: 3 },
             mt: { xs: 1, md: 0 },
-            color: "common.white",
+            // color: "common.white",
             textAlign: { xs: "center", md: "left" },
           }}
         >

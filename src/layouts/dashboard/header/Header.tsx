@@ -83,7 +83,7 @@ export default function Header({ onOpenNav }: Props) {
                 fIndianCurrency(user?.AEPS_wallet_amount) || 0
               }`}
             </Label>
-            <NotificationsPopover />
+            {/* <NotificationsPopover /> */}
 
             <AccountPopover />
           </>
