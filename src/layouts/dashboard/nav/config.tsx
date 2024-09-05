@@ -145,6 +145,10 @@ const NavConfig = [
             title: "My Fund Requests",
             path: PATH_DASHBOARD.fundmanagement.myfundrequest,
           },
+          {
+            title: "Wallet to Wallet Transfer",
+            path: PATH_DASHBOARD.fundmanagement.Wallettowallet,
+          },
         ],
       },
       {

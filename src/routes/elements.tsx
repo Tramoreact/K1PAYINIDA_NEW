@@ -108,6 +108,9 @@ export const AEPSsettlement = Loadable(
 export const MyFundRequest = Loadable(
   lazy(() => import("../sections/FundManagement/MyFundRequest"))
 );
+export const WalletToWallet = Loadable(
+  lazy(() => import("../sections/FundManagement/WalletToWallet"))
+);
 export const ManageFundFlow = Loadable(
   lazy(() => import("../sections/FundManagement/ManageFundFlow"))
 );

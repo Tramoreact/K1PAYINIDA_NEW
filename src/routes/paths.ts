@@ -54,6 +54,7 @@ export const PATH_DASHBOARD = {
     mybankaccount: path(ROOTS_DASHBOARD, "/fundmanagement/mybankaccount"),
     aepssettlement: path(ROOTS_DASHBOARD, "/fundmanagement/aepssettlement"),
     myfundrequest: path(ROOTS_DASHBOARD, "/fundmanagement/myfundrequest"),
+    Wallettowallet: path(ROOTS_DASHBOARD, "/fundmanagement/WalletToWallet"),
     managefundflow: path(ROOTS_DASHBOARD, "/fundmanagement/managefundflow"),
     mynetworkfunds: path(ROOTS_DASHBOARD, "/fundmanagement/mynetworkfunds"),
   },
