@@ -25,6 +25,11 @@ import {
   TextField,
   Typography,
   useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { Api } from "src/webservices";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -41,6 +46,8 @@ import ApiDataLoading from "../../../components/customFunctions/ApiDataLoading";
 import { useAuthContext } from "src/auth/useAuthContext";
 import Scrollbar from "src/components/scrollbar/Scrollbar";
 import useResponsive from "src/hooks/useResponsive";
+import { reloadResources } from "i18next";
+import loadingScreen from "src/components/loading-screen";
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
@@ -367,6 +374,9 @@ export default function DMTbeneficiary() {
                       <TableCell sx={{ fontWeight: 800, textAlign: "center" }}>
                         Action
                       </TableCell>
+                      <TableCell sx={{ fontWeight: 800, textAlign: "center" }}>
+                        Delete Bene
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -550,8 +560,16 @@ export default function DMTbeneficiary() {
 // ----------------------------------------------------------------------
 
 const BeneList = React.memo(
-  ({ row, callback, remitterNumber, deleteBene, pay }: any) => {
+  ({
+    row,
+    callback,
+    remitterNumber,
+    deleteBene,
+    pay,
+    fatchBeneficiary,
+  }: any) => {
     const { user, UpdateUserDetail } = useAuthContext();
+    console.log("user===================", user);
     const { enqueueSnackbar } = useSnackbar();
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
@@ -569,6 +587,22 @@ const BeneList = React.memo(
     const handleClose2 = () => {
       setModalEdit2(false);
       setDeleteOtp("");
+    };
+
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const handleConfirmDelete = () => {
+      BeneDelete();
+      setOpen(false);
+      window.location.reload();
     };
 
     const verifyBene = (val: string) => {
@@ -618,6 +652,21 @@ const BeneList = React.memo(
           }
         }
       });
+    };
+
+    const BeneDelete = () => {
+      let token = localStorage.getItem("token");
+      Api("moneyTransfer/beneficiary/delete/" + row._id, "GET", "", token).then(
+        (Response: any) => {
+          if (Response.status == 200) {
+            if (Response.data.code == 200) {
+              enqueueSnackbar(Response.data.message);
+            } else {
+              enqueueSnackbar(Response.data.message);
+            }
+          }
+        }
+      );
     };
     const confirmDeleteBene = () => {
       setIsLoading(true);
@@ -699,6 +748,13 @@ const BeneList = React.memo(
               </Button>
             </Stack>
           </TableCell>
+          <TableCell>
+            <Stack justifyContent={"center"} flexDirection={"row"}>
+              <Button variant="contained" onClick={handleClickOpen}>
+                Delete
+              </Button>
+            </Stack>
+          </TableCell>
         </TableRow>
         <Modal
           open={open2}
@@ -767,6 +823,22 @@ const BeneList = React.memo(
             </Card>
           </Grid>
         </Modal>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this beneficiary?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              No
+            </Button>
+            <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
       </>
     );
   }

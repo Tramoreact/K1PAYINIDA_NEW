@@ -413,7 +413,7 @@ function WalletToWallet() {
                 }}
               >
                 <Stack alignItems="center" mt={2}>
-                  {selfieSrc ? (
+                  {selfieSrc == userDetail?.userInfo?.selfie[0] ? (
                     <Image
                       src={selfieSrc}
                       alt="selfie"
